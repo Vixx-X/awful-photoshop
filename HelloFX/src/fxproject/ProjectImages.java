@@ -26,9 +26,6 @@ import javafx.scene.image.ImageView;
  * @author Gaby
  */
 public class ProjectImages extends Application{
-    
-    @FXML
-    private ImageView imageView1;
         
     @Override
     public void start(Stage stage) throws Exception {
@@ -36,11 +33,6 @@ public class ProjectImages extends Application{
          stage.setTitle("A ve que tal");
          stage.setScene(new Scene(root, 800, 600));
          stage.show();
-      InputStream stream = new FileInputStream("C:\\Users\\Gaby\\Pictures\\StarWars.png");
-      Image image = new Image(stream);
-      //imageView1.setImage(image);
-      System.out.println(image);
-      System.out.println("hey");
     }
     public static void main(String[] args){
         launch(args);
