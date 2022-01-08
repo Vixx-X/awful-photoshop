@@ -4,8 +4,10 @@
  */
 package fxproject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -24,10 +26,35 @@ public class ImageEditController implements Initializable {
     @FXML
     private ImageView imageMain;
     
+    @FXML
+    void BlackWhiteFilter(ActionEvent event) {
+        System.out.println("BlackWhiteFilter here");
+    }
+
+    @FXML
+    void GrayScaleFilter(ActionEvent event) {
+        System.out.println("GrayScaleFilter here");
+    }
+
+    @FXML
+    void negativeFilter(ActionEvent event) {
+        System.out.println("negativeFilter here");
+    }
+    
+    @FXML
+    void histogramView(ActionEvent event) throws IOException {
+        ProjectImages.getInstance().showBarChart();
+    }
+    
+    @FXML
+    void informatioView(ActionEvent event) throws IOException {
+        ProjectImages.getInstance().showDetails();
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         imageMain.setImage(ProjectImages.getInstance().getImageChoose());
-    }    
+    }
     
 }
