@@ -7,10 +7,15 @@ package fxproject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -19,13 +24,38 @@ import javafx.scene.image.ImageView;
  */
 public class ImageEditController implements Initializable {
 
+    ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja", "Cilíndrico", "Gauss");
+    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel", "Roberts", "Prewitt");
     /**
      * Initializes the controller class.
      */
-   
+    @FXML
+    private Button buttonBorder;
+
+    @FXML
+    private TextField columnsBorder;
+
+    @FXML
+    private TextField rowsBorder;
+
+    @FXML
+    private ComboBox<String> borderFilters;
+
+    @FXML
+    private Button buttonSmoothed;
+
+    @FXML
+    private TextField columnsSmooth;
+
+    @FXML
+    private TextField rowsSmooth;
+
+    @FXML
+    private ComboBox<String> smoothedFilters;
+
     @FXML
     private ImageView imageMain;
-    
+
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
         System.out.println("BlackWhiteFilter here");
@@ -43,21 +73,95 @@ public class ImageEditController implements Initializable {
         System.out.println("negativeFilter here");
         //imageMain.setImage([**insertar imagen de tipo Image**]);
     }
+
+    boolean validInputRowsColumns(TextField col, TextField row) {
+        int numberCol = Integer.parseInt(col.getText());
+        int numberRow = Integer.parseInt(row.getText());
+        return (numberCol >= 1 && numberRow >= 2 || numberCol >= 2 && numberRow >= 1) && (numberCol <= 7 && numberRow <= 7);
+    }
+
+    void enableFilterButton(ComboBox filterChoose, TextField col, TextField row, int number) {
+        if (!(filterChoose.getValue() == null || col.getText().isEmpty()
+                || row.getText().isEmpty()) && validInputRowsColumns(col, row)) {
+            if(number == 0){
+                buttonSmoothed.setDisable(false);
+            }else if(number == 1){
+                buttonBorder.setDisable(false);
+            }
+        }else{
+            if(number == 0){
+                buttonSmoothed.setDisable(true);
+            }else if(number == 1){
+                buttonBorder.setDisable(true);
+            }
+        }
+    }
+
+    @FXML
+    void selectFilters(ActionEvent event) {
+        if(event.getSource().equals(smoothedFilters)){
+            enableFilterButton(smoothedFilters,rowsSmooth,columnsSmooth, 0);
+        }else{
+            enableFilterButton(borderFilters,rowsBorder,columnsBorder, 1);
+        }
+    }
+
+    @FXML
+    void columnsFilters(ActionEvent event) {
+        if(event.getSource().equals(columnsSmooth)){
+            enableFilterButton(smoothedFilters,rowsSmooth,columnsSmooth, 0);
+        }else{
+            enableFilterButton(borderFilters,rowsBorder,columnsBorder, 1);
+        }
+    }
+
+    @FXML
+    void rowsFilters(ActionEvent event) {
+        if(event.getSource().equals(rowsSmooth)){
+            enableFilterButton(smoothedFilters,rowsSmooth,columnsSmooth, 0);
+        }else{
+            enableFilterButton(borderFilters,rowsBorder,columnsBorder, 1);
+        }
+    }
+
+    @FXML
+    void applySmoothed(ActionEvent event) {
+        int numberCol = Integer.parseInt(columnsSmooth.getText());
+        int numberRow = Integer.parseInt(rowsSmooth.getText());
+        System.out.println("Smooth filter here");
+        System.out.println(numberCol);
+        System.out.println(numberRow);
+        System.out.println(smoothedFilters.getValue());
+        //imageMain.setImage([**insertar imagen de tipo Image**]);
+    }
     
+    @FXML
+    void applyBorder(ActionEvent event) {
+        int numberCol = Integer.parseInt(columnsBorder.getText());
+        int numberRow = Integer.parseInt(rowsBorder.getText());
+        System.out.println("Border filter here");
+        System.out.println(numberCol);
+        System.out.println(numberRow);
+        System.out.println(borderFilters.getValue());
+        //imageMain.setImage([**insertar imagen de tipo Image**]);
+    }
+
     @FXML
     void histogramView(ActionEvent event) throws IOException {
         ProjectImages.getInstance().showBarChart();
     }
-    
+
     @FXML
     void informationView(ActionEvent event) throws IOException {
         ProjectImages.getInstance().showDetails();
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        smoothedFilters.setItems(smoothedList);
+        borderFilters.setItems(borderList);
         imageMain.setImage(ProjectImages.getInstance().getImageChoose());
     }
-    
+
 }
