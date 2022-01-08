@@ -29,16 +29,19 @@ public class ImageEditController implements Initializable {
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
         System.out.println("BlackWhiteFilter here");
+        //imageMain.setImage([**insertar imagen de tipo Image**]);
     }
 
     @FXML
     void GrayScaleFilter(ActionEvent event) {
         System.out.println("GrayScaleFilter here");
+        //imageMain.setImage([**insertar imagen de tipo Image**]);
     }
 
     @FXML
     void negativeFilter(ActionEvent event) {
         System.out.println("negativeFilter here");
+        //imageMain.setImage([**insertar imagen de tipo Image**]);
     }
     
     @FXML
@@ -47,7 +50,7 @@ public class ImageEditController implements Initializable {
     }
     
     @FXML
-    void informatioView(ActionEvent event) throws IOException {
+    void informationView(ActionEvent event) throws IOException {
         ProjectImages.getInstance().showDetails();
     }
     

@@ -240,7 +240,7 @@
                            <children>
                               <VBox prefHeight="50.0" prefWidth="233.0">
                                  <children>
-                                    <Button mnemonicParsing="false" onAction="#informatioView" prefHeight="25.0" prefWidth="150.0" text="Ver Detalles">
+                                    <Button mnemonicParsing="false" onAction="#informationView" prefHeight="25.0" prefWidth="150.0" text="Ver Detalles">
                                        <VBox.margin>
                                           <Insets top="5.0" />
                                        </VBox.margin>
