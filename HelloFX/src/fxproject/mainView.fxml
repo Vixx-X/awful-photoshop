@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.Controller">
+<BorderPane fx:id="mainLayout" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.Controller">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -20,7 +20,7 @@
                <menus>
                   <Menu mnemonicParsing="false" text="Archivo">
                      <items>
-                        <MenuItem fx:id="btnCl1" mnemonicParsing="false" onAction="#buttonClickMe" text="Abrir imágenes..." />
+                        <MenuItem fx:id="btnCl1" mnemonicParsing="false" onAction="#uploadImages" text="Abrir imágenes..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Guardar" />
                         <Menu mnemonicParsing="false" text="Guardar como...">

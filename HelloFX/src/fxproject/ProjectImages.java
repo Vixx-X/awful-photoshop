@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 
 /**
  *
@@ -29,15 +30,14 @@ import javafx.scene.image.ImageView;
  */
 public class ProjectImages extends Application {
 
-    private Controller control;
+    private BorderPane mainLayout;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("example.fxml"));
-        stage.setTitle("A ve que tal");
-        stage.setScene(new Scene(root));
+        mainLayout = FXMLLoader.load(getClass().getResource("mainView.fxml"));
+        stage.setTitle("Photoshop Básico");
+        stage.setScene(new Scene(mainLayout));
         stage.show();
-        
     }
 
     public static void main(String[] args) {

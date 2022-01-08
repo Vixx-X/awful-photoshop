@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -42,7 +43,7 @@ public class Controller implements Initializable {
     private Label mainLabel;
 
     @FXML
-    void buttonClickMe(ActionEvent event) throws FileNotFoundException {
+    void uploadImages(ActionEvent event) throws FileNotFoundException {
         //Image image = new Image(getClass().getResourceAsStream("../images/StarWars.png"));
         FileChooser fc = new FileChooser();
         //fc.getExtensionFilters().add(new ExtensionFilter("*.pbm", "*.pgm", "*.bmp", "*.ppm", "*.pnm", "*.dib"));
@@ -55,8 +56,12 @@ public class Controller implements Initializable {
             images[i] = new Image(new FileInputStream(file.getAbsolutePath()));
             i++;
         }
-        //System.out.println(file.getAbsolutePath());
-        if (i > 0) {
+        showImages(i, images, names);
+
+    }
+    
+    void showImages(int i, Image[] images, String[] names){
+         if (i > 0) {
             mainLabel.setText("Escoga una Imagen para editar");
             labelImage1.setText(names[0]);
             imageView1.setImage(images[0]);
