@@ -21,10 +21,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javax.imageio.ImageIO;
 
-public class Controller implements Initializable{
-    
+public class Controller implements Initializable {
+
     @FXML
-    private MenuItem btnCl;
+    private MenuItem btnCl1;
 
     @FXML
     private ImageView imageView1;
@@ -33,8 +33,13 @@ public class Controller implements Initializable{
     private ImageView imageView2;
 
     @FXML
-    private Label lab;
+    private Label labelImage1;
 
+    @FXML
+    private Label labelImage2;
+    
+    @FXML
+    private Label mainLabel;
 
     @FXML
     void buttonClickMe(ActionEvent event) throws FileNotFoundException {
@@ -43,25 +48,38 @@ public class Controller implements Initializable{
         //fc.getExtensionFilters().add(new ExtensionFilter("*.pbm", "*.pgm", "*.bmp", "*.ppm", "*.pnm", "*.dib"));
         List<File> f = fc.showOpenMultipleDialog(null);
         Image[] images = new Image[2];
+        String[] names = new String[2];
         int i = 0;
-        for (File file: f){
+        for (File file : f) {
+            names[i] = file.getName();
             images[i] = new Image(new FileInputStream(file.getAbsolutePath()));
-            System.out.println(images[i]);
             i++;
         }
         //System.out.println(file.getAbsolutePath());
-        if (i>0) {
+        if (i > 0) {
+            mainLabel.setText("Escoga una Imagen para editar");
+            labelImage1.setText(names[0]);
             imageView1.setImage(images[0]);
         }
-        if(i>1){
+        if (i > 1) {
+            labelImage2.setText(names[1]);
             imageView2.setImage(images[1]);
         }
-        
+
         System.out.println(imageView1);
-        lab.setText("Holi");
+        imageView1.setOnMouseClicked(e -> {
+            String clickedImgUrl = (String) ((ImageView) e.getSource()).getUserData();
+            System.out.println("Image was clicked: 1");
+        });
+        
+        imageView2.setOnMouseClicked(e -> {
+            String clickedImgUrl = (String) ((ImageView) e.getSource()).getUserData();
+            System.out.println("Image was clicked: 2");
+        });
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
     }
 }
