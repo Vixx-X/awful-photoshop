@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,7 +25,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
-
+    
     @FXML
     private MenuItem btnCl1;
 
@@ -41,7 +43,8 @@ public class Controller implements Initializable {
     
     @FXML
     private Label mainLabel;
-
+    
+   
     @FXML
     void uploadImages(ActionEvent event) throws FileNotFoundException {
         //Image image = new Image(getClass().getResourceAsStream("../images/StarWars.png"));
@@ -73,13 +76,22 @@ public class Controller implements Initializable {
 
         System.out.println(imageView1);
         imageView1.setOnMouseClicked(e -> {
-            String clickedImgUrl = (String) ((ImageView) e.getSource()).getUserData();
+            //String clickedImgUrl = (String) ((ImageView) e.getSource()).getUserData();
             System.out.println("Image was clicked: 1");
+            //System.out.println(mainClass);
+            try {
+                ProjectImages.getInstance().showImagePanel(images[0]);
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         imageView2.setOnMouseClicked(e -> {
-            String clickedImgUrl = (String) ((ImageView) e.getSource()).getUserData();
-            System.out.println("Image was clicked: 2");
+            try {
+                ProjectImages.getInstance().showImagePanel(images[1]);
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
     }
 

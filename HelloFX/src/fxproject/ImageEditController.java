@@ -7,6 +7,8 @@ package fxproject;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.fxml.FXML;
+import javafx.scene.image.ImageView;
 
 /**
  * FXML Controller class
@@ -18,9 +20,14 @@ public class ImageEditController implements Initializable {
     /**
      * Initializes the controller class.
      */
+   
+    @FXML
+    private ImageView imageMain;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        imageMain.setImage(ProjectImages.getInstance().getImageChoose());
     }    
     
 }

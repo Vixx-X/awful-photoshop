@@ -5,6 +5,7 @@
 package fxproject;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -29,8 +30,19 @@ import javafx.scene.layout.BorderPane;
  * @author Gaby
  */
 public class ProjectImages extends Application {
+    private static ProjectImages instance;
 
-    private BorderPane mainLayout;
+    private static BorderPane mainLayout;
+    private static Image imageChoose;
+    
+    
+   public static ProjectImages getInstance() {
+        if (instance == null) {
+            instance = new ProjectImages();     
+        }
+        return instance;
+    }
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -38,6 +50,18 @@ public class ProjectImages extends Application {
         stage.setTitle("Photoshop Básico");
         stage.setScene(new Scene(mainLayout));
         stage.show();
+    }
+    
+
+    public void showImagePanel(Image image) throws IOException {
+        imageChoose = image;
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("imageEditor.fxml"));
+        mainLayout.setCenter(imagePanel);
+
+    }
+
+    public Image getImageChoose() {
+        return imageChoose ;
     }
 
     public static void main(String[] args) {
