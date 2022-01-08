@@ -63,6 +63,13 @@ public class Controller implements Initializable {
 
     }
     
+    @FXML
+    void saveImages(ActionEvent event) {
+        System.out.println("Aqui salvas tu imagen"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+        // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
+    }
+    
     void showImages(int i, Image[] images, String[] names){
          if (i > 0) {
             mainLabel.setText("Escoga una Imagen para editar");
