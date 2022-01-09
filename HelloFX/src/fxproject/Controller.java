@@ -63,13 +63,6 @@ public class Controller implements Initializable {
 
     }
     
-    @FXML
-    void saveImages(ActionEvent event) {
-        System.out.println("Aqui salvas tu imagen"); 
-        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-        // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
-    }
-    
     void showImages(int i, Image[] images, String[] names){
          if (i > 0) {
             mainLabel.setText("Escoga una Imagen para editar");
@@ -101,7 +94,26 @@ public class Controller implements Initializable {
             }
         });
     }
+    
+    @FXML
+    void saveImages(ActionEvent event) {
+        System.out.println("Aqui salvas tu imagen"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+        // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
+    }
+    
+    @FXML
+    void redoAction(ActionEvent event) {
+        System.out.println("Rehacer cambios la imagen actual"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+    }
 
+    @FXML
+    void undoAction(ActionEvent event) {
+        System.out.println("Deshacer cambios la imagen actual"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

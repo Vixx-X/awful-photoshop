@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 public class ImageEditController implements Initializable {
 
     ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja", "Cilíndrico", "Gauss");
-    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel", "Roberts", "Prewitt");
+    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel", "Roberts", "Prewitt", "Perfilado");
     ObservableList<String> optionsThreshold = FXCollections.observableArrayList("Valor constante", "Rango");
     /**
      * Initializes the controller class.

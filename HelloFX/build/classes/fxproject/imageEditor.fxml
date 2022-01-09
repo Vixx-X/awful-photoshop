@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="676.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditController">
+<BorderPane maxHeight="676.0" maxWidth="918.0" minHeight="676.0" minWidth="918.0" prefHeight="676.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditController">
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -107,7 +107,7 @@
                               <Separator orientation="VERTICAL" prefHeight="200.0" />
                               <VBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="230.0" spacing="15.0">
                                  <children>
-                                    <Label prefHeight="20.0" prefWidth="242.0" text="Filtros de Bordes:">
+                                    <Label prefHeight="20.0" prefWidth="242.0" text="Filtros de Bordes y Perfilado">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -167,7 +167,7 @@
                         <Separator prefWidth="200.0" />
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <VBox prefHeight="50.0" prefWidth="233.0">
+                              <VBox prefHeight="100.0" prefWidth="238.0">
                                  <children>
                                     <Label prefHeight="20.0" prefWidth="242.0" text="Histograma:">
                                        <font>
@@ -189,11 +189,17 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="70.0">
+                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="45.0">
                                        <children>
-                                          <ComboBox fx:id="threshold" onAction="#typeThreshold" prefWidth="150.0" promptText="Tipo" />
-                                          <Button fx:id="thresholdButton" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" onAction="#applyThreshold" prefHeight="25.0" prefWidth="138.0" text="Aplicar" textAlignment="CENTER" />
+                                          <ComboBox fx:id="threshold" onAction="#typeThreshold" prefHeight="25.0" prefWidth="166.0" promptText="Tipo">
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin></ComboBox>
+                                          <Button fx:id="thresholdButton" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" onAction="#applyThreshold" prefHeight="25.0" prefWidth="118.0" text="Aplicar" textAlignment="CENTER" />
                                        </children>
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
                                     </HBox>
                                     <VBox prefHeight="45.0" prefWidth="141.0" spacing="5.0">
                                        <children>
