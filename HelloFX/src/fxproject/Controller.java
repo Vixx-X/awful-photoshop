@@ -56,6 +56,7 @@ public class Controller implements Initializable {
         int i = 0;
         for (File file : f) {
             names[i] = file.getName();
+	    System.out.println(file.getAbsolutePath());
             images[i] = new Image(new FileInputStream(file.getAbsolutePath()));
             i++;
         }
