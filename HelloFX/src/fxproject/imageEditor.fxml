@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="676.0" maxWidth="918.0" minHeight="676.0" minWidth="918.0" prefHeight="676.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditController">
+<BorderPane maxHeight="676.0" maxWidth="918.0" minHeight="676.0" minWidth="918.0" prefHeight="676.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditorController">
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>

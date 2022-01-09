@@ -49,22 +49,22 @@ public class ProjectImages extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
-        mainLayout = FXMLLoader.load(getClass().getResource("mainView.fxml"));
+        mainLayout = FXMLLoader.load(getClass().getResource("MainView.fxml"));
         primaryStage.setTitle("Photoshop Básico");
-        primaryStage.setScene(new Scene(mainLayout));
+        primaryStage.setScene(new Scene(mainLayout, 800, 600));
         primaryStage.show();
     }
     
 
     public void showImagePanel(Image image) throws IOException {
         imageChoose = image;
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("imageEditor.fxml"));
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
         mainLayout.setCenter(imagePanel);
 
     }
     
     public void showBarChart() throws IOException {
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("barChart.fxml"));
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
         Stage histogramView = new Stage();
         histogramView.initModality(Modality.WINDOW_MODAL);
         histogramView.initOwner(primaryStage);
@@ -73,7 +73,7 @@ public class ProjectImages extends Application {
     }
     
     public void showDetails() throws IOException {
-        BorderPane informationPanel = FXMLLoader.load(getClass().getResource("informationView.fxml"));
+        BorderPane informationPanel = FXMLLoader.load(getClass().getResource("InformationView.fxml"));
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);

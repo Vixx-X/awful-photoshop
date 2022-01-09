@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
  *
  * @author Gaby
  */
-public class ImageEditController implements Initializable {
+public class ImageEditorController implements Initializable {
 
     ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja", "Cilíndrico", "Gauss");
     ObservableList<String> borderList = FXCollections.observableArrayList("Sobel", "Roberts", "Prewitt", "Perfilado");

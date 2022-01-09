@@ -22,7 +22,7 @@ import javafx.stage.FileChooser;
 //import javafx.stage.FileChooser.ExtensionFilter;
 //import javax.imageio.ImageIO;
 
-public class Controller implements Initializable {
+public class MainViewController implements Initializable {
     
     @FXML
     private MenuItem btnCl1;
@@ -80,7 +80,7 @@ public class Controller implements Initializable {
             try {
                 ProjectImages.getInstance().showImagePanel(images[0]);
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
@@ -88,7 +88,7 @@ public class Controller implements Initializable {
             try {
                 ProjectImages.getInstance().showImagePanel(images[1]);
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
