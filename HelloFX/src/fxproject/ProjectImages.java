@@ -6,7 +6,6 @@ package fxproject;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,7 +50,7 @@ public class ProjectImages extends Application {
         primaryStage = stage;
         mainLayout = FXMLLoader.load(getClass().getResource("MainView.fxml"));
         primaryStage.setTitle("Photoshop Básico");
-        primaryStage.setScene(new Scene(mainLayout, 800, 600));
+        primaryStage.setScene(new Scene(mainLayout));
         primaryStage.show();
     }
     
@@ -61,6 +60,15 @@ public class ProjectImages extends Application {
         BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
         mainLayout.setCenter(imagePanel);
 
+    }
+    
+    public void showkernelPanel() throws IOException{
+        BorderPane kernelPanel = FXMLLoader.load(getClass().getResource("KernelEdit.fxml"));
+        Stage kernelView = new Stage();
+        kernelView.initModality(Modality.WINDOW_MODAL);
+        kernelView.initOwner(primaryStage);
+        kernelView.setScene(new Scene(kernelPanel));
+        kernelView.showAndWait();
     }
     
     public void showBarChart() throws IOException {

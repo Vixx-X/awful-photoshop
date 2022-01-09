@@ -211,6 +211,11 @@ public class ImageEditorController implements Initializable {
     void histogramView(ActionEvent event) throws IOException {
         ProjectImages.getInstance().showBarChart();
     }
+    
+    @FXML
+    void kernelView(ActionEvent event) throws IOException {
+        ProjectImages.getInstance().showkernelPanel();
+    }
 
     @FXML
     void informationView(ActionEvent event) throws IOException {

@@ -17,11 +17,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="676.0" maxWidth="918.0" minHeight="676.0" minWidth="918.0" prefHeight="676.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditorController">
+<BorderPane maxHeight="737.0" maxWidth="933.0" minHeight="676.0" minWidth="918.0" prefHeight="737.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditorController">
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="676.0" prefWidth="565.0" spacing="15.0">
+            <VBox prefHeight="723.0" prefWidth="649.0" spacing="15.0">
                <padding>
                   <Insets bottom="10.0" top="10.0" />
                </padding>
@@ -34,9 +34,9 @@
                            </font>
                         </Label>
                         <Separator prefWidth="200.0" />
-                        <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="512.0">
+                        <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="470.0">
                            <buttons>
-                              <Button minWidth="20.0" mnemonicParsing="false" onAction="#GrayScaleFilter" prefHeight="17.0" text="Escala de Grises" />
+                              <Button minWidth="20.0" mnemonicParsing="false" onAction="#GrayScaleFilter" prefHeight="25.0" text="Escala de Grises" />
                               <Button minWidth="0.0" mnemonicParsing="false" onAction="#BlackWhiteFilter" prefHeight="33.0" prefWidth="416.0" text="Blanco y negro" />
                               <Button mnemonicParsing="false" onAction="#negativeFilter" prefHeight="25.0" prefWidth="217.0" text="Negativo" />
                            </buttons>
@@ -64,7 +64,7 @@
                            </font>
                         </Label>
                         <Separator prefWidth="200.0" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                        <HBox prefHeight="120.0" prefWidth="494.0" spacing="15.0">
                            <children>
                               <VBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="230.0" spacing="15.0">
                                  <children>
@@ -74,7 +74,7 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="smoothedFilters" onAction="#selectFilters" prefHeight="25.0" prefWidth="241.0" promptText="Seleccione un filtro" />
-                                    <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                                    <HBox alignment="BOTTOM_RIGHT" minWidth="240.0" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                                        <children>
                                           <VBox prefHeight="45.0" prefWidth="141.0">
                                              <children>
@@ -105,14 +105,14 @@
                                  </children>
                               </VBox>
                               <Separator orientation="VERTICAL" prefHeight="200.0" />
-                              <VBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="230.0" spacing="15.0">
+                              <VBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="120.0" prefWidth="247.0" spacing="15.0">
                                  <children>
                                     <Label prefHeight="20.0" prefWidth="242.0" text="Filtros de Bordes y Perfilado">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="borderFilters" onAction="#selectFilters" prefHeight="25.0" prefWidth="241.0" promptText="Seleccione un filtro" />
+                                    <ComboBox fx:id="borderFilters" onAction="#selectFilters" prefHeight="25.0" prefWidth="263.0" promptText="Seleccione un filtro" />
                                     <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                                        <children>
                                           <VBox prefHeight="45.0" prefWidth="141.0">
@@ -167,14 +167,14 @@
                         <Separator prefWidth="200.0" />
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <VBox prefHeight="100.0" prefWidth="238.0">
+                              <VBox prefHeight="105.0" prefWidth="135.0">
                                  <children>
                                     <Label prefHeight="20.0" prefWidth="242.0" text="Histograma:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <Button mnemonicParsing="false" onAction="#histogramView" prefHeight="25.0" prefWidth="150.0" text="Mostrar histograma">
+                                    <Button mnemonicParsing="false" onAction="#histogramView" prefHeight="25.0" prefWidth="141.0" text="Mostrar Histograma">
                                        <VBox.margin>
                                           <Insets top="5.0" />
                                        </VBox.margin>
@@ -182,20 +182,35 @@
                                  </children>
                               </VBox>
                               <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="15.0" />
-                              <VBox prefHeight="50.0" prefWidth="261.0">
+                              <VBox prefHeight="105.0" prefWidth="83.0">
+                                 <children>
+                                    <Label prefHeight="20.0" prefWidth="242.0" text="Kernel:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Button mnemonicParsing="false" onAction="#kernelView" prefHeight="25.0" prefWidth="82.0" text="Crear">
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="15.0" />
+                              <VBox prefHeight="105.0" prefWidth="232.0">
                                  <children>
                                     <Label prefHeight="20.0" prefWidth="242.0" text="Umbralización:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="45.0">
+                                    <HBox prefHeight="25.0" prefWidth="224.0" spacing="20.0">
                                        <children>
-                                          <ComboBox fx:id="threshold" onAction="#typeThreshold" prefHeight="25.0" prefWidth="166.0" promptText="Tipo">
+                                          <ComboBox fx:id="threshold" onAction="#typeThreshold" prefHeight="25.0" prefWidth="161.0" promptText="Valor constante">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin></ComboBox>
-                                          <Button fx:id="thresholdButton" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" onAction="#applyThreshold" prefHeight="25.0" prefWidth="118.0" text="Aplicar" textAlignment="CENTER" />
+                                          <Button fx:id="thresholdButton" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" onAction="#applyThreshold" prefHeight="25.0" prefWidth="120.0" text="Aplicar" textAlignment="CENTER" />
                                        </children>
                                        <VBox.margin>
                                           <Insets top="5.0" />
