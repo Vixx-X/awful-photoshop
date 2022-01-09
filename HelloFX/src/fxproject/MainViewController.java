@@ -99,27 +99,6 @@ public class MainViewController implements Initializable {
 		});
 	}
 
-	@FXML
-	void saveImages(ActionEvent event) {
-                RawImage image = ProjectImages.getInstance().getChoose();
-                if (image != null)
-                    image.writeImage();
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-		// Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
-	}
-
-	@FXML
-	void redoAction(ActionEvent event) {
-		System.out.println("Rehacer cambios la imagen actual"); 
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-	}
-
-	@FXML
-	void undoAction(ActionEvent event) {
-		System.out.println("Deshacer cambios la imagen actual"); 
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-	}
-
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
