@@ -1,11 +1,11 @@
 package fxproject;
 
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,11 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javax.imageio.ImageIO;
+//import javafx.stage.FileChooser.ExtensionFilter;
+//import javax.imageio.ImageIO;
 
 public class Controller implements Initializable {
     
