@@ -54,7 +54,7 @@ public class MainViewController implements Initializable {
         int i = 0;
         for (File file : f) {
             names[i] = file.getName();
-            images[i] = new Image(file.getAbsolutePath());
+            images[i] = new Image(file.toURI().toString());
             i++;
         }
         showImages(i, images, names);
