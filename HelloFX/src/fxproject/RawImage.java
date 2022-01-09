@@ -10,7 +10,7 @@ import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,8 +147,14 @@ public class RawImage {
 	void readOther(String filename) {
 		// Stolen from https://stackoverflow.com/questions/6524196/java-get-pixel-array-from-image
 
-		BufferedImage image = SwingFXUtils.fromFXImage(new Image(filename), null);
-
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(filename));
+		} catch (IOException ex) {
+			Logger.getLogger(RawImage.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		if (image == null) return;
+                
 		final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 		final int _width = image.getWidth();
 		final int _height = image.getHeight();
@@ -242,8 +248,9 @@ public class RawImage {
 	}
 
 	public BufferedImage getBufferedImage() {
-		BufferedImage image = new BufferedImage(this.width, this.height, this.type == Type.RGB ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+                // System.out.println(Arrays.toString(this.mat));
 		System.arraycopy(this.mat, 0, px, 0, this.width * this.height);
 		return image;
 	}
@@ -276,16 +283,16 @@ public class RawImage {
 
 	void _writeImage(String filename) {
 		Pair<String, Boolean> aux = this.getFormat(filename);
-		String extension = aux.getKey();
+		String _extension = aux.getKey();
 		Boolean compressed = aux.getValue();
 
-		Boolean isNetbpm = stringIsNetbpm(extension);
+		Boolean isNetbpm = stringIsNetbpm(_extension);
 		if (isNetbpm) {
-			this.writeNetbpm(filename, extension, compressed);
+			this.writeNetbpm(filename, _extension, compressed);
 			return;
 		}
 
-		this.writeOther(filename, extension);
+		this.writeOther(filename, _extension);
 	}
 
 	int getGrayPixel(int x) {
