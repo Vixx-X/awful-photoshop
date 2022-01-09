@@ -34,7 +34,7 @@ public class ProjectImages extends Application {
 
     private static Stage primaryStage;
     private static BorderPane mainLayout;
-    private static Image imageChoose;
+    private static RawImage imageChoose;
     
     
     public static ProjectImages getInstance() {
@@ -55,11 +55,10 @@ public class ProjectImages extends Application {
     }
     
 
-    public void showImagePanel(Image image) throws IOException {
+    public void showImagePanel(RawImage image) throws IOException {
         imageChoose = image;
         BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
         mainLayout.setCenter(imagePanel);
-
     }
     
     public void showkernelPanel() throws IOException{
@@ -90,9 +89,12 @@ public class ProjectImages extends Application {
     }
 
     public Image getImageChoose() {
-        return imageChoose ;
+        return imageChoose.getImage();
     }
     
+    public RawImage getChoose() {
+        return imageChoose;
+    }
 
     public static void main(String[] args) {
         launch(args);

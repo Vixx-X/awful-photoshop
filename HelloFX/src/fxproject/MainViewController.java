@@ -66,11 +66,16 @@ public class MainViewController implements Initializable {
 		if (i > 0) {
 			mainLabel.setText("Escoga una Imagen para editar");
 			labelImage1.setText(names[0]);
-			imageView1.setImage(images[0].getImage());
+                        Image img = images[0].getImage();
+			imageView1.setImage(img);
+                        System.out.println(img.getWidth() + " " + img.getHeight());
+                        imageView1.setSmooth(false);
+                       
 		}
 		if (i > 1) {
 			labelImage2.setText(names[1]);
 			imageView2.setImage(images[1].getImage());
+                        imageView2.setSmooth(false);
 		}
 
 		System.out.println(imageView1);
@@ -79,7 +84,7 @@ public class MainViewController implements Initializable {
 			System.out.println("Image was clicked: 1");
 			//System.out.println(mainClass);
 			try {
-				ProjectImages.getInstance().showImagePanel(images[0].getImage());
+				ProjectImages.getInstance().showImagePanel(images[0]);
 			} catch (IOException ex) {
 				Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -87,7 +92,7 @@ public class MainViewController implements Initializable {
 
 		imageView2.setOnMouseClicked(e -> {
 			try {
-				ProjectImages.getInstance().showImagePanel(images[1].getImage());
+				ProjectImages.getInstance().showImagePanel(images[1]);
 			} catch (IOException ex) {
 				Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -96,7 +101,9 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	void saveImages(ActionEvent event) {
-		System.out.println("Aqui salvas tu imagen"); 
+                RawImage image = ProjectImages.getInstance().getChoose();
+                if (image != null)
+                    image.writeImage();
 		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
 		// Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
 	}
