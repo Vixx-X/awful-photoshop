@@ -1,11 +1,11 @@
 package fxproject;
 
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,13 +18,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javax.imageio.ImageIO;
+//import javafx.stage.FileChooser.ExtensionFilter;
+//import javax.imageio.ImageIO;
 
-public class Controller implements Initializable {
+public class MainViewController implements Initializable {
     
     @FXML
     private MenuItem btnCl1;
@@ -56,8 +54,7 @@ public class Controller implements Initializable {
         int i = 0;
         for (File file : f) {
             names[i] = file.getName();
-	    System.out.println(file.getAbsolutePath());
-            images[i] = new Image(new FileInputStream(file.getAbsolutePath()));
+            images[i] = new Image(file.getAbsolutePath());
             i++;
         }
         showImages(i, images, names);
@@ -83,7 +80,7 @@ public class Controller implements Initializable {
             try {
                 ProjectImages.getInstance().showImagePanel(images[0]);
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
@@ -91,11 +88,30 @@ public class Controller implements Initializable {
             try {
                 ProjectImages.getInstance().showImagePanel(images[1]);
             } catch (IOException ex) {
-                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
+    
+    @FXML
+    void saveImages(ActionEvent event) {
+        System.out.println("Aqui salvas tu imagen"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+        // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
+    }
+    
+    @FXML
+    void redoAction(ActionEvent event) {
+        System.out.println("Rehacer cambios la imagen actual"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+    }
 
+    @FXML
+    void undoAction(ActionEvent event) {
+        System.out.println("Deshacer cambios la imagen actual"); 
+        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 
 /**
  *
@@ -32,11 +33,12 @@ import javafx.scene.layout.BorderPane;
 public class ProjectImages extends Application {
     private static ProjectImages instance;
 
+    private static Stage primaryStage;
     private static BorderPane mainLayout;
     private static Image imageChoose;
     
     
-   public static ProjectImages getInstance() {
+    public static ProjectImages getInstance() {
         if (instance == null) {
             instance = new ProjectImages();     
         }
@@ -46,23 +48,43 @@ public class ProjectImages extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        mainLayout = FXMLLoader.load(getClass().getResource("mainView.fxml"));
-        stage.setTitle("Photoshop Básico");
-        stage.setScene(new Scene(mainLayout));
-        stage.show();
+        primaryStage = stage;
+        mainLayout = FXMLLoader.load(getClass().getResource("MainView.fxml"));
+        primaryStage.setTitle("Photoshop Básico");
+        primaryStage.setScene(new Scene(mainLayout, 800, 600));
+        primaryStage.show();
     }
     
 
     public void showImagePanel(Image image) throws IOException {
         imageChoose = image;
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("imageEditor.fxml"));
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
         mainLayout.setCenter(imagePanel);
 
+    }
+    
+    public void showBarChart() throws IOException {
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
+        Stage histogramView = new Stage();
+        histogramView.initModality(Modality.WINDOW_MODAL);
+        histogramView.initOwner(primaryStage);
+        histogramView.setScene(new Scene(imagePanel));
+        histogramView.showAndWait();
+    }
+    
+    public void showDetails() throws IOException {
+        BorderPane informationPanel = FXMLLoader.load(getClass().getResource("InformationView.fxml"));
+        Stage informationView = new Stage();
+        informationView.initModality(Modality.WINDOW_MODAL);
+        informationView.initOwner(primaryStage);
+        informationView.setScene(new Scene(informationPanel));
+        informationView.showAndWait();
     }
 
     public Image getImageChoose() {
         return imageChoose ;
     }
+    
 
     public static void main(String[] args) {
         launch(args);
