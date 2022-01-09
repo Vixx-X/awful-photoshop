@@ -57,13 +57,13 @@ public class ProjectImages extends Application {
 
     public void showImagePanel(Image image) throws IOException {
         imageChoose = image;
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("imageEditor.fxml"));
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
         mainLayout.setCenter(imagePanel);
 
     }
     
     public void showkernelPanel() throws IOException{
-        BorderPane kernelPanel = FXMLLoader.load(getClass().getResource("kernelEdit.fxml"));
+        BorderPane kernelPanel = FXMLLoader.load(getClass().getResource("KernelEdit.fxml"));
         Stage kernelView = new Stage();
         kernelView.initModality(Modality.WINDOW_MODAL);
         kernelView.initOwner(primaryStage);
@@ -72,7 +72,7 @@ public class ProjectImages extends Application {
     }
     
     public void showBarChart() throws IOException {
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("barChart.fxml"));
+        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
         Stage histogramView = new Stage();
         histogramView.initModality(Modality.WINDOW_MODAL);
         histogramView.initOwner(primaryStage);
@@ -81,7 +81,7 @@ public class ProjectImages extends Application {
     }
     
     public void showDetails() throws IOException {
-        BorderPane informationPanel = FXMLLoader.load(getClass().getResource("informationView.fxml"));
+        BorderPane informationPanel = FXMLLoader.load(getClass().getResource("InformationView.fxml"));
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);
