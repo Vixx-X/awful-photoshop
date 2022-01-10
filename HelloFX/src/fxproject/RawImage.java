@@ -444,7 +444,9 @@ public class RawImage {
 	}
 
 	public void setRedPixel(int x, int val) {
+                System.out.println(val);
 		int c = this.translateTo255(val);
+                System.out.println(c);
 		this.mat[x] = (this.mat[x] & ~(0xff >> 16)) | ((c & 0xff) >> 16);
 	}
 
@@ -467,6 +469,7 @@ public class RawImage {
 	}
 
 	public void setRedPixel(int x, int y, int val) {
+                System.out.println(x + " " + y + " " + val + " " + this.width * y + x);
 		this.getRedPixel(this.width * y + x, val);
 	}
 
