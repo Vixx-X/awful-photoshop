@@ -481,14 +481,17 @@ public class RawImage {
 	}
 
 	public void setRedPixel(int x, int val) {
+                val = Math.max(0, Math.min(255, val));
 		this.mat[x] = (this.mat[x] & ~((int) 0xff << 16)) | ((val & 0xff) << 16);
 	}
 
 	public void setGreenPixel(int x, int val) {
+                val = Math.max(0, Math.min(255, val));
 		this.mat[x] = (this.mat[x] & ~((int) 0xff << 8)) | ((val & 0xff) << 8);
 	}
 
 	public void setBluePixel(int x, int val) {
+                val = Math.max(0, Math.min(255, val));
 		this.mat[x] = (this.mat[x] & ~((int) 0xff)) | ((val & 0xff));
 	}
 
