@@ -9,6 +9,9 @@ import fxproject.filters.globals.BlackWhiteFilter;
 import fxproject.filters.globals.GrayScaleFilter;
 import fxproject.filters.globals.NegativeFilter;
 import java.io.File;
+import fxproject.filters.locals.CircleFilter;
+import fxproject.filters.locals.GaussFilter;
+import fxproject.filters.locals.SquareFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -254,9 +257,27 @@ public class ImageEditorController implements Initializable {
         System.out.println(numberCol);
         System.out.println(numberRow);
         System.out.println(smoothedFilters.getValue());
-        //ProjectImages.getInstance().pushImage(img);
-        //enableToolsButtons();
-        //imageMain.setImage([**insertar imagen de tipo Image**]);
+        
+        RawImage choose = ProjectImages.getInstance().getChoose();
+   
+        String type = smoothedFilters.getValue();
+        RawImage img = null;
+
+        switch (type) {
+            case "Caja" -> img = SquareFilter.apply(choose, numberCol, numberRow);
+            case "Cilíndrico" -> img = CircleFilter.apply(choose, numberCol, numberRow);
+            case "Gauss" -> img = GaussFilter.apply(choose, numberCol, numberRow);
+            default -> {
+                return;
+            }
+        }
+        if (img == null){
+            return;
+        }
+
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
     }
 
     @FXML
@@ -331,7 +352,10 @@ public class ImageEditorController implements Initializable {
     @FXML
     void saveImages(ActionEvent event) {
         RawImage image = ProjectImages.getInstance().getChoose();
+        System.out.println("SE GUALDO");
+        System.out.println(image);
         if (image != null) {
+            System.out.println("PUTA");
             image.writeImage();
         }
 

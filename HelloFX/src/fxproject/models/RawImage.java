@@ -307,9 +307,15 @@ public class RawImage {
 
 	private BufferedImage _getBufferedImage(int _type) {
 		BufferedImage image = new BufferedImage(this.width, this.height, _type);
-		final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		// System.out.println(Arrays.toString(this.mat));
-		System.arraycopy(this.mat, 0, px, 0, this.width * this.height);
+                if (_type == BufferedImage.TYPE_INT_ARGB) {
+                    final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+                    System.arraycopy(this.mat, 0, px, 0, this.width * this.height);
+                } else {
+                    final byte[] px = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+                    for (int idx = 0; idx < this.width * this.height; idx++ ) {
+                        px[idx] = (byte) (this.mat[idx] & 0xff); 
+                    }
+                } 
 		return image;
 	}
 
