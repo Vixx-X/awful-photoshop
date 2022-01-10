@@ -7,6 +7,7 @@ package fxproject;
 import fxproject.models.RawImage;
 import fxproject.filters.globals.BlackWhiteFilter;
 import fxproject.filters.globals.ContrastFilter;
+import fxproject.filters.globals.EcualiceFilter;
 import fxproject.filters.globals.GammaFilter;
 import fxproject.filters.globals.GrayScaleFilter;
 import fxproject.filters.globals.NegativeFilter;
@@ -132,16 +133,10 @@ public class ImageEditorController implements Initializable {
     private TextField kernelRows;
 
     @FXML
-    private Button brightnessButton;
-
-    @FXML
     private Slider brightnessSlide;
 
     @FXML
     private TextField brightnessTextfield;
-
-    @FXML
-    private Button contrastButton;
 
     @FXML
     private Slider contrastSlide;
@@ -571,6 +566,15 @@ public class ImageEditorController implements Initializable {
         RawImage choose = ProjectImages.getInstance().getChoose();
         RawImage img = ContrastFilter.apply(choose, beta);
         
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
+    }
+    
+    @FXML
+    void applyEqualize(ActionEvent event) {
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = EcualiceFilter.apply(choose);
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
