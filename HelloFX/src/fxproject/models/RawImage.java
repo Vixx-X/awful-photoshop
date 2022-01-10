@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fxproject;
+package fxproject.models;
 
 import java.awt.image.DataBufferByte;
 import java.awt.image.BufferedImage;

@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fxproject.filters;
+package fxproject.filters.globals;
 
-import fxproject.RawImage;
+import fxproject.models.RawImage;
 
 /**
  *
  * @author vixx_
  */
-public class BlackWhiteFilter {
+public class GrayScaleFilter {
     public static RawImage apply(RawImage img, int x1, int y1, int x2, int y2) {
         RawImage another = img.copy();
 
@@ -19,19 +19,15 @@ public class BlackWhiteFilter {
                 int R = img.getRedPixel(x, y);
                 int G = img.getGreenPixel(x, y);
                 int B = img.getBluePixel(x, y);
-                System.out.println(x + " " + y + " R=" + R + " G=" + G + " B=" + B);
-                                
-                System.out.println("FUK1 " + ((R + G + B) > (255*3/2) ? 255 : 0));
-                another.setGrayPixel(x, y, (R + G + B) > (255*3/2) ? 255 : 0);
+                another.setGrayPixel(x, y, (int) Math.round((0.21 * R) + (0.75 * G) + (0.07 * B)));
             }
         }
         return another;
     }
     
     public static RawImage apply(RawImage img) {
-        RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width, img.height);
+        RawImage another = GrayScaleFilter.apply(img, 0, 0, img.width, img.height);
         another.type = RawImage.Type.GrayScale;
-        another.colorMax = 1;
         return another;
     }
 }

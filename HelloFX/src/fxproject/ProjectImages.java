@@ -4,7 +4,8 @@
  */
 package fxproject;
 
-import fxproject.RawImage.Type;
+import fxproject.models.RawImage;
+import fxproject.models.RawImage.Type;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
