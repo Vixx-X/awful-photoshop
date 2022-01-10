@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import fxproject.RawImage.Type;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,11 +38,12 @@ public class ProjectImages extends Application {
     private static Stage primaryStage;
     private static BorderPane mainLayout;
     private static RawImage imageChoose;
-
+    
     private ArrayList<RawImage> imageList = new ArrayList<>();
     private int currentState;
-    
-    public ProjectImages(){
+    public int i;
+
+    public ProjectImages() {
         currentState = 0;
     }
 
@@ -84,13 +86,29 @@ public class ProjectImages extends Application {
     }
 
     public void showBarChart() throws IOException {
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
-        Stage histogramView = new Stage();
-        histogramView.initModality(Modality.WINDOW_MODAL);
-        histogramView.initOwner(primaryStage);
-        histogramView.setScene(new Scene(imagePanel));
-        histogramView.showAndWait();
+        if(getChoose().type == Type.GrayScale){
+            i = 0;
+            BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
+            Stage histogramView = new Stage();
+            histogramView.initModality(Modality.WINDOW_MODAL);
+            histogramView.initOwner(primaryStage);
+            histogramView.setScene(new Scene(imagePanel));
+            histogramView.showAndWait();
+            
+        }else {
+            for(i=1; i<4; i++){
+                BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
+                Stage histogramView = new Stage();
+                histogramView.initModality(Modality.NONE);
+                histogramView.initOwner(primaryStage);
+                histogramView.setScene(new Scene(imagePanel));
+                histogramView.show();
+            }
+        }
+
     }
+
+    
 
     public void showDetails() throws IOException {
         BorderPane informationPanel = FXMLLoader.load(getClass().getResource("InformationView.fxml"));
@@ -108,11 +126,11 @@ public class ProjectImages extends Application {
     public RawImage getChoose() {
         return imageList.get(currentState);
     }
-    
+
     public int getIndex() {
         return currentState;
     }
-    
+
     public int getStateListSize() {
         return imageList.size();
     }
@@ -128,7 +146,7 @@ public class ProjectImages extends Application {
         } else {
             currentState++;
         }
-        System.out.println(currentState);
+        //System.out.println(currentState);
         imageList.add(image);
     }
 
