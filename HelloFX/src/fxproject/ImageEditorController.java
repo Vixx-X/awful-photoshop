@@ -4,9 +4,10 @@
  */
 package fxproject;
 
-import fxproject.filters.BlackWhiteFilter;
-import fxproject.filters.GrayScaleFilter;
-import fxproject.filters.NegativeFilter;
+import fxproject.models.RawImage;
+import fxproject.filters.globals.BlackWhiteFilter;
+import fxproject.filters.globals.GrayScaleFilter;
+import fxproject.filters.globals.NegativeFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
