@@ -178,8 +178,6 @@ public class RawImage {
 		this.height = _height;
 		this.colorMax = color;
 		this.type = maxsizes == 3 ? Type.RGB : Type.GrayScale;
-
-		System.out.println(Arrays.toString(mat));
 	}
 
 	void readOther(String filename) {
@@ -347,6 +345,7 @@ public class RawImage {
 	}
 
 	public Image getImage() {
+                if (this.mat == null || this.mat.length <= 0) return null; 
 		Image aux = SwingFXUtils.toFXImage(this.getBufferedImage(), null);
 		return this.resample(aux, Math.max(1, 300 / Math.min(this.width, this.height)));
 	}
@@ -590,6 +589,49 @@ public class RawImage {
 	public int getBluePixel(int x, int y) {
 		return this.getBluePixel(this.width * y + x);
 	}
+        
+        public int[] getRedHistogram(int x1, int y1, int x2, int y2) {
+                y1 = Math.max(0, y1);
+                y2 = Math.min(this.height, y2 + 1);
+                x1 = Math.max(0, x1);
+                x2 = Math.min(this.width, x2 + 1);
+                int[] histo = new int[this.colorMax+1];
+                for (int y=y1; y<y2; ++y){
+                    for (int x=x1; x<x2; ++x){
+                        histo[this.getTranslatedRedPixel(x, y)]++;
+                    }
+                }
+                return histo;
+        }
+        
+                
+        public int[] getGreenHistogram(int x1, int y1, int x2, int y2) {
+                y1 = Math.max(0, y1);
+                y2 = Math.min(this.height, y2 + 1);
+                x1 = Math.max(0, x1);
+                x2 = Math.min(this.width, x2 + 1);
+                int[] histo = new int[this.colorMax+1];
+                for (int y=y1; y<y2; ++y){
+                    for (int x=x1; x<x2; ++x){
+                        histo[this.getTranslatedGreenPixel(x, y)]++;
+                    }
+                }
+                return histo;
+        }
+                        
+        public int[] getBlueHistogram(int x1, int y1, int x2, int y2) {
+                y1 = Math.max(0, y1);
+                y2 = Math.min(this.height, y2 + 1);
+                x1 = Math.max(0, x1);
+                x2 = Math.min(this.width, x2 + 1);
+                int[] histo = new int[this.colorMax+1];
+                for (int y=y1; y<y2; ++y){
+                    for (int x=x1; x<x2; ++x){
+                        histo[this.getTranslatedBluePixel(x, y)]++;
+                    }
+                }
+                return histo;
+        }
 
 	public int[] getRedHistogram() {
 		int[] histo = new int[this.colorMax+1];
