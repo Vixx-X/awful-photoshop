@@ -19,7 +19,7 @@
       </BarChart>
    </center>
    <top>
-      <Label prefHeight="27.0" prefWidth="104.0" text="Histograma" BorderPane.alignment="CENTER">
+      <Label fx:id="labelHistogram" alignment="TOP_CENTER" prefHeight="28.0" prefWidth="697.0" text="Histograma" textAlignment="CENTER" BorderPane.alignment="TOP_CENTER">
          <font>
             <Font size="19.0" />
          </font>

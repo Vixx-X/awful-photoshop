@@ -519,7 +519,7 @@ public class RawImage {
 	}
 
 	public int[] getRedHistogram() {
-		int[] histo = new int[this.colorMax];
+		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
 			histo[this.getRedPixel(i)]++;
@@ -528,7 +528,7 @@ public class RawImage {
 	}
 
 	public int[] getBlueHistogram() {
-		int[] histo = new int[this.colorMax];
+		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
 			histo[this.getBluePixel(i)]++;
@@ -537,7 +537,7 @@ public class RawImage {
 	}
 
 	public int[] getGreenHistogram() {
-		int[] histo = new int[this.colorMax];
+		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
 			histo[this.getGreenPixel(i)]++;
@@ -546,7 +546,7 @@ public class RawImage {
 	}
 
 	public int[] getGrayHistogram() {
-		int[] histo = new int[this.colorMax];
+		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
 			histo[this.getGrayPixel(i)]++;

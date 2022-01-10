@@ -22,7 +22,7 @@
                      <items>
                         <MenuItem fx:id="btnCl1" mnemonicParsing="false" onAction="#uploadImages" text="Abrir imágenes..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveImages" text="Guardar" />
+                        <MenuItem mnemonicParsing="false" text="Guardar" />
                         <Menu mnemonicParsing="false" text="Guardar como...">
                           <items>
                             <MenuItem mnemonicParsing="false" text="Archivo .rle" />
@@ -32,8 +32,8 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Herramientas">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#undoAction" text="Undo" />
-                        <MenuItem mnemonicParsing="false" onAction="#redoAction" text="Redo" />
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
                      </items>
                   </Menu>
                </menus>
