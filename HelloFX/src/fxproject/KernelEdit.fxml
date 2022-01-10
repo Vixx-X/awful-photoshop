@@ -13,7 +13,7 @@
    <top>
       <VBox prefHeight="59.0" prefWidth="764.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="TOP_LEFT" prefHeight="27.0" prefWidth="757.0" style="&#10;" text="Seleccione la cantidad de filas y columnas de su Kernel" textFill="#9f9f9f" wrapText="false">
+            <Label alignment="TOP_LEFT" prefHeight="27.0" prefWidth="757.0" style="&#10;" text="Seleccione la cantidad de filas y columnas de su Kernel y presione &quot;Enter&quot;" textFill="#9f9f9f" wrapText="false">
                <font>
                   <Font size="18.0" />
                </font>
@@ -34,7 +34,7 @@
       </VBox>
    </top>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#applyKernel" text="Aplicar" BorderPane.alignment="BOTTOM_RIGHT">
+      <Button fx:id="buttonApply" disable="true" mnemonicParsing="false" onAction="#applyKernel" text="Aplicar" BorderPane.alignment="BOTTOM_RIGHT">
          <BorderPane.margin>
             <Insets bottom="20.0" right="20.0" />
          </BorderPane.margin>
