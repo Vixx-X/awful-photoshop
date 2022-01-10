@@ -134,7 +134,7 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     private Slider brightnessSlide;
-    
+
     @FXML
     private TextField brightnessTextfield;
 
@@ -143,13 +143,13 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     private TextField contrastTextfield;
-    
+
     @FXML
     private Slider gammaSlide;
-    
+
     @FXML
     private TextField gammaTextfield;
-    
+
     private final ArrayList<TextField> kernelFieldList = new ArrayList<>();
     //private final ArrayList<Integer> kernelNumbers = new ArrayList<>();
     public float[] kernelNumbers;
@@ -158,18 +158,20 @@ public class ImageEditorController implements Initializable {
     private int kernelNumRows;
     private GridPane kernelRoot = new GridPane();
 
+    ImagePortion getPair() {
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        ImagePortion temp = new ImagePortion(0, 0, choose.width - 1, choose.height - 1);
+        if (imagePortionBool.isSelected()) {
+            temp = obtainDataPortion();
+        }
+        return temp;
+    }
+
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img;
-
-        if (imagePortionBool.isSelected()) {
-            ImagePortion temp = obtainDataPortion();
-            img = BlackWhiteFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
-        } else {
-            img = BlackWhiteFilter.apply(choose);
-        }
-
+        ImagePortion temp = getPair();
+        RawImage img = BlackWhiteFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
@@ -178,28 +180,18 @@ public class ImageEditorController implements Initializable {
     @FXML
     void GrayScaleFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img;
-        if (imagePortionBool.isSelected()) {
-            ImagePortion temp = obtainDataPortion();
-            img = GrayScaleFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
-        } else {
-            img = GrayScaleFilter.apply(choose);
-        }
+        ImagePortion temp = getPair();
+        RawImage img = GrayScaleFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
     }
-    
+
     @FXML
     void negativeFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img;
-        if (imagePortionBool.isSelected()) {
-            ImagePortion temp = obtainDataPortion();
-            img = NegativeFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
-        } else {
-            img = NegativeFilter.apply(choose);
-        }
+        ImagePortion temp = getPair();
+        RawImage img = NegativeFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
@@ -263,21 +255,28 @@ public class ImageEditorController implements Initializable {
         System.out.println(numberCol);
         System.out.println(numberRow);
         System.out.println(smoothedFilters.getValue());
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
-   
+
         String type = smoothedFilters.getValue();
         RawImage img = null;
+        ImagePortion temp = getPair();
 
         switch (type) {
-            case "Caja" -> img = SquareFilter.apply(choose, numberCol, numberRow);
-            case "Cilíndrico" -> img = CircleFilter.apply(choose, numberCol, numberRow);
-            case "Gauss" -> img = GaussFilter.apply(choose, numberCol, numberRow);
+            case "Caja" ->
+                img = SquareFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
+            case "Cilíndrico" ->
+                img = CircleFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
+            case "Gauss" ->
+                img = GaussFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
             default -> {
                 return;
             }
         }
-        if (img == null){
+        if (img == null) {
             return;
         }
 
@@ -335,18 +334,19 @@ public class ImageEditorController implements Initializable {
         RawImage img = null;
 
         int min = Integer.parseInt(thresholdVal1.getText());
+        ImagePortion temp = getPair();
         if ("Rango".equals(threshold.getValue())) {
             int max = Integer.parseInt(thresholdVal2.getText());
             System.out.println("rango");
             System.out.println(min);
             System.out.println(max);
-            img = ThresholdFilter.apply(choose, min, max);
+            img = ThresholdFilter.apply(choose, min, max, temp.x1, temp.y1, temp.x2, temp.y2);
         } else {
             System.out.println("valor");
             System.out.println(min);
-            img = ThresholdFilter.apply(choose, min);
+            img = ThresholdFilter.apply(choose, min, temp.x1, temp.y1, temp.x2, temp.y2);
         }
-        
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
@@ -510,10 +510,11 @@ public class ImageEditorController implements Initializable {
             }
         }
         System.out.println(Arrays.toString(kernelNumbers));
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows);
-        
+        ImagePortion temp = getPair();
+        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, temp.x1, temp.y1, temp.x2, temp.y2);
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
@@ -523,8 +524,8 @@ public class ImageEditorController implements Initializable {
     void sliderContrast(MouseEvent event) {
         System.out.println(contrastSlide.getValue());
     }
-    
-    float limitsValue(float i, float limit){
+
+    float limitsValue(float i, float limit) {
         if (i > limit) {
             i = limit;
         } else if (i < -limit) {
@@ -544,28 +545,28 @@ public class ImageEditorController implements Initializable {
         float i = Float.parseFloat(contrastTextfield.getText());
         contrastSlide.setValue(limitsValue(i, 10));
     }
-    
+
     @FXML
     void setGamma(ActionEvent event) {
         float i = Float.parseFloat(gammaTextfield.getText());
-        contrastSlide.setValue(limitsValue(i, 5));
+        gammaSlide.setValue(limitsValue(i, 5));
     }
-    
-    
+
     @FXML
     void applyBrightness(ActionEvent event) {
         brightnessTextfield.setText(String.valueOf(brightnessSlide.getValue()));
         System.out.println("brillito");
         System.out.println(brightnessSlide.getValue());
-        
+
         float gamma = (float) brightnessSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = SumFilter.apply(choose, gamma);
-        
+        ImagePortion temp = getPair();
+        RawImage img = SumFilter.apply(choose, gamma, temp.x1, temp.y1, temp.x2, temp.y2);
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
-        
+
     }
 
     @FXML
@@ -573,36 +574,39 @@ public class ImageEditorController implements Initializable {
         contrastTextfield.setText(String.valueOf(contrastSlide.getValue()));
         System.out.println("contrasteeee");
         System.out.println(contrastSlide.getValue());
-        
+
         float beta = (float) contrastSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = ContrastFilter.apply(choose, beta);
-        
+        ImagePortion temp = getPair();
+        RawImage img = ContrastFilter.apply(choose, beta, temp.x1, temp.y1, temp.x2, temp.y2);
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
     }
-    
+
     @FXML
     void applyGamma(ActionEvent event) {
         gammaTextfield.setText(String.valueOf(gammaSlide.getValue()));
         System.out.println("gamma");
         System.out.println(gammaSlide.getValue());
-        
+
         float gamma = (float) gammaSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = GammaFilter.apply(choose, gamma);
-        
+        ImagePortion temp = getPair();
+        RawImage img = GammaFilter.apply(choose, gamma, temp.x1, temp.y1, temp.x2, temp.y2);
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
-        
+
     }
-    
+
     @FXML
     void applyEqualize(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = EcualiceFilter.apply(choose);
+        ImagePortion temp = getPair();
+        RawImage img = EcualiceFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
