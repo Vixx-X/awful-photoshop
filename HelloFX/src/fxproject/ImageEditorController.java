@@ -8,8 +8,11 @@ import fxproject.models.RawImage;
 import fxproject.filters.globals.BlackWhiteFilter;
 import fxproject.filters.globals.GrayScaleFilter;
 import fxproject.filters.globals.NegativeFilter;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +26,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * FXML Controller class
@@ -99,6 +108,26 @@ public class ImageEditorController implements Initializable {
     
     @FXML
     private TextField widthPortion;
+    
+    @FXML
+    private Button kernelButtonApply;
+
+    @FXML
+    private TextField kernelColumns;
+
+    @FXML
+    private BorderPane kernelPane;
+
+    @FXML
+    private TextField kernelRows;
+    
+    private final ArrayList<TextField> kernelFieldList = new ArrayList<>();
+    //private final ArrayList<Integer> kernelNumbers = new ArrayList<>();
+    public float[] kernelNumbers;
+
+    private int kernelNumCols; 
+    private int kernelNumRows;
+    private GridPane kernelRoot = new GridPane();
 
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
@@ -275,11 +304,6 @@ public class ImageEditorController implements Initializable {
     }
 
     @FXML
-    void kernelView(ActionEvent event) throws IOException {
-        ProjectImages.getInstance().showkernelPanel();
-    }
-
-    @FXML
     void informationView(ActionEvent event) throws IOException {
         ProjectImages.getInstance().showDetails();
     }
@@ -290,8 +314,24 @@ public class ImageEditorController implements Initializable {
         if (image != null) {
             image.writeImage();
         }
+
         // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
         // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
+    }
+    
+    @FXML
+    void saveAsAction(ActionEvent event) {
+        RawImage image = ProjectImages.getInstance().getChoose();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
+        //
+        File f = fileChooser.showSaveDialog(null);
+        System.out.println(f.getAbsolutePath());
+        
+        if (image != null) {
+            image.writeImage(f.getAbsolutePath());
+        }
     }
     
     void enableToolsButtons(){
@@ -360,6 +400,60 @@ public class ImageEditorController implements Initializable {
         int width = Integer.parseInt(widthPortion.getText());
         int height = Integer.parseInt(heightPortion.getText());
         return new ImagePortion(x, y, width, height);
+    }
+
+    @FXML
+    void createGridPane(ActionEvent event) {
+        kernelRoot = new GridPane();
+        if (!(kernelColumns.getText().isEmpty())) {
+            kernelNumCols = Integer.parseInt(kernelColumns.getText());
+        }
+        if (!(kernelRows.getText().isEmpty())) {
+            kernelNumRows = Integer.parseInt(kernelRows.getText());
+        }
+        if (!(kernelColumns.getText().isEmpty()) && !(kernelRows.getText().isEmpty())) {
+            kernelNumbers = new float[kernelNumCols*kernelNumRows];
+            kernelRoot.setGridLinesVisible(true);
+            for (int i = 0; i < kernelNumCols; i++) {
+                ColumnConstraints colConst = new ColumnConstraints();
+                colConst.setPercentWidth(100.0 / kernelNumCols);
+                kernelRoot.getColumnConstraints().add(colConst);
+            }
+            for (int i = 0; i < kernelNumRows; i++) {
+                RowConstraints rowConst = new RowConstraints();
+                rowConst.setPercentHeight(100.0 / kernelNumRows);
+                kernelRoot.getRowConstraints().add(rowConst);
+            }
+
+            for (int i = 0; i < kernelNumRows; i++) {
+                for (int j = 0; j < kernelNumCols; j++) {
+                    TextField f = new TextField();
+                    kernelFieldList.add(f);
+                    kernelRoot.add(kernelFieldList.get(i * kernelNumCols + j), j, i);
+                }
+            }
+
+            kernelPane.setCenter(kernelRoot);
+            kernelButtonApply.setDisable(false);
+        }
+        //for (TextField file : kernelFieldList) {
+        //    System.out.println(file.getText());
+        //}
+    }
+
+    @FXML
+    void applyKernel(ActionEvent event) {
+        for (int i = 0; i < kernelNumRows; i++) {
+            for (int j = 0; j < kernelNumCols; j++) {
+                if (kernelFieldList.get(i * kernelNumCols + j).getText().isEmpty()) {
+                    kernelNumbers[i* kernelNumCols + j] = (float) 0.0;
+                } else {
+                    Float.parseFloat("23.6");
+                    kernelNumbers[i* kernelNumCols + j] = Float.parseFloat(kernelFieldList.get(i * kernelNumCols + j).getText());
+                }
+            }
+        }
+        System.out.println(Arrays.toString(kernelNumbers));
     }
 
     @Override

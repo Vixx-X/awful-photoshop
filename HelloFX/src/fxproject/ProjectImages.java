@@ -77,15 +77,6 @@ public class ProjectImages extends Application {
         kernelView.showAndWait();
     }
 
-    public void showkernelPanel() throws IOException {
-        BorderPane kernelPanel = FXMLLoader.load(getClass().getResource("KernelEdit.fxml"));
-        Stage kernelView = new Stage();
-        kernelView.initModality(Modality.WINDOW_MODAL);
-        kernelView.initOwner(primaryStage);
-        kernelView.setScene(new Scene(kernelPanel));
-        kernelView.showAndWait();
-    }
-
     public void showBarChart() throws IOException {
         if(getChoose().type == Type.GrayScale){
             i = 0;
