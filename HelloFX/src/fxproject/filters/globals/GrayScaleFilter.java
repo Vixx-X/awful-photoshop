@@ -26,7 +26,7 @@ public class GrayScaleFilter {
     }
     
     public static RawImage apply(RawImage img) {
-        RawImage another = GrayScaleFilter.apply(img, 0, 0, img.width, img.height);
+        RawImage another = GrayScaleFilter.apply(img, 0, 0, img.width-1, img.height-1);
         another.type = RawImage.Type.GrayScale;
         return another;
     }
