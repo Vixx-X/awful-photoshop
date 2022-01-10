@@ -12,17 +12,24 @@ import fxproject.RawImage;
  * @author vixx_
  */
 public class NegativeFilter {
-    
-    public static RawImage apply(RawImage img) {
+    public static RawImage apply(RawImage img, int x1, int y1, int x2, int y2) {
         RawImage another = img.copy();
-        for (int i = 0; i<another.width * another.height; i++) {
-            int R = another.getRedPixel(i);
-            another.setRedPixel(i, 255 - R);
-            int G = another.getGreenPixel(i);
-            another.setGreenPixel(i, 255 - G);
-            int B = another.getBluePixel(i);
-            another.setBluePixel(i, 255 - B);
+
+        for (int y = Math.max(0, y1); y < Math.min(another.height, y2 + 1); y++) {
+            for (int x = Math.max(0, x1); x < Math.min(another.width, x2 + 1); x++) {
+                int R = another.getRedPixel(x, y);
+                int G = another.getGreenPixel(x, y);
+                int B = another.getBluePixel(x, y);
+
+                another.setRedPixel(x, y, 255 - R);
+                another.setGreenPixel(x, y, 255 - G);
+                another.setBluePixel(x, y, 255 - B);
+            }
         }
         return another;
+    }
+    
+    public static RawImage apply(RawImage img) {
+        return NegativeFilter.apply(img, 0, 0, img.width, img.height);
     }
 }

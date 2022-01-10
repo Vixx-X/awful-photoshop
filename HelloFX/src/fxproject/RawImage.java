@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -356,19 +357,17 @@ public class RawImage {
 		try {
 			FileWriter writer = new FileWriter(filename);
 
-			if (writer == null) {
-				System.out.println("An error occured");
-				return;
-			}
-
 			// Write magic number
 			String magicNumber;
-			if ("pbm".equals(extension)) magicNumber = "P1";
-			else if ("pgm".equals(extension)) magicNumber = "P2";
-			else if ("ppm".equals(extension)) magicNumber = "P3";
-			else {
-				System.out.println("Wrong extension " + extension);
-				return;
+			switch (extension) {
+				case "pbm" -> magicNumber = "P1";
+				case "pgm" -> magicNumber = "P2";
+				case "ppm" -> magicNumber = "P3";
+					default -> {
+						System.out.println("Wrong extension " + extension);
+						writer.close();
+						return;
+					}
 			}
 			writer.write(magicNumber + "\n");
 
@@ -381,11 +380,11 @@ public class RawImage {
 			int[] arr = new int[width * height * div];
 			for (int i=0; i<mat.length; i+=div) {
 				if (type == Type.RGB) {
-					arr[i] = getRedPixel(i);
-					arr[i+1] = getGreenPixel(i);
-					arr[i+2] = getBluePixel(i);
+					arr[i] = getTranslatedRedPixel(i);
+					arr[i+1] = getTranslatedGreenPixel(i);
+					arr[i+2] = getTranslatedBluePixel(i);
 				} else {
-					arr[i] = getGrayPixel(i);
+					arr[i] = getTranslatedGrayPixel(i);
 				}
 			}
 
@@ -437,6 +436,44 @@ public class RawImage {
 		return 255 * c / this.colorMax;
 	}
 
+	public void setTranslatedGrayPixel(int x, int val) {
+		this.setTranslatedRedPixel(x, val);
+		this.setTranslatedGreenPixel(x, val);
+		this.setTranslatedBluePixel(x, val);
+	}
+
+	public void setTranslatedRedPixel(int x, int val) {
+		int c = this.translateTo255(val);
+		this.setRedPixel(x, c);
+	}
+
+	public void setTranslatedGreenPixel(int x, int val) {
+		int c = this.translateTo255(val);
+		this.setGreenPixel(x, c);
+	}
+
+	public void setTranslatedBluePixel(int x, int val) {
+		int c = this.translateTo255(val);
+		this.setBluePixel(x, c);
+	}
+
+	public void setTranslatedGrayPixel(int x, int y, int val) {
+		this.setTranslatedGrayPixel(this.width * y + x, val);
+	}
+
+	public void setTranslatedGreenPixel(int x, int y, int val) {
+		this.setTranslatedGreenPixel(this.width * y + x, val);
+	}
+
+	public void setTranslatedRedPixel(int x, int y, int val) {
+		this.setTranslatedRedPixel(this.width * y + x, val);
+	}
+
+	public void setTranslatedBluePixel(int x, int y, int val) {
+		this.setTranslatedBluePixel(this.width * y + x, val);
+	}
+
+
 	public void setGrayPixel(int x, int val) {
 		this.setRedPixel(x, val);
 		this.setGreenPixel(x, val);
@@ -444,34 +481,31 @@ public class RawImage {
 	}
 
 	public void setRedPixel(int x, int val) {
-		int c = this.translateTo255(val);
-		this.mat[x] = (this.mat[x] & ~(0xff >> 16)) | ((c & 0xff) >> 16);
+		this.mat[x] = (this.mat[x] & ~((int) 0xff << 16)) | ((val & 0xff) << 16);
 	}
 
 	public void setGreenPixel(int x, int val) {
-		int c = this.translateTo255(val);
-		this.mat[x] = (this.mat[x] & ~(0xff >> 8)) | ((c & 0xff) >> 8);
+		this.mat[x] = (this.mat[x] & ~((int) 0xff << 8)) | ((val & 0xff) << 8);
 	}
 
 	public void setBluePixel(int x, int val) {
-		int c = this.translateTo255(val);
-		this.mat[x] = (this.mat[x] & ~0xff) | ((c & 0xff));
+		this.mat[x] = (this.mat[x] & ~((int) 0xff)) | ((val & 0xff));
 	}
 
 	public void setGrayPixel(int x, int y, int val) {
-		this.getGrayPixel(this.width * y + x, val);
+		this.setGrayPixel(this.width * y + x, val);
 	}
 
 	public void setGreenPixel(int x, int y, int val) {
-		this.getGreenPixel(this.width * y + x, val);
+		this.setGreenPixel(this.width * y + x, val);
 	}
 
 	public void setRedPixel(int x, int y, int val) {
-		this.getRedPixel(this.width * y + x, val);
+		this.setRedPixel(this.width * y + x, val);
 	}
 
 	public void setBluePixel(int x, int y, int val) {
-		this.getBluePixel(this.width * y + x, val);
+		this.setBluePixel(this.width * y + x, val);
 	}
 
 
@@ -479,24 +513,57 @@ public class RawImage {
 		return c * this.colorMax / 255;
 	}
 
-	public int getGrayPixel(int x) {
-		int c = this.mat[x] & 0xff;
+	public int getTranslatedGrayPixel(int x) {
+		int c = this.getGrayPixel(x);
 		return this.translateFrom255(c);
+	}
+
+	public int getTranslatedRedPixel(int x) {
+		int c = this.getRedPixel(x);
+		return this.translateFrom255(c);
+	}
+
+	public int getTranslatedGreenPixel(int x) {
+		int c = this.getGreenPixel(x);
+		return this.translateFrom255(c);
+	}
+
+	public int getTranslatedBluePixel(int x) {
+		int c = this.getBluePixel(x);
+		return this.translateFrom255(c);
+	}
+
+	public int getTraslatedGrayPixel(int x, int y) {
+		return this.getGrayPixel(this.width * y + x);
+	}
+
+	public int getTranslatedGreenPixel(int x, int y) {
+		return this.getTranslatedGreenPixel(this.width * y + x);
+	}
+
+	public int getTranslatedRedPixel(int x, int y) {
+		return this.getTranslatedRedPixel(this.width * y + x);
+	}
+
+	public int getTranslatedBluePixel(int x, int y) {
+		return this.getTranslatedBluePixel(this.width * y + x);
+	}
+
+
+	public int getGrayPixel(int x) {
+		return this.mat[x] & 0xff;
 	}
 
 	public int getRedPixel(int x) {
-		int c = (this.mat[x] >> 16) & 0xff;
-		return this.translateFrom255(c);
+		return (this.mat[x] >> 16) & 0xff;
 	}
 
 	public int getGreenPixel(int x) {
-		int c = (this.mat[x] >> 8) & 0xff;
-		return this.translateFrom255(c);
+		return (this.mat[x] >> 8) & 0xff;
 	}
 
 	public int getBluePixel(int x) {
-		int c = this.mat[x] & 0xff;
-		return this.translateFrom255(c);
+		return this.mat[x] & 0xff;
 	}
 
 	public int getGrayPixel(int x, int y) {
@@ -519,7 +586,7 @@ public class RawImage {
 		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
-			histo[this.getRedPixel(i)]++;
+			histo[this.getTranslatedRedPixel(i)]++;
 		}
 		return histo;
 	}
@@ -528,7 +595,7 @@ public class RawImage {
 		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
-			histo[this.getBluePixel(i)]++;
+			histo[this.getTranslatedBluePixel(i)]++;
 		}
 		return histo;
 	}
@@ -537,7 +604,7 @@ public class RawImage {
 		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
-			histo[this.getGreenPixel(i)]++;
+			histo[this.getTranslatedGreenPixel(i)]++;
 		}
 		return histo;
 	}
@@ -546,8 +613,17 @@ public class RawImage {
 		int[] histo = new int[this.colorMax+1];
 		int pixels = this.width * this.height;
 		for (int i = 0; i < pixels; i++) {
-			histo[this.getGrayPixel(i)]++;
+			histo[this.getTranslatedGrayPixel(i)]++;
 		}
 		return histo;
+	}
+
+	public int countDifferentColors() {
+		HashSet<Integer> colors = new HashSet<>();
+		int pixels = this.width * this.height;
+		for (int i = 0; i < pixels; i++) {
+			colors.add(this.mat[i]);
+		}
+		return colors.size();
 	}
 }

@@ -11,15 +11,22 @@ import fxproject.RawImage;
  * @author vixx_
  */
 public class GrayScaleFilter {
-
-    public static RawImage apply(RawImage img) {
+    public static RawImage apply(RawImage img, int x1, int y1, int x2, int y2) {
         RawImage another = img.copy();
-        for (int i = 0; i<another.width * another.height; i++) {
-            int R = img.getRedPixel(i);
-            int G = img.getGreenPixel(i);
-            int B = img.getBluePixel(i);
-            another.setGrayPixel(i, (int) Math.round((0.21 * R) + (0.75 * G) + (0.07 * B)));
+
+        for (int y = Math.max(0, y1); y < Math.min(another.height, y2 + 1); y++) {
+            for (int x = Math.max(0, x1); x < Math.min(another.width, x2 + 1); x++) {
+                int R = img.getRedPixel(x, y);
+                int G = img.getGreenPixel(x, y);
+                int B = img.getBluePixel(x, y);
+                another.setGrayPixel(x, y, (int) Math.round((0.21 * R) + (0.75 * G) + (0.07 * B)));
+            }
         }
+        return another;
+    }
+    
+    public static RawImage apply(RawImage img) {
+        RawImage another = GrayScaleFilter.apply(img, 0, 0, img.width, img.height);
         another.type = RawImage.Type.GrayScale;
         return another;
     }
