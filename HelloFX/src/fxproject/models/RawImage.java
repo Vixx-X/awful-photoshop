@@ -258,7 +258,8 @@ public class RawImage {
 			_extension = filename.substring(idx+1);
 			if ("rle".equals(_extension)) {
 				compressed = true;
-				idx = filename.substring(0, idx).lastIndexOf(".");
+                                filename = filename.substring(0, idx);
+				idx = filename.lastIndexOf(".");
 				if (idx < 0) {
 					System.out.println("File has no extension.");
 					return new Pair<>("", false);
@@ -298,16 +299,24 @@ public class RawImage {
 		return this._getBufferedImage(BufferedImage.TYPE_INT_ARGB);
 	}
 
-	public BufferedImage getBufferedImage(boolean typed) {
+	public BufferedImage getBufferedImage(boolean typed, boolean bmpOrJpg) {
 		if (!typed) return this.getBufferedImage();
-		return this._getBufferedImage(this.type == Type.RGB ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_BYTE_GRAY);
+                if (bmpOrJpg) return this._getBufferedImage(this.type == Type.RGB ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_BYTE_GRAY);
+                return this._getBufferedImage(this.type == Type.RGB ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_BYTE_GRAY);
 	}
+        
 
 	private BufferedImage _getBufferedImage(int _type) {
 		BufferedImage image = new BufferedImage(this.width, this.height, _type);
+
                 if (_type == BufferedImage.TYPE_INT_ARGB) {
                     final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
                     System.arraycopy(this.mat, 0, px, 0, this.width * this.height);
+                } else if (_type == BufferedImage.TYPE_INT_RGB) {
+                    final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+                    for (int idx = 0; idx < this.width * this.height; idx++ ) {
+                        px[idx] = this.mat[idx] & 0xffffff; 
+                    }
                 } else {
                     final byte[] px = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
                     for (int idx = 0; idx < this.width * this.height; idx++ ) {
@@ -378,7 +387,9 @@ public class RawImage {
 
 			// Write sizes
 			writer.write(width + " " + height + "\n");
-			writer.write(colorMax + "\n");
+                        
+                        if (!"pbm".equals(extension))
+                                writer.write(colorMax + "\n");
 
 			// Write pixels
 			int div = type == Type.RGB? 3: 1;
@@ -392,20 +403,26 @@ public class RawImage {
 					arr[i] = getTranslatedGrayPixel(i);
 				}
 			}
-
-			int px, idx = 0, j, cnt;
-			while (idx < arr.length) {
-				cnt = 1;
-				px = arr[idx];
-				for (j=idx; j < arr.length-1; j++) {
-					if (arr[j] != arr[j+1])
-						break;
-					cnt++;
-				}
-				String aux = cnt == 1? cnt + "-" + px : "" + px;
-				writer.write(aux + "\n");
-				idx = j+1;
-			}
+                        
+                        if (rleCompress) {
+                      		int px, idx = 0, j, cnt;
+                                while (idx < arr.length) {
+                                        cnt = 1;
+                                        px = arr[idx];
+                                        for (j=idx; j < arr.length-1; j++) {
+                                                if (arr[j] != arr[j+1])
+                                                        break;
+                                                cnt++;
+                                        }
+                                        String aux = cnt != 1? cnt + "-" + px : "" + px;
+                                        writer.write(aux + "\n");
+                                        idx = j+1;
+                                }      
+                        } else {
+                                for (int idx=0; idx<arr.length; idx++) {
+                                    writer.write(arr[idx] + "\n");
+                                }
+                        }
 
 			writer.close();
 		} catch (IOException ex) {
@@ -414,10 +431,11 @@ public class RawImage {
 	}
 
 	void writeOther(String filename, String extension) {
-		BufferedImage bi = this.getBufferedImage(false);
+                extension = extension.toLowerCase();
+		BufferedImage bi = this.getBufferedImage(true, extension.equals("bmp") || extension.equals("jpg") || extension.equals("jpeg"));
 		File outputFile = new File(filename);
 		try {
-			ImageIO.write(bi, extension, outputFile);
+			boolean ret = ImageIO.write(bi, extension, outputFile);
 		} catch (IOException ex) {
 			Logger.getLogger(RawImage.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -427,7 +445,7 @@ public class RawImage {
 		Pair<String, Boolean> aux = this.getFormat(filename);
 		String _extension = aux.getKey();
 		Boolean compressed = aux.getValue();
-
+                
 		Boolean isNetbpm = stringIsNetbpm(_extension);
 		if (isNetbpm) {
 			this.writeNetbpm(filename, _extension, compressed);
@@ -677,4 +695,22 @@ public class RawImage {
 		}
 		return colors.size();
 	}
+        
+        public float avgBrightness(int x1, int y1, int x2, int y2) {
+                y1 = Math.max(0, y1);
+                y2 = Math.min(this.height, y2 + 1);
+                x1 = Math.max(0, x1);
+                x2 = Math.min(this.width, x2 + 1);
+		int cnt = 0;
+		int pixels = (y2-y1) * (x2-x1);
+                for (int y=y1; y<y2; ++y) {
+                    for (int x=x1; x<x2; ++x) {
+			cnt += this.getRedPixel(x, y) + this.getBluePixel(x, y) + this.getGreenPixel(x, y);
+                    }
+		}
+		return ((float) cnt) / (3 * pixels);
+	}
+        public float avgBrightness() {
+            return avgBrightness(0, 0, this.width - 1, this.height - 1);
+        }
 }

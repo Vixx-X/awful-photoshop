@@ -6,11 +6,16 @@ package fxproject;
 
 import fxproject.models.RawImage;
 import fxproject.filters.globals.BlackWhiteFilter;
+import fxproject.filters.globals.ContrastFilter;
+import fxproject.filters.globals.GammaFilter;
 import fxproject.filters.globals.GrayScaleFilter;
 import fxproject.filters.globals.NegativeFilter;
+import fxproject.filters.globals.SumFilter;
+import fxproject.filters.globals.ThresholdFilter;
 import java.io.File;
 import fxproject.filters.locals.CircleFilter;
 import fxproject.filters.locals.GaussFilter;
+import fxproject.filters.locals.KernelFilter;
 import fxproject.filters.locals.SquareFilter;
 import java.io.IOException;
 import java.net.URL;
@@ -325,18 +330,25 @@ public class ImageEditorController implements Initializable {
     @FXML
     void applyThreshold(ActionEvent event) {
         System.out.println("Umbralizacion aqui");
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = null;
+
         int min = Integer.parseInt(thresholdVal1.getText());
         if ("Rango".equals(threshold.getValue())) {
             int max = Integer.parseInt(thresholdVal2.getText());
             System.out.println("rango");
             System.out.println(min);
             System.out.println(max);
+            img = ThresholdFilter.apply(choose, min, max);
         } else {
             System.out.println("valor");
             System.out.println(min);
+            img = ThresholdFilter.apply(choose, min);
         }
-        //ProjectImages.getInstance().pushImage(img);
-        //enableToolsButtons();
+        
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
     }
 
     @FXML
@@ -497,6 +509,13 @@ public class ImageEditorController implements Initializable {
             }
         }
         System.out.println(Arrays.toString(kernelNumbers));
+        
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows);
+        
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
     }
 
     @FXML
@@ -531,6 +550,15 @@ public class ImageEditorController implements Initializable {
         brightnessTextfield.setText(String.valueOf(brightnessSlide.getValue()));
         System.out.println("brillito");
         System.out.println(brightnessSlide.getValue());
+        
+        float gamma = (float) brightnessSlide.getValue();
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = SumFilter.apply(choose, gamma);
+        
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
+        
     }
 
     @FXML
@@ -538,6 +566,14 @@ public class ImageEditorController implements Initializable {
         contrastTextfield.setText(String.valueOf(contrastSlide.getValue()));
         System.out.println("contrasteeee");
         System.out.println(contrastSlide.getValue());
+        
+        float beta = (float) contrastSlide.getValue();
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = ContrastFilter.apply(choose, beta);
+        
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
     }
 
     @Override
