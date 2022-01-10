@@ -9,16 +9,16 @@ package fxproject;
  * @author Gaby
  */
 public class ImagePortion {
-    public int x;
-    public int y;
-    public int width;
-    public int height;
+    public int x1;
+    public int y1;
+    public int x2;
+    public int y2;
     
     public ImagePortion(int x, int y, int width, int height){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this.x1 = x;
+        this.y1 = y;
+        this.x2= x+width;
+        this.y2 = y+height;
     }
 
 }

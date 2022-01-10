@@ -30,6 +30,6 @@ public class NegativeFilter {
     }
     
     public static RawImage apply(RawImage img) {
-        return NegativeFilter.apply(img, 0, 0, img.width, img.height);
+        return NegativeFilter.apply(img, 0, 0, img.width-1, img.height-1);
     }
 }

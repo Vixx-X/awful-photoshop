@@ -103,7 +103,15 @@ public class ImageEditorController implements Initializable {
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = BlackWhiteFilter.apply(choose);
+        RawImage img;
+        
+        if(imagePortionBool.isSelected()){
+            ImagePortion temp = obtainDataPortion();
+            img = BlackWhiteFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
+        }else{
+            img = BlackWhiteFilter.apply(choose);
+        }
+        
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
@@ -112,7 +120,13 @@ public class ImageEditorController implements Initializable {
     @FXML
     void GrayScaleFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = GrayScaleFilter.apply(choose);
+        RawImage img;
+        if(imagePortionBool.isSelected()){
+            ImagePortion temp = obtainDataPortion();
+            img = GrayScaleFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
+        }else{
+            img = GrayScaleFilter.apply(choose);
+        }
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
@@ -121,7 +135,13 @@ public class ImageEditorController implements Initializable {
     @FXML
     void negativeFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = NegativeFilter.apply(choose);
+        RawImage img;
+        if(imagePortionBool.isSelected()){
+            ImagePortion temp = obtainDataPortion();
+            img = NegativeFilter.apply(choose, temp.x1, temp.y1, temp.x2, temp.y2);
+        }else{
+            img = NegativeFilter.apply(choose);
+        }
         imageMain.setImage(img.getImage());
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
@@ -316,9 +336,9 @@ public class ImageEditorController implements Initializable {
         
         if(!widthPortion.getText().isEmpty() || !heightPortion.getText().isEmpty()){
             if(widthPortion.getText().isEmpty()){
-                heightPortion.setText(widthPortion.getText());
-            }else if(heightPortion.getText().isEmpty()){
                 widthPortion.setText(heightPortion.getText());
+            }else if(heightPortion.getText().isEmpty()){
+                heightPortion.setText(widthPortion.getText());
             }
             if(portionX.getText().isEmpty()){
                 portionX.setText("0");
@@ -337,8 +357,8 @@ public class ImageEditorController implements Initializable {
     ImagePortion obtainDataPortion(){
         int x = Integer.parseInt(portionX.getText());
         int y = Integer.parseInt(portionY.getText());
-        int width = Integer.parseInt(portionY.getText());
-        int height = Integer.parseInt(portionY.getText());
+        int width = Integer.parseInt(widthPortion.getText());
+        int height = Integer.parseInt(heightPortion.getText());
         return new ImagePortion(x, y, width, height);
     }
 

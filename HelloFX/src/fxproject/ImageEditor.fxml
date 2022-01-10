@@ -452,8 +452,8 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Herramientas">
                      <items>
-                        <MenuItem fx:id="undoButton" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
-                        <MenuItem fx:id="redoButton" mnemonicParsing="false" onAction="#redoAction" text="Redo" />
+                        <MenuItem fx:id="undoButton" disable="true" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
+                        <MenuItem fx:id="redoButton" disable="true" mnemonicParsing="false" onAction="#redoAction" text="Redo" />
                      </items>
                   </Menu>
                </menus>

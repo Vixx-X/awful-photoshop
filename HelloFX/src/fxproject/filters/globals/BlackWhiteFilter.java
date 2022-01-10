@@ -26,7 +26,7 @@ public class BlackWhiteFilter {
     }
     
     public static RawImage apply(RawImage img) {
-        RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width, img.height);
+        RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width-1, img.height-1);
         another.type = RawImage.Type.GrayScale;
         another.colorMax = 1;
         return another;
