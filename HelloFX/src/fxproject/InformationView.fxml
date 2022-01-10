@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.InformationViewController">
    <top>
       <Label text="Información Adicional" BorderPane.alignment="CENTER">
          <font>
@@ -35,7 +35,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1">
+            <Text fx:id="colors" fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
@@ -53,7 +53,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fill="#323232" layoutX="88.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Text fx:id="dimensions" fill="#323232" layoutX="88.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
@@ -66,7 +66,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Text fx:id="bitsxpixel" fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
@@ -74,7 +74,7 @@
                   <Insets left="15.0" />
                </GridPane.margin>
             </Text>
-            <Text fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Text fx:id="dpi" fill="#323232" strokeType="OUTSIDE" strokeWidth="0.0" text="lorem ipsum" wrappingWidth="417.25" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="14.0" />
                </font>

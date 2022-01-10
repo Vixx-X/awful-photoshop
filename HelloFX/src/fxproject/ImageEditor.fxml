@@ -4,6 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -248,6 +249,86 @@
                               <Insets top="10.0" />
                            </VBox.margin>
                         </HBox>
+                        <HBox layoutX="10.0" layoutY="43.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <VBox prefHeight="76.0" prefWidth="455.0" spacing="10.0">
+                                 <children>
+                                    <Label prefHeight="20.0" prefWidth="283.0" text="Filtros a porción de imagen:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox prefHeight="47.0" prefWidth="460.0" spacing="5.0">
+                                       <children>
+                                          <HBox prefHeight="48.0" prefWidth="444.0" spacing="10.0">
+                                             <children>
+                                                <VBox prefHeight="48.0" prefWidth="125.0">
+                                                   <children>
+                                                      <Label text="Punto inicial:">
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="126.0" spacing="5.0">
+                                                         <children>
+                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="(">
+                                                               <font>
+                                                                  <Font size="19.0" />
+                                                               </font>
+                                                            </Text>
+                                                            <TextField fx:id="portionX" alignment="CENTER" onAction="#enablePortionImage" prefHeight="25.0" prefWidth="37.0" promptText="0" />
+                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=",">
+                                                               <font>
+                                                                  <Font size="19.0" />
+                                                               </font>
+                                                            </Text>
+                                                            <TextField fx:id="portionY" alignment="CENTER" onAction="#enablePortionImage" prefHeight="25.0" prefWidth="35.0" promptText="0" />
+                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=")">
+                                                               <font>
+                                                                  <Font size="19.0" />
+                                                               </font>
+                                                            </Text>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="48.0" prefWidth="70.0">
+                                                   <children>
+                                                      <Label text="Ancho: ">
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="75.0" spacing="5.0">
+                                                         <children>
+                                                            <TextField fx:id="widthPortion" alignment="CENTER" onAction="#enablePortionImage" prefHeight="25.0" prefWidth="60.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox layoutX="153.0" layoutY="10.0" prefHeight="48.0" prefWidth="69.0">
+                                                   <children>
+                                                      <Label text="Largo:">
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="81.0" spacing="5.0">
+                                                         <children>
+                                                            <TextField fx:id="heightPortion" alignment="CENTER" onAction="#enablePortionImage" prefHeight="25.0" prefWidth="60.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                                <CheckBox fx:id="imagePortionBool" alignment="BOTTOM_RIGHT" disable="true" mnemonicParsing="false" prefHeight="48.0" prefWidth="127.0" text="Aplicar a la porcion" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
                      <VBox.margin>
                         <Insets left="25.0" right="25.0" top="25.0" />
@@ -282,7 +363,7 @@
                         </HBox>
                      </children>
                      <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
+                        <Insets left="25.0" right="25.0" top="15.0" />
                      </VBox.margin>
                   </VBox>
                </children>
@@ -371,8 +452,8 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Herramientas">
                      <items>
-                        <MenuItem fx:id="undoButton" disable="true" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
-                        <MenuItem fx:id="redoButton" disable="true" mnemonicParsing="false" onAction="#redoAction" text="Redo" />
+                        <MenuItem fx:id="undoButton" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
+                        <MenuItem fx:id="redoButton" mnemonicParsing="false" onAction="#redoAction" text="Redo" />
                      </items>
                   </Menu>
                </menus>

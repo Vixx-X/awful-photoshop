@@ -27,7 +27,6 @@ public class BarChartController implements Initializable {
     
     public BarChartController(){
         this.typeHistogram = ProjectImages.getInstance().i;
-        System.out.println(typeHistogram);
     }
     
     @Override
@@ -52,7 +51,7 @@ public class BarChartController implements Initializable {
         }
         
         
-        System.out.println("el histograma es" + Arrays.toString(dataHistogram));
+        //System.out.println("el histograma es" + Arrays.toString(dataHistogram));
         XYChart.Series dataSeries1 = new XYChart.Series();
         dataSeries1.getData().add(new XYChart.Data("0", dataHistogram[0]));
         //dataSeries1.setName("2014");
@@ -60,9 +59,6 @@ public class BarChartController implements Initializable {
             dataSeries1.getData().add(new XYChart.Data(String.valueOf(i), dataHistogram[i]));
         }
         dataSeries1.getData().add(new XYChart.Data(String.valueOf(dataHistogram.length-1), dataHistogram[dataHistogram.length-1]));
-        //dataSeries1.getData().add(new XYChart.Data("Desktop", 567));
-        //dataSeries1.getData().add(new XYChart.Data("Phone"  , 65));
-        //dataSeries1.getData().add(new XYChart.Data("Tablet"  , 23));
         
         histogram.getData().add(dataSeries1);
     }

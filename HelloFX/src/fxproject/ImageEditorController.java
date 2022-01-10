@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -82,6 +83,21 @@ public class ImageEditorController implements Initializable {
     
     @FXML
     private MenuItem redoButton;
+    
+    @FXML
+    private CheckBox imagePortionBool;
+    
+    @FXML
+    private TextField portionX;
+
+    @FXML
+    private TextField portionY;
+    
+    @FXML
+    private TextField heightPortion;
+    
+    @FXML
+    private TextField widthPortion;
 
     @FXML
     void BlackWhiteFilter(ActionEvent event) {
@@ -292,6 +308,37 @@ public class ImageEditorController implements Initializable {
         }
         enableToolsButtons();
         //Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
+    }
+    
+    @FXML
+    void enablePortionImage(ActionEvent event) {
+        
+        if(!widthPortion.getText().isEmpty() || !heightPortion.getText().isEmpty()){
+            if(widthPortion.getText().isEmpty()){
+                heightPortion.setText(widthPortion.getText());
+            }else if(heightPortion.getText().isEmpty()){
+                widthPortion.setText(heightPortion.getText());
+            }
+            if(portionX.getText().isEmpty()){
+                portionX.setText("0");
+            }
+            if(portionY.getText().isEmpty()){
+                portionY.setText("0");
+            }
+            imagePortionBool.setDisable(false);
+        }else{
+            imagePortionBool.setDisable(true);
+        }
+        
+
+    }
+    
+    ImagePortion obtainDataPortion(){
+        int x = Integer.parseInt(portionX.getText());
+        int y = Integer.parseInt(portionY.getText());
+        int width = Integer.parseInt(portionY.getText());
+        int height = Integer.parseInt(portionY.getText());
+        return new ImagePortion(x, y, width, height);
     }
 
     @Override
