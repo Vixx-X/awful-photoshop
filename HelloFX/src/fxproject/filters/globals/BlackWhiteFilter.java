@@ -29,6 +29,7 @@ public class BlackWhiteFilter {
         RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width-1, img.height-1);
         another.type = RawImage.Type.GrayScale;
         another.colorMax = 1;
+        another.bpp = 8;
         return another;
     }
 }
