@@ -406,7 +406,7 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <VBox prefHeight="676.0" prefWidth="321.0">
                <children>
-                  <ImageView fx:id="imageMain" fitHeight="307.0" fitWidth="345.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imageMain" fitHeight="321.0" fitWidth="345.0" pickOnBounds="true" preserveRatio="true" />
                   <VBox prefHeight="62.0" prefWidth="345.0">
                      <children>
                         <Label alignment="TOP_LEFT" text="Contraste:">
@@ -416,17 +416,17 @@
                         </Label>
                         <HBox prefHeight="33.0" prefWidth="227.0" spacing="4.0">
                            <children>
-                              <TextField prefHeight="25.0" prefWidth="68.0">
+                              <TextField fx:id="contrastTextfield" onAction="#setContrastButton" prefHeight="25.0" prefWidth="68.0" promptText="0">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
                               </TextField>
-                              <Slider majorTickUnit="50.0" prefHeight="22.0" prefWidth="164.0" showTickLabels="true">
+                              <Slider fx:id="contrastSlide" majorTickUnit="5.0" max="10.0" min="-10.0" minorTickCount="2" prefHeight="22.0" prefWidth="164.0" showTickLabels="true" showTickMarks="true">
                                  <HBox.margin>
                                     <Insets left="10.0" right="30.0" />
                                  </HBox.margin>
                               </Slider>
-                              <Button alignment="TOP_CENTER" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
+                              <Button fx:id="contrastButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyContrast" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -434,7 +434,7 @@
                         </HBox>
                      </children>
                      <VBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="10.0" right="10.0" top="25.0" />
                      </VBox.margin>
                   </VBox>
                   <VBox layoutX="20.0" layoutY="317.0" prefHeight="62.0" prefWidth="345.0">
@@ -446,13 +446,13 @@
                         </Label>
                         <HBox prefHeight="33.0" prefWidth="227.0" spacing="4.0">
                            <children>
-                              <TextField prefHeight="25.0" prefWidth="68.0" />
-                              <Slider majorTickUnit="50.0" prefHeight="22.0" prefWidth="164.0" showTickLabels="true">
+                              <TextField fx:id="brightnessTextfield" onAction="#setBrightnessButton" prefHeight="25.0" prefWidth="68.0" promptText="0" />
+                              <Slider fx:id="brightnessSlide" majorTickUnit="5.0" max="10.0" min="-10.0" prefHeight="22.0" prefWidth="164.0" showTickLabels="true" showTickMarks="true">
                                  <HBox.margin>
                                     <Insets left="10.0" right="30.0" />
                                  </HBox.margin>
                               </Slider>
-                              <Button alignment="TOP_CENTER" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
+                              <Button fx:id="brightnessButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyBrightness" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
