@@ -365,15 +365,10 @@ public class ImageEditorController implements Initializable {
     @FXML
     void saveImages(ActionEvent event) {
         RawImage image = ProjectImages.getInstance().getChoose();
-        System.out.println("SE GUALDO");
         System.out.println(image);
         if (image != null) {
-            System.out.println("PUTA");
             image.writeImage();
         }
-
-        // Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-        // Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
     }
 
     @FXML
@@ -382,7 +377,7 @@ public class ImageEditorController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
-        //
+        
         File f = fileChooser.showSaveDialog(null);
         System.out.println(f.getAbsolutePath());
 
@@ -509,8 +504,7 @@ public class ImageEditorController implements Initializable {
                 }
             }
         }
-        System.out.println(Arrays.toString(kernelNumbers));
-
+        
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
         RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, temp.x1, temp.y1, temp.x2, temp.y2);
@@ -555,9 +549,6 @@ public class ImageEditorController implements Initializable {
     @FXML
     void applyBrightness(ActionEvent event) {
         brightnessTextfield.setText(String.valueOf(brightnessSlide.getValue()));
-        System.out.println("brillito");
-        System.out.println(brightnessSlide.getValue());
-
         float gamma = (float) brightnessSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
@@ -572,9 +563,6 @@ public class ImageEditorController implements Initializable {
     @FXML
     void applyContrast(ActionEvent event) {
         contrastTextfield.setText(String.valueOf(contrastSlide.getValue()));
-        System.out.println("contrasteeee");
-        System.out.println(contrastSlide.getValue());
-
         float beta = (float) contrastSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
@@ -588,9 +576,6 @@ public class ImageEditorController implements Initializable {
     @FXML
     void applyGamma(ActionEvent event) {
         gammaTextfield.setText(String.valueOf(gammaSlide.getValue()));
-        System.out.println("gamma");
-        System.out.println(gammaSlide.getValue());
-
         float gamma = (float) gammaSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
