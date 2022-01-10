@@ -67,11 +67,7 @@ public class MainViewController implements Initializable {
 		if (i > 0) {
 			mainLabel.setText("Escoga una Imagen para editar");
 			labelImage1.setText(names[0]);
-                        Image img = images[0].getImage();
-			imageView1.setImage(img);
-                        //System.out.println(img.getWidth() + " " + img.getHeight());
-                        //System.out.println("holi" + images[0].width + " " + images[0].height);
-                        System.out.println(img.getWidth() + " " + img.getHeight());
+			imageView1.setImage(images[0].getImage());
                         imageView1.setSmooth(false);
                        
 		}
@@ -79,8 +75,6 @@ public class MainViewController implements Initializable {
 			labelImage2.setText(names[1]);
 			imageView2.setImage(images[1].getImage());
                         imageView2.setSmooth(false);
-                        //System.out.println("bye" + images[1].width + " " + images[1].height);
-                        System.out.println(images[1].getImage().getWidth() + " " + images[1].getImage().getHeight());
 		}
 
 		System.out.println(imageView1);

@@ -177,7 +177,8 @@ public class RawImage {
 		this.width = _width;
 		this.height = _height;
 		this.colorMax = color;
-		this.type = maxsizes == 3 ? Type.RGB : Type.GrayScale;
+		this.type = _extension == 3 ? Type.RGB : Type.GrayScale;
+                this.bpp = this.type == Type.GrayScale? 8 : 16;
 	}
 
 	void readOther(String filename) {
@@ -199,13 +200,14 @@ public class RawImage {
 
 		int[] result = new int[_height * _width];
 		if (_type == Type.GrayScale) {
+                    System.out.println(" READ GRAY");
 			final int pixelLength = 1;
-			for (int pixel = 0, cnt = 0; pixel + 2 < pixels.length; pixel += pixelLength, cnt += 1) {
+			for (int pixel = 0, cnt = 0; pixel < pixels.length; pixel += pixelLength, cnt += 1) {
 				int argb = 0;
 				argb += -16777216; // 255 alpha
 				argb += ((int) pixels[pixel] & 0xff); // blue
-				argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
-				argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
+				argb += (((int) pixels[pixel] & 0xff) << 8); // green
+				argb += (((int) pixels[pixel ] & 0xff) << 16); // red
 				result[cnt] = argb;
 			}
 		} else if (hasAlphaChannel) {
@@ -235,6 +237,7 @@ public class RawImage {
 		this.mat = result;
 		this.colorMax = 255;
 		this.type = _type;
+                this.bpp = this.type == Type.GrayScale? 8 : 16;
 	}
 
 	public Pair<String, Boolean> getFormat() {
@@ -308,6 +311,7 @@ public class RawImage {
 
 	private BufferedImage _getBufferedImage(int _type) {
 		BufferedImage image = new BufferedImage(this.width, this.height, _type);
+ 
 
                 if (_type == BufferedImage.TYPE_INT_ARGB) {
                     final int[] px = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -318,9 +322,11 @@ public class RawImage {
                         px[idx] = this.mat[idx] & 0xffffff; 
                     }
                 } else {
+                                   System.out.println("GRAY");
                     final byte[] px = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
                     for (int idx = 0; idx < this.width * this.height; idx++ ) {
-                        px[idx] = (byte) (this.mat[idx] & 0xff); 
+                        //System.out.println(this.mat[idx]);
+                        px[idx] = (byte) this.mat[idx]; 
                     }
                 } 
 		return image;
