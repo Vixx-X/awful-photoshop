@@ -134,7 +134,7 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     private Slider brightnessSlide;
-
+    
     @FXML
     private TextField brightnessTextfield;
 
@@ -143,7 +143,13 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     private TextField contrastTextfield;
-
+    
+    @FXML
+    private Slider gammaSlide;
+    
+    @FXML
+    private TextField gammaTextfield;
+    
     private final ArrayList<TextField> kernelFieldList = new ArrayList<>();
     //private final ArrayList<Integer> kernelNumbers = new ArrayList<>();
     public float[] kernelNumbers;
@@ -183,7 +189,7 @@ public class ImageEditorController implements Initializable {
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
     }
-
+    
     @FXML
     void negativeFilter(ActionEvent event) {
         RawImage choose = ProjectImages.getInstance().getChoose();
@@ -517,28 +523,34 @@ public class ImageEditorController implements Initializable {
     void sliderContrast(MouseEvent event) {
         System.out.println(contrastSlide.getValue());
     }
+    
+    float limitsValue(float i, float limit){
+        if (i > limit) {
+            i = limit;
+        } else if (i < -limit) {
+            i = -limit;
+        }
+        return i;
+    }
 
     @FXML
     void setBrightnessButton(ActionEvent event) {
         float i = Float.parseFloat(brightnessTextfield.getText());
-        if (i > 10) {
-            i = 10;
-        } else if (i < -10) {
-            i = -10;
-        }
-        brightnessSlide.setValue(i);
+        brightnessSlide.setValue(limitsValue(i, 10));
     }
 
     @FXML
     void setContrastButton(ActionEvent event) {
         float i = Float.parseFloat(contrastTextfield.getText());
-        if (i > 10) {
-            i = 10;
-        } else if (i < -10) {
-            i = -10;
-        }
-        contrastSlide.setValue(i);
+        contrastSlide.setValue(limitsValue(i, 10));
     }
+    
+    @FXML
+    void setGamma(ActionEvent event) {
+        float i = Float.parseFloat(gammaTextfield.getText());
+        contrastSlide.setValue(limitsValue(i, 5));
+    }
+    
     
     @FXML
     void applyBrightness(ActionEvent event) {
@@ -569,6 +581,22 @@ public class ImageEditorController implements Initializable {
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
+    }
+    
+    @FXML
+    void applyGamma(ActionEvent event) {
+        gammaTextfield.setText(String.valueOf(gammaSlide.getValue()));
+        System.out.println("gamma");
+        System.out.println(gammaSlide.getValue());
+        
+        float gamma = (float) gammaSlide.getValue();
+        RawImage choose = ProjectImages.getInstance().getChoose();
+        RawImage img = GammaFilter.apply(choose, gamma);
+        
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
+        
     }
     
     @FXML

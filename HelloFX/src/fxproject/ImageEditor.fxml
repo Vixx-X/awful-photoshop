@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="743.0" maxWidth="933.0" minHeight="676.0" minWidth="918.0" prefHeight="743.0" prefWidth="977.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditorController">
+<BorderPane maxHeight="748.0" maxWidth="975.0" minHeight="676.0" minWidth="918.0" prefHeight="748.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.ImageEditorController">
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -440,36 +440,6 @@
                         <Insets left="25.0" right="25.0" top="25.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox layoutX="20.0" layoutY="356.0" prefHeight="62.0" prefWidth="345.0">
-                     <children>
-                        <Label alignment="TOP_LEFT" prefHeight="20.0" prefWidth="110.0" text="Por un gamma:">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Label>
-                        <HBox prefHeight="33.0" prefWidth="227.0" spacing="4.0">
-                           <children>
-                              <TextField fx:id="contrastTextfield1" onAction="#setContrastButton" prefHeight="25.0" prefWidth="68.0" promptText="0">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </TextField>
-                              <Slider fx:id="contrastSlide1" majorTickUnit="2.5" max="5.0" min="-5.0" minorTickCount="2" prefHeight="22.0" prefWidth="164.0" showTickLabels="true" showTickMarks="true">
-                                 <HBox.margin>
-                                    <Insets left="10.0" right="30.0" />
-                                 </HBox.margin>
-                              </Slider>
-                              <Button fx:id="contrastButton1" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyContrast" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
-                     </VBox.margin>
-                  </VBox>
                   <VBox layoutX="20.0" layoutY="317.0" prefHeight="62.0" prefWidth="345.0">
                      <children>
                         <Label alignment="TOP_LEFT" text="Brillo:">
@@ -493,25 +463,25 @@
                         </HBox>
                      </children>
                      <VBox.margin>
-                        <Insets left="25.0" right="25.0" top="20.0" />
+                        <Insets left="25.0" right="25.0" top="10.0" />
                      </VBox.margin>
                   </VBox>
                   <VBox layoutX="20.0" layoutY="500.0" prefHeight="62.0" prefWidth="345.0">
                      <children>
-                        <Label alignment="TOP_LEFT" text="Por un gamma:">
+                        <Label alignment="TOP_LEFT" text="Gamma:">
                            <font>
-                              <Font name="System Italic" size="14.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
                         <HBox prefHeight="33.0" prefWidth="227.0" spacing="4.0">
                            <children>
-                              <TextField fx:id="brightnessTextfield1" onAction="#setBrightnessButton" prefHeight="25.0" prefWidth="68.0" promptText="0" />
-                              <Slider fx:id="brightnessSlide1" majorTickUnit="2.5" max="5.0" min="-5.0" prefHeight="22.0" prefWidth="164.0" showTickLabels="true" showTickMarks="true">
+                              <TextField fx:id="gammaTextfield" onAction="#setGamma" prefHeight="25.0" prefWidth="68.0" promptText="0" />
+                              <Slider fx:id="gammaSlide" majorTickUnit="2.5" max="5.0" min="-5.0" prefHeight="22.0" prefWidth="164.0" showTickLabels="true" showTickMarks="true">
                                  <HBox.margin>
                                     <Insets left="10.0" right="30.0" />
                                  </HBox.margin>
                               </Slider>
-                              <Button fx:id="brightnessButton1" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyBrightness" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
+                              <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyGamma" prefHeight="25.0" prefWidth="71.0" text="Aplicar" textAlignment="CENTER" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -519,7 +489,7 @@
                         </HBox>
                      </children>
                      <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
+                        <Insets left="25.0" right="25.0" top="10.0" />
                      </VBox.margin>
                   </VBox>
                   <VBox layoutX="35.0" layoutY="562.0" prefHeight="29.0" prefWidth="345.0">
