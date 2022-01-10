@@ -20,20 +20,10 @@ public class NegativeFilter {
                 int R = another.getRedPixel(x, y);
                 int G = another.getGreenPixel(x, y);
                 int B = another.getBluePixel(x, y);
-                System.out.println(x + " " + y + " R=" + R + " G=" + G + " B=" + B);
-                                
-                System.out.println("FUK1");
+
                 another.setRedPixel(x, y, 255 - R);
-                System.out.println("FUK2");
-
-                System.out.println("FUK3");
                 another.setGreenPixel(x, y, 255 - G);
-                System.out.println("FUK4");
-
-                System.out.println("FUK5");
                 another.setBluePixel(x, y, 255 - B);
-                System.out.println("FUK6");
-
             }
         }
         return another;

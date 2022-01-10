@@ -19,6 +19,9 @@ public class BlackWhiteFilter {
                 int R = img.getRedPixel(x, y);
                 int G = img.getGreenPixel(x, y);
                 int B = img.getBluePixel(x, y);
+                System.out.println(x + " " + y + " R=" + R + " G=" + G + " B=" + B);
+                                
+                System.out.println("FUK1 " + ((R + G + B) > (255*3/2) ? 255 : 0));
                 another.setGrayPixel(x, y, (R + G + B) > (255*3/2) ? 255 : 0);
             }
         }
