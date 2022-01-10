@@ -4,8 +4,10 @@
  */
 package fxproject;
 
+import fxproject.RawImage.Type;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,20 +32,27 @@ import javafx.stage.Modality;
  * @author Gaby
  */
 public class ProjectImages extends Application {
+
     private static ProjectImages instance;
 
     private static Stage primaryStage;
     private static BorderPane mainLayout;
     private static RawImage imageChoose;
     
-    
+    private ArrayList<RawImage> imageList = new ArrayList<>();
+    private int currentState;
+    public int i;
+
+    public ProjectImages() {
+        currentState = 0;
+    }
+
     public static ProjectImages getInstance() {
         if (instance == null) {
-            instance = new ProjectImages();     
+            instance = new ProjectImages();
         }
         return instance;
     }
-
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -53,15 +62,21 @@ public class ProjectImages extends Application {
         primaryStage.setScene(new Scene(mainLayout));
         primaryStage.show();
     }
-    
 
     public void showImagePanel(RawImage image) throws IOException {
+        currentState = 0;
         imageChoose = image;
+        imageList = new ArrayList<>();
+        imageList.add(imageChoose);
         BorderPane imagePanel = FXMLLoader.load(getClass().getResource("ImageEditor.fxml"));
-        mainLayout.setCenter(imagePanel);
+        Stage kernelView = new Stage();
+        kernelView.initModality(Modality.WINDOW_MODAL);
+        kernelView.initOwner(primaryStage);
+        kernelView.setScene(new Scene(imagePanel));
+        kernelView.showAndWait();
     }
-    
-    public void showkernelPanel() throws IOException{
+
+    public void showkernelPanel() throws IOException {
         BorderPane kernelPanel = FXMLLoader.load(getClass().getResource("KernelEdit.fxml"));
         Stage kernelView = new Stage();
         kernelView.initModality(Modality.WINDOW_MODAL);
@@ -69,16 +84,32 @@ public class ProjectImages extends Application {
         kernelView.setScene(new Scene(kernelPanel));
         kernelView.showAndWait();
     }
-    
+
     public void showBarChart() throws IOException {
-        BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
-        Stage histogramView = new Stage();
-        histogramView.initModality(Modality.WINDOW_MODAL);
-        histogramView.initOwner(primaryStage);
-        histogramView.setScene(new Scene(imagePanel));
-        histogramView.showAndWait();
+        if(getChoose().type == Type.GrayScale){
+            i = 0;
+            BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
+            Stage histogramView = new Stage();
+            histogramView.initModality(Modality.WINDOW_MODAL);
+            histogramView.initOwner(primaryStage);
+            histogramView.setScene(new Scene(imagePanel));
+            histogramView.showAndWait();
+            
+        }else {
+            for(i=1; i<4; i++){
+                BorderPane imagePanel = FXMLLoader.load(getClass().getResource("BarChart.fxml"));
+                Stage histogramView = new Stage();
+                histogramView.initModality(Modality.NONE);
+                histogramView.initOwner(primaryStage);
+                histogramView.setScene(new Scene(imagePanel));
+                histogramView.show();
+            }
+        }
+
     }
+
     
+
     public void showDetails() throws IOException {
         BorderPane informationPanel = FXMLLoader.load(getClass().getResource("InformationView.fxml"));
         Stage informationView = new Stage();
@@ -89,11 +120,50 @@ public class ProjectImages extends Application {
     }
 
     public Image getImageChoose() {
-        return imageChoose.getImage();
+        return imageList.get(currentState).getImage();
     }
-    
+
     public RawImage getChoose() {
-        return imageChoose;
+        return imageList.get(currentState);
+    }
+
+    public int getIndex() {
+        return currentState;
+    }
+
+    public int getStateListSize() {
+        return imageList.size();
+    }
+
+    public void pushImage(RawImage image) {
+        if (currentState != (imageList.size() - 1)) {
+            for (int i = currentState + 1; i < imageList.size(); i++) {
+                imageList.remove(i);
+            }
+        }
+        if (currentState == 9) {
+            imageList.remove(1);
+        } else {
+            currentState++;
+        }
+        //System.out.println(currentState);
+        imageList.add(image);
+    }
+
+    public RawImage undo() {
+        if (currentState > 0) {
+            currentState--;
+            return imageList.get(currentState);
+        }
+        return null;
+    }
+
+    public RawImage redo() {
+        if ((imageList.size() - 1) > currentState) {
+            currentState++;
+            return imageList.get(currentState);
+        }
+        return null;
     }
 
     public static void main(String[] args) {

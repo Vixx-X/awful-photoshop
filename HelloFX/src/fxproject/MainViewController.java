@@ -68,6 +68,8 @@ public class MainViewController implements Initializable {
 			labelImage1.setText(names[0]);
                         Image img = images[0].getImage();
 			imageView1.setImage(img);
+                        //System.out.println(img.getWidth() + " " + img.getHeight());
+                        //System.out.println("holi" + images[0].width + " " + images[0].height);
                         System.out.println(img.getWidth() + " " + img.getHeight());
                         imageView1.setSmooth(false);
                        
@@ -76,6 +78,8 @@ public class MainViewController implements Initializable {
 			labelImage2.setText(names[1]);
 			imageView2.setImage(images[1].getImage());
                         imageView2.setSmooth(false);
+                        //System.out.println("bye" + images[1].width + " " + images[1].height);
+                        System.out.println(images[1].getImage().getWidth() + " " + images[1].getImage().getHeight());
 		}
 
 		System.out.println(imageView1);
@@ -97,27 +101,6 @@ public class MainViewController implements Initializable {
 				Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		});
-	}
-
-	@FXML
-	void saveImages(ActionEvent event) {
-                RawImage image = ProjectImages.getInstance().getChoose();
-                if (image != null)
-                    image.writeImage();
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-		// Se puede hacer un condicioal que si es nulo abrir una ventana donde diga que no se ha eligido una imagen pa salvar
-	}
-
-	@FXML
-	void redoAction(ActionEvent event) {
-		System.out.println("Rehacer cambios la imagen actual"); 
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
-	}
-
-	@FXML
-	void undoAction(ActionEvent event) {
-		System.out.println("Deshacer cambios la imagen actual"); 
-		// Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
 	}
 
 	@Override
