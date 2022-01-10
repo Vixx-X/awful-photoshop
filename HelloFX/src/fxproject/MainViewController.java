@@ -1,6 +1,7 @@
 package fxproject;
 
 //import java.awt.image.BufferedImage;
+import fxproject.models.RawImage;
 import java.io.File;
 //import java.io.FileInputStream;
 import java.io.FileNotFoundException;

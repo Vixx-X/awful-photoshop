@@ -4,7 +4,7 @@
  */
 package fxproject;
 
-import fxproject.RawImage.Type;
+import fxproject.models.RawImage.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
