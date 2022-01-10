@@ -516,7 +516,7 @@
                <menus>
                   <Menu mnemonicParsing="false" text="Archivo">
                      <items>
-                        <MenuItem fx:id="btnCl1" mnemonicParsing="false" text="Abrir imágenes..." />
+                        <MenuItem fx:id="btnCl1" disable="true" mnemonicParsing="false" text="Abrir imágenes..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#saveImages" text="Guardar" />
                         <Menu mnemonicParsing="false" onAction="#saveAsAction" text="Guardar como..." />

@@ -379,9 +379,8 @@ public class ImageEditorController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
         
         File f = fileChooser.showSaveDialog(null);
-        System.out.println(f.getAbsolutePath());
 
-        if (image != null) {
+        if (image != null && f != null) {
             image.writeImage(f.getAbsolutePath());
         }
     }
