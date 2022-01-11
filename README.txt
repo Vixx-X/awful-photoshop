@@ -16,16 +16,17 @@ Trabajo realizado por:
         Imagen.
 
 ##      3. Los métodos escogidos para la modificación del brillo y contraste son tres:
-        - Por un valor constante.
+        - Por un valor constante (en el caso de brillo se realiza una suma de dicho valor, 
+        en el caso de contraste se aplica una regla de tres considerando el mismo). 
         - Con un valor Gamma.
         - Ecualización de la Imagen
         
 ##      4. Al mostrar un histograma, si la imagen es en escala de grises o blanco y
         negro se mostrará solo un gráfico. Si por el contrario está compuesta por los tres
-        canales rgb, se mostrán tres histogramas.
+        canales rgb, se mostrarán tres histogramas.
 
-##      5. En lo referente a la umbralización, la misma se puede aplicar de dos maneras por
-        valor o por rango. Si es por valor los valores por encima de dicho valor se colocarán
-        en blanco, de lo contrario, negro. En el caso de umbralización por rango si están 
-        dentro del rango se colocará negro de lo contrario blanco.
+##      5. En lo referente a la umbralización, la misma se puede aplicar de dos maneras: por
+        valor o por rango. Si es por valor, los pixeles cuyo color esté por encima de dicho 
+        umbral se colocarán en blanco, de lo contrario, negro. En el caso de umbralización 
+        por rango si están dentro del rango se setearán a blanco, en caso contrario negro.
 
