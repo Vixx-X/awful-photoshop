@@ -7,7 +7,6 @@ package fxproject;
 import fxproject.models.RawImage;
 import fxproject.filters.globals.BlackWhiteFilter;
 import fxproject.filters.globals.ContrastFilter;
-import fxproject.filters.globals.GammaFilter;
 import fxproject.filters.globals.GrayScaleFilter;
 import fxproject.filters.globals.NegativeFilter;
 import fxproject.filters.globals.SumFilter;
@@ -20,7 +19,6 @@ import fxproject.filters.locals.SquareFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -262,21 +260,24 @@ public class ImageEditorController implements Initializable {
         System.out.println(numberCol);
         System.out.println(numberRow);
         System.out.println(smoothedFilters.getValue());
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
-   
+
         String type = smoothedFilters.getValue();
         RawImage img = null;
 
         switch (type) {
-            case "Caja" -> img = SquareFilter.apply(choose, numberCol, numberRow);
-            case "Cilíndrico" -> img = CircleFilter.apply(choose, numberCol, numberRow);
-            case "Gauss" -> img = GaussFilter.apply(choose, numberCol, numberRow);
+            case "Caja" ->
+                img = SquareFilter.apply(choose, numberCol, numberRow);
+            case "Cilíndrico" ->
+                img = CircleFilter.apply(choose, numberCol, numberRow);
+            case "Gauss" ->
+                img = GaussFilter.apply(choose, numberCol, numberRow);
             default -> {
                 return;
             }
         }
-        if (img == null){
+        if (img == null) {
             return;
         }
 
@@ -345,7 +346,7 @@ public class ImageEditorController implements Initializable {
             System.out.println(min);
             img = ThresholdFilter.apply(choose, min);
         }
-        
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
@@ -376,7 +377,7 @@ public class ImageEditorController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
-        
+
         File f = fileChooser.showSaveDialog(null);
         System.out.println(f.getAbsolutePath());
 
@@ -503,10 +504,10 @@ public class ImageEditorController implements Initializable {
                 }
             }
         }
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
-        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows);
-        
+        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, false);
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
@@ -538,19 +539,19 @@ public class ImageEditorController implements Initializable {
         }
         contrastSlide.setValue(i);
     }
-    
+
     @FXML
     void applyBrightness(ActionEvent event) {
         brightnessTextfield.setText(String.valueOf(brightnessSlide.getValue()));
-        
+
         float gamma = (float) brightnessSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
         RawImage img = SumFilter.apply(choose, gamma);
-        
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
-        
+
     }
 
     @FXML
@@ -560,7 +561,7 @@ public class ImageEditorController implements Initializable {
         float beta = (float) contrastSlide.getValue();
         RawImage choose = ProjectImages.getInstance().getChoose();
         RawImage img = ContrastFilter.apply(choose, beta);
-        
+
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
