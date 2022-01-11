@@ -1,8 +1,6 @@
-# awful-photoshop
-
 Trabajo realizado por:
-## Adesso Vittorio C.I. 26838989
-## Ustariz Gabriela C.I 26956071
+# Adesso Vittorio C.I. 26838989
+# Ustariz Gabriela C.I 26956071
 
 ## Aclaratorias
 
@@ -31,3 +29,5 @@ Trabajo realizado por:
         valor o por rango. Si es por valor, los pixeles cuyo color esté por encima de dicho 
         umbral se colocarán en blanco, de lo contrario, negro. En el caso de umbralización 
         por rango si están dentro del rango se setearán a blanco, en caso contrario negro.
+        
+##      6. Importante agregar la libreria JavaFx para que funciona la aplicación
