@@ -17,6 +17,8 @@ import java.io.File;
 import fxproject.filters.locals.CircleFilter;
 import fxproject.filters.locals.GaussFilter;
 import fxproject.filters.locals.KernelFilter;
+import fxproject.filters.locals.PrewittFilter;
+import fxproject.filters.locals.RobertsFilter;
 import fxproject.filters.locals.SquareFilter;
 import java.io.IOException;
 import java.net.URL;
@@ -285,13 +287,43 @@ public class ImageEditorController implements Initializable {
     void applyBorder(ActionEvent event) {
         int numberCol = Integer.parseInt(columnsBorder.getText());
         int numberRow = Integer.parseInt(rowsBorder.getText());
+        
         System.out.println("Border filter here");
         System.out.println(numberCol);
         System.out.println(numberRow);
         System.out.println(borderFilters.getValue());
-        //ProjectImages.getInstance().pushImage(img);
-        //enableToolsButtons();
-        //imageMain.setImage([**insertar imagen de tipo Image**]);
+        
+        RawImage choose = ProjectImages.getInstance().getChoose();
+
+        String type = borderFilters.getValue();
+        RawImage img = null;
+        ImagePortion temp = getPair();
+
+        switch (type) {
+            case "Sobel" ->
+                img = SquareFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
+            case "Roberts" ->
+                img = RobertsFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
+            case "Prewitt" ->
+                img = PrewittFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
+            case "Perfilado" ->
+                img = GaussFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);    
+            default -> {
+                return;
+            }
+        }
+        if (img == null) {
+            return;
+        }
+
+        ProjectImages.getInstance().pushImage(img);
+        enableToolsButtons();
+        imageMain.setImage(img.getImage());
+      
     }
 
     @FXML
@@ -487,7 +519,7 @@ public class ImageEditorController implements Initializable {
         
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
-        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, temp.x1, temp.y1, temp.x2, temp.y2);
+        RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, temp.x1, temp.y1, temp.x2, temp.y2, false);
 
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
