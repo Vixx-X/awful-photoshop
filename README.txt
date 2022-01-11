@@ -1,6 +1,10 @@
+# awful-photoshop 
+
+Proyecto de la Universidad
+
 Trabajo realizado por:
-# Adesso Vittorio C.I. 26838989
-# Ustariz Gabriela C.I 26956071
+### Adesso Vittorio C.I. 26838989
+### Ustariz Gabriela C.I 26956071
 
 ## Aclaratorias
 
@@ -31,4 +35,3 @@ Trabajo realizado por:
         por rango si están dentro del rango se setearán a blanco, en caso contrario negro.
         
 ##      6. Importante agregar la libreria JavaFx para que funciona la aplicación
-
