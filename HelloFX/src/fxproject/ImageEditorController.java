@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import fxproject.filters.locals.SobelFilter;
 import fxproject.models.RawImage;
 import fxproject.filters.globals.BlackWhiteFilter;
 import fxproject.filters.globals.ContrastFilter;
@@ -18,12 +19,12 @@ import fxproject.filters.locals.CircleFilter;
 import fxproject.filters.locals.GaussFilter;
 import fxproject.filters.locals.KernelFilter;
 import fxproject.filters.locals.PrewittFilter;
+import fxproject.filters.locals.ProfileFilter;
 import fxproject.filters.locals.RobertsFilter;
 import fxproject.filters.locals.SquareFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -287,12 +287,7 @@ public class ImageEditorController implements Initializable {
     void applyBorder(ActionEvent event) {
         int numberCol = Integer.parseInt(columnsBorder.getText());
         int numberRow = Integer.parseInt(rowsBorder.getText());
-        
-        System.out.println("Border filter here");
-        System.out.println(numberCol);
-        System.out.println(numberRow);
-        System.out.println(borderFilters.getValue());
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
 
         String type = borderFilters.getValue();
@@ -301,7 +296,7 @@ public class ImageEditorController implements Initializable {
 
         switch (type) {
             case "Sobel" ->
-                img = SquareFilter.apply(choose, numberCol, numberRow,
+                img = SobelFilter.apply(choose, numberCol, numberRow,
                         temp.x1, temp.y1, temp.x2, temp.y2);
             case "Roberts" ->
                 img = RobertsFilter.apply(choose, numberCol, numberRow,
@@ -310,8 +305,8 @@ public class ImageEditorController implements Initializable {
                 img = PrewittFilter.apply(choose, numberCol, numberRow,
                         temp.x1, temp.y1, temp.x2, temp.y2);
             case "Perfilado" ->
-                img = GaussFilter.apply(choose, numberCol, numberRow,
-                        temp.x1, temp.y1, temp.x2, temp.y2);    
+                img = ProfileFilter.apply(choose, numberCol, numberRow,
+                        temp.x1, temp.y1, temp.x2, temp.y2);
             default -> {
                 return;
             }
@@ -323,7 +318,7 @@ public class ImageEditorController implements Initializable {
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
-      
+
     }
 
     @FXML
@@ -398,7 +393,7 @@ public class ImageEditorController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
-        
+
         File f = fileChooser.showSaveDialog(null);
 
         if (image != null && f != null) {
@@ -516,7 +511,7 @@ public class ImageEditorController implements Initializable {
                 }
             }
         }
-        
+
         RawImage choose = ProjectImages.getInstance().getChoose();
         ImagePortion temp = getPair();
         RawImage img = KernelFilter.apply(choose, kernelNumbers, kernelNumCols, kernelNumRows, temp.x1, temp.y1, temp.x2, temp.y2, false);
