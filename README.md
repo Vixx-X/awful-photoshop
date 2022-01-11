@@ -1,6 +1,6 @@
 Trabajo realizado por:
-# Adesso Vittorio C.I. 26838989
-# Ustariz Gabriela C.I 26956071
+### Adesso Vittorio C.I. 26838989
+### Ustariz Gabriela C.I 26956071
 
 ## Aclaratorias
 
