@@ -51,10 +51,8 @@ public class BarChartController implements Initializable {
         }
         
         
-        //System.out.println("el histograma es" + Arrays.toString(dataHistogram));
         XYChart.Series dataSeries1 = new XYChart.Series();
         dataSeries1.getData().add(new XYChart.Data("0", dataHistogram[0]));
-        //dataSeries1.setName("2014");
         for(int i=1; i<dataHistogram.length -1; i++){
             dataSeries1.getData().add(new XYChart.Data(String.valueOf(i), dataHistogram[i]));
         }

@@ -17,7 +17,6 @@ public class SquareFilter {
         for (int idx = 0; idx<kernel.length; idx++) {
             kernel[idx] = 1.0f;
         }
-        System.out.println("AAAA");
         return KernelFilter.apply(img, kernel, width, height, x1, y1, x2, y2);
     }
     

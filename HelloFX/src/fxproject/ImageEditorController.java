@@ -251,10 +251,6 @@ public class ImageEditorController implements Initializable {
     void applySmoothed(ActionEvent event) {
         int numberCol = Integer.parseInt(columnsSmooth.getText());
         int numberRow = Integer.parseInt(rowsSmooth.getText());
-        System.out.println("Smooth filter here");
-        System.out.println(numberCol);
-        System.out.println(numberRow);
-        System.out.println(smoothedFilters.getValue());
 
         RawImage choose = ProjectImages.getInstance().getChoose();
 
@@ -329,7 +325,6 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     void applyThreshold(ActionEvent event) {
-        System.out.println("Umbralizacion aqui");
         RawImage choose = ProjectImages.getInstance().getChoose();
         RawImage img = null;
 
@@ -337,13 +332,8 @@ public class ImageEditorController implements Initializable {
         ImagePortion temp = getPair();
         if ("Rango".equals(threshold.getValue())) {
             int max = Integer.parseInt(thresholdVal2.getText());
-            System.out.println("rango");
-            System.out.println(min);
-            System.out.println(max);
             img = ThresholdFilter.apply(choose, min, max, temp.x1, temp.y1, temp.x2, temp.y2);
         } else {
-            System.out.println("valor");
-            System.out.println(min);
             img = ThresholdFilter.apply(choose, min, temp.x1, temp.y1, temp.x2, temp.y2);
         }
 
@@ -365,7 +355,6 @@ public class ImageEditorController implements Initializable {
     @FXML
     void saveImages(ActionEvent event) {
         RawImage image = ProjectImages.getInstance().getChoose();
-        System.out.println(image);
         if (image != null) {
             image.writeImage();
         }
@@ -401,25 +390,20 @@ public class ImageEditorController implements Initializable {
 
     @FXML
     void undoAction(ActionEvent event) {
-        //System.out.println("Deshacer cambios la imagen actual");
         RawImage image = ProjectImages.getInstance().undo();
         if (image != null) {
             imageMain.setImage(image.getImage());
         }
         enableToolsButtons();
-
-        //Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
     }
 
     @FXML
     void redoAction(ActionEvent event) {
-        //System.out.println("Rehacer cambios la imagen actual");
         RawImage image = ProjectImages.getInstance().redo();
         if (image != null) {
             imageMain.setImage(image.getImage());
         }
         enableToolsButtons();
-        //Tu imagen es imageChoose para acceder = ProjectImages.getInstance().getImageChoose();
     }
 
     @FXML
@@ -486,9 +470,6 @@ public class ImageEditorController implements Initializable {
             kernelPane.setCenter(kernelRoot);
             kernelButtonApply.setDisable(false);
         }
-        //for (TextField file : kernelFieldList) {
-        //    System.out.println(file.getText());
-        //}
     }
 
     @FXML
@@ -511,11 +492,6 @@ public class ImageEditorController implements Initializable {
         ProjectImages.getInstance().pushImage(img);
         enableToolsButtons();
         imageMain.setImage(img.getImage());
-    }
-
-    @FXML
-    void sliderContrast(MouseEvent event) {
-        System.out.println(contrastSlide.getValue());
     }
 
     float limitsValue(float i, float limit) {
