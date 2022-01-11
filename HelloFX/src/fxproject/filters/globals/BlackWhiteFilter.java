@@ -11,6 +11,7 @@ import fxproject.models.RawImage;
  * @author vixx_
  */
 public class BlackWhiteFilter {
+
     public static RawImage apply(RawImage img, int x1, int y1, int x2, int y2) {
         RawImage another = img.copy();
 
@@ -19,14 +20,14 @@ public class BlackWhiteFilter {
                 int R = img.getRedPixel(x, y);
                 int G = img.getGreenPixel(x, y);
                 int B = img.getBluePixel(x, y);
-                another.setGrayPixel(x, y, (R + G + B) > (255*3/2) ? 255 : 0);
+                another.setGrayPixel(x, y, (R + G + B) > (255 * 3 / 2) ? 255 : 0);
             }
         }
         return another;
     }
-    
+
     public static RawImage apply(RawImage img) {
-        RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width-1, img.height-1);
+        RawImage another = BlackWhiteFilter.apply(img, 0, 0, img.width - 1, img.height - 1);
         another.type = RawImage.Type.GrayScale;
         another.colorMax = 1;
         another.bpp = 8;
