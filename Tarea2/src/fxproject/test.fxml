@@ -5,12 +5,13 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="727.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.testController">
+<VBox fx:id="mainLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="799.0" prefWidth="1415.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.testController">
    <children>
       <MenuBar>
          <menus>
@@ -51,15 +52,19 @@
             </Menu>
          </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.8278560250391236" prefHeight="738.0" prefWidth="1280.0">
-        <items>
-            <ScrollPane>
+      <HBox prefHeight="1800.0" prefWidth="1555.0">
+         <children>
+            <ScrollPane fx:id="leftPanel" prefHeight="774.0" prefWidth="1182.0">
                <content>
-                  <ImageView fitHeight="700.0" fitWidth="1061.0" onMouseClicked="#clickPanel" pickOnBounds="true" preserveRatio="true" />
+                  <StackPane fx:id="backgroundLayout" prefHeight="767.0" prefWidth="1180.0" style="-fx-background-color: #666666;">
+                     <children>
+                        <ImageView fx:id="canvasLayout" fitHeight="674.0" fitWidth="999.0" onMouseClicked="#clickPanel" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
                </content>
             </ScrollPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="356.0" />
-        </items>
-      </SplitPane>
+         </children>
+      </HBox>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="356.0" />
    </children>
 </VBox>
