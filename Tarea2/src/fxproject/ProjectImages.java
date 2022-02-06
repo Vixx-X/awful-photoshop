@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fxproject;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,32 +26,35 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+
 /**
  *
  * @author Gaby
  */
-public class ProjectImages extends Application{
-    
+public class ProjectImages extends Application {
+
     private static ProjectImages instance;
     private static Stage primaryStage;
     private static VBox mainLayout;
-    
+
     private float widthCanvas;
     private float heightCanvas;
+    //private ArrayList<RawImage> imageList = new ArrayList<>();
     private int currentState;
     public int i;
-    
-    //ProjectImages.getInstance().showImagePanel(images[0]);
-    
 
-    
+    public ProjectImages() {
+        currentState = 0;
+    }
+
+    //ProjectImages.getInstance().showImagePanel(images[0]);
     public static ProjectImages getInstance() {
         if (instance == null) {
             instance = new ProjectImages();
         }
         return instance;
     }
-        
+
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
@@ -59,28 +63,35 @@ public class ProjectImages extends Application{
         primaryStage.setScene(new Scene(mainLayout));
         primaryStage.show();
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         launch(args);
     }
-    
+
     public float getWidth() {
         return widthCanvas;
-    } 
+    }
+
     public void setWidth(float width) {
         widthCanvas = width;
-    } 
+    }
+
     public float getHeight() {
         return heightCanvas;
-    } 
+    }
+
     public void setHeight(float height) {
         heightCanvas = height;
-    } 
-            public void showDetails() throws IOException {
-        
     }
+
     public void showPanel(float width, float height) throws IOException {
         setWidth(width);
         setHeight(height);
+        currentState = 0;
+        /*imageChoose = image;
+        imageList = new ArrayList<>();
+        imageList.add(imageChoose); */
+        
         //System.out.println("A veee ["+widthCanvas+", "+height+"]");
         VBox informationPanel = FXMLLoader.load(getClass().getResource("test.fxml"));
         Stage informationView = new Stage();
@@ -89,4 +100,43 @@ public class ProjectImages extends Application{
         informationView.setScene(new Scene(informationPanel));
         informationView.showAndWait();
     }
+
+    public int getIndex() {
+        return currentState;
+    }
+
+    /* public int getStateListSize() {
+        return imageList.size();
+    }
+
+    public void pushImage(RawImage image) {
+        if (currentState != (imageList.size() - 1)) {
+            for (int i = currentState + 1; i < imageList.size(); i++) {
+                imageList.remove(i);
+            }
+        }
+        if (currentState == 9) {
+            imageList.remove(1);
+        } else {
+            currentState++;
+        }
+        //System.out.println(currentState);
+        imageList.add(image);
+    }
+
+    public RawImage undo() {
+        if (currentState > 0) {
+            currentState--;
+            return imageList.get(currentState);
+        }
+        return null;
+    }
+
+    public RawImage redo() {
+        if ((imageList.size() - 1) > currentState) {
+            currentState++;
+            return imageList.get(currentState);
+        }
+        return null;
+    } */
 }
