@@ -87,56 +87,49 @@ public class testController implements Initializable {
         return out;
     }
 
-    public WritableImage putImage(int[] c, Image i) {
-        //int w = c[2] - c[1] + 1;
-        //int h = c[3] - c[1] + 1;
-        for (int x = c[0]; x < c[2]; x++) {
-            for (int y = c[1]; y < c[3]; y++) {
-                //layout.getPixelWriter().setPixels(x, y, w, h, i.getPixelReader(), x - c[0], y - c[1]);
-                layout.getPixelWriter().setColor(x, y, i.getPixelReader().getColor(x - c[0], y - c[1]));
+    public void putImage(ImagePortion c, Image i) {
+        for (int x = c.x1; x < c.x2; x++) {
+            for (int y = c.y1; y < c.y2; y++) {
+                layout.getPixelWriter().setColor(x, y, i.getPixelReader().getColor(x - c.x1, y - c.y1));
             }
         }
-        return layout;
+    }
+    
+    public void fillBorder(int srcX, int destX, int srcY, int destY, int[] p) {
+        for (int x = srcX; x < destX; x++) {
+            for (int y = srcY; y < destY; y++) {
+                if(x == p[0] || x == p[1] || y == p[2] || y == p[3]){
+                    layout.getPixelWriter().setColor(x, y, Color.WHITE);
+                }else{
+                    layout.getPixelWriter().setColor(x, y, Color.DIMGRAY);
+                }
+            }
+        }
+    }
+    
+     //Pass state of image f.e rotate, normal, etc
+    public void selectedImage(ImagePortion c, Image i) {
+        // Define borderSize
+        int bz = 4;
+        int[] p =  {c.x1-1, c.x2+1, c.y1-1, c.y2+1};
+        fillBorder(c.x1-bz, c.x1, c.y1-bz, c.y2+bz, p);
+        fillBorder(c.x1, c.x2+bz, c.y1-bz, c.y1, p);
+        fillBorder(c.x1, c.x2+bz, c.y2, c.y2+bz, p);
+        fillBorder(c.x2, c.x2+bz, c.y1, c.y2, p);
+     
     }
 
-    public int[] centerImage(Image image) {
+    public ImagePortion centerImage(Image image) {
 
-        int[] coordinates = new int[4];
         int wImage2 = (int) (image.getWidth() / 2);
         int hImage2 = (int) (image.getHeight() / 2);
         int w2 = width / 2;
         int h2 = height / 2;
 
-        coordinates[0] = w2 - wImage2;
-        coordinates[1] = h2 - hImage2;
-        coordinates[2] = w2 + wImage2;
-        coordinates[3] = h2 + hImage2;
-
-        return coordinates;
+        return new ImagePortion(w2 - wImage2, h2 - hImage2, (int) image.getWidth(), 
+                (int) image.getHeight());
     }
-
-    public Image addBorder(Image image) {
-        int w = (int) image.getWidth();
-        int h = (int) image.getHeight();
-        System.out.println("[" + width + ", " + height + "]");
-        System.out.println(image.getPixelReader());
-        WritableImage out = new WritableImage(w + 8, h + 8);
-        for (int x = 0; x < w + 8; x++) {
-            for (int y = 0; y < h + 8; y++) {
-                if (x < 3 || y < 3 || x > w + 4 || y > h + 4) {
-                    out.getPixelWriter().setColor(x, y, Color.DIMGRAY);
-                } else if (x == 3 || y == 3 || x == w + 4 || y == h + 4) {
-                    out.getPixelWriter().setColor(x, y, Color.WHITE);
-                } else {
-                    out.getPixelWriter().setColor(x, y, image.getPixelReader().getColor(x - 4, y - 4));
-                    //System.out.println("(" + x + ", " +  y + ")" );
-                    //out.getPixelWriter().setPixels(x, y, w+6, h+6, image.getPixelReader(), x-3, y-3);
-                }
-            }
-        }
-        return out;
-    }
-
+  
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
             undoButton.setDisable(true);
@@ -212,12 +205,14 @@ public class testController implements Initializable {
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
         width = (int) ProjectImages.getInstance().getWidth();
         height = (int) ProjectImages.getInstance().getHeight();
-        Image i = createExampleImage();
-        Image border = addBorder(i);
-        int[] c = centerImage(border);
         layout = createLayout();
-        Image put = putImage(c, border);
-        canvasLayout.setImage(put);
+        Image i = createExampleImage();
+        ImagePortion c = centerImage(i);
+        putImage(c, i);
+        //System.out.println("coordenadas [" + c.x1 + ", " + c.y1 + "]");
+        //System.out.println("coordenadas [" + c.x2 + ", " + c.y2 + "]");
+        selectedImage(c, i);
+        canvasLayout.setImage(layout);
         canvasLayout.setFitWidth(ProjectImages.getInstance().getWidth());
         canvasLayout.setFitHeight(ProjectImages.getInstance().getHeight());
         canvasLayout.setPreserveRatio(true);
