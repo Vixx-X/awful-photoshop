@@ -26,5 +26,4 @@ public class RawImage extends Mat {
     public boolean writeImage(String filename) {
         return Imgcodecs.imwrite(this.filename, this);
     }
-
 }
