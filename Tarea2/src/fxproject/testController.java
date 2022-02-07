@@ -21,8 +21,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -43,7 +46,7 @@ public class testController implements Initializable {
     private StackPane backgroundLayout;
 
     @FXML
-    private ImageView canvasLayout;
+    private Pane canvasLayout;
 
     @FXML
     private ScrollPane leftPanel;
@@ -198,6 +201,47 @@ public class testController implements Initializable {
       WritableImage writableImage = SwingFXUtils.toFXImage(bufImage, null);
       return writableImage;
    }*/
+    
+    public void addEdge(int x, int y){
+        Circle circle = new Circle(x, y, 6.5);
+        circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+        canvasLayout.getChildren().add(circle);
+    }
+    
+    public void addBorder(double w, double h, ImagePortion c){
+        Rectangle rect = new Rectangle(w, h);
+       // rect.setStyle("-fx-background-color:white; -fx-border-style:solid; -fx-border-width:3; -fx-border-color:black;");
+        rect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+        
+        int i = c.x1-3;
+        int f = c.y1-3;
+        //rect.setFill(Color.WHITE);
+        rect.relocate(i, f);
+        canvasLayout.getChildren().add(rect);
+        
+        addEdge(c.x1-2, c.y1-2);
+        addEdge(c.x2+2, c.y2+2);
+        addEdge(c.x2+2, c.y1-2);
+        addEdge(c.x1-2, c.y2+2);
+        
+        Rectangle rect2 = new Rectangle(w, h);
+        rect2.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+        rect2.relocate(0, 0);
+        rect.setOnDragDetected(e-> {
+            canvasLayout.getChildren().add(rect2);
+        });
+        
+        rect.setOnMouseDragged(e -> {
+            rect2.relocate(i+e.getX(), f+e.getY());
+        });
+        
+        rect.setOnMouseReleased(e-> {
+            System.out.println("[" + e.getY() + ", " + e.getX());
+            canvasLayout.getChildren().remove(rect2);
+        });
+    }
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -205,18 +249,42 @@ public class testController implements Initializable {
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
         width = (int) ProjectImages.getInstance().getWidth();
         height = (int) ProjectImages.getInstance().getHeight();
-        layout = createLayout();
-        Image i = createExampleImage();
-        ImagePortion c = centerImage(i);
-        putImage(c, i);
+        //layout = createLayout();
+        //putImage(c, i);
         //System.out.println("coordenadas [" + c.x1 + ", " + c.y1 + "]");
         //System.out.println("coordenadas [" + c.x2 + ", " + c.y2 + "]");
-        selectedImage(c, i);
-        canvasLayout.setImage(layout);
-        canvasLayout.setFitWidth(ProjectImages.getInstance().getWidth());
-        canvasLayout.setFitHeight(ProjectImages.getInstance().getHeight());
-        canvasLayout.setPreserveRatio(true);
-
+        //selectedImage(c, i);
+        canvasLayout.setPrefSize(width, height);
+        canvasLayout.setMaxSize(width, height);
+        canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
+        
+        Image i = createExampleImage();
+        ImagePortion c = centerImage(i);
+        ImageView iv1 = new ImageView(i);
+        iv1.relocate(c.x1, c.y1);
+        //iv1.setImage(i);
+        iv1.setFitWidth(i.getWidth());
+        iv1.setFitHeight(i.getHeight());
+        iv1.setPreserveRatio(true);
+        canvasLayout.getChildren().addAll(iv1);
+        
+        iv1.setOnMouseClicked(e -> {
+            addBorder(i.getWidth() + 6, i.getHeight() + 6, c);
+        });
+        
+        
+        //addBorder(i.getWidth() + 6, i.getHeight() + 6, c);
+        //Rectangle rect = new Rectangle(i.getWidth() + 6, i.getWidth() + 6);
+        
+        
+        /*iv1.setOnMouseDragEntered(e -> {
+            System.out.println("[chao]");
+           canvasLayout.getChildren().add(rect);
+        }); */
+       
+        
+        
+        
     }
 
 }

@@ -5,9 +5,9 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -37,7 +37,7 @@
                <content>
                   <StackPane fx:id="backgroundLayout" prefHeight="767.0" prefWidth="1180.0" style="-fx-background-color: #666666;">
                      <children>
-                        <ImageView fx:id="canvasLayout" fitHeight="674.0" fitWidth="999.0" onMouseClicked="#clickPanel" pickOnBounds="true" preserveRatio="true" />
+                        <Pane fx:id="canvasLayout" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </StackPane>
                </content>
