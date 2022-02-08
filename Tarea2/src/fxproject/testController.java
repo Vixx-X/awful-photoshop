@@ -8,25 +8,16 @@ import fxproject.graphics.CanvasEntity;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import org.opencv.core.Point;
 
@@ -67,6 +58,7 @@ public class testController implements Initializable {
 
         }
         CanvasEntity i = main.canvas.getSelectedImage(p);
+        System.out.println(i);
         if (i != null) {
             g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
                     i.getImage().getHeight(), canvasLayout);
@@ -76,7 +68,7 @@ public class testController implements Initializable {
 
         System.out.println("[" + event.getX() + ", " + event.getY() + "]");
     }
-    
+
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
             undoButton.setDisable(true);
@@ -129,7 +121,7 @@ public class testController implements Initializable {
         }
         drawRaster();
     }
-    
+
     public void drawRaster() {
         //canvasLayout.getChildren().removeAll(visualImages);
         visualImages = new ArrayList<>();

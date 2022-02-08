@@ -55,10 +55,10 @@ public class CanvasEntity {
         Size size = this.img.size();
         Point center = new Point(size.height / 2, size.width / 2);
 
-        corners[0] = CanvasEntity.rotatePoint(new Point(0 + this.y, 0 + this.x), center, this.angle);
-        corners[1] = CanvasEntity.rotatePoint(new Point(0 + this.y, size.width + this.x), center, this.angle);
-        corners[2] = CanvasEntity.rotatePoint(new Point(size.height + this.y, size.width + this.x), center, this.angle);
-        corners[3] = CanvasEntity.rotatePoint(new Point(size.height + this.y, 0 + this.x), center, this.angle);
+        corners[0] = CanvasEntity.rotatePoint(new Point(0 + this.x, 0 + this.y), center, this.angle);
+        corners[1] = CanvasEntity.rotatePoint(new Point(size.width + this.x, 0 + this.y), center, this.angle);
+        corners[2] = CanvasEntity.rotatePoint(new Point(size.width + this.x, size.height + this.y), center, this.angle);
+        corners[3] = CanvasEntity.rotatePoint(new Point(0 + this.x, size.height + this.y), center, this.angle);
 
         return corners;
     }
@@ -68,13 +68,13 @@ public class CanvasEntity {
 
         Point[] corners = this.getCorners();
 
-        int[] p21 = {(int) corners[1].x - (int) corners[0].x, (int) corners[1].y - (int) corners[0].x};
-        int[] p41 = {(int) corners[3].x - (int) corners[0].x, (int) corners[4].y - (int) corners[0].x};
+        int[] p21 = {(int) corners[1].x - (int) corners[0].x, (int) corners[1].y - (int) corners[0].y};
+        int[] p41 = {(int) corners[3].x - (int) corners[0].x, (int) corners[3].y - (int) corners[0].y};
 
         int p21m2 = p21[0] * p21[0] + p21[1] * p21[1];
         int p41m2 = p41[0] * p41[0] + p41[1] * p41[1];
 
-        int[] p = {(int) pTest.x - (int) corners[0].x, (int) pTest.y - (int) corners[9].y};
+        int[] p = {(int) pTest.x - (int) corners[0].x, (int) pTest.y - (int) corners[0].y};
 
         int testA = p[0] * p21[0] + p[1] * p21[1];
         if (0 <= testA && testA <= p21m2) {
