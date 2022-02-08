@@ -47,17 +47,21 @@ public class testController implements Initializable {
 
     private ArrayList<ImageView> visualImages;
 
+    private CanvasEntity tmp;
+
     @FXML
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         Canvas c = new Canvas(main.getCurrentCanvas());
-        if (main.g != null) {
+        if (main.g != null && tmp != null) {
             if (main.g.type != null) {
                 switch (main.g.type) {
                     case "translate" -> {
                         Point p1 = new Point(main.g.mobileRect.getX(),
                                 main.g.mobileRect.getY());
-                        main.currentImage.translateImg(p1);
+                        int index = c.images.indexOf(main.currentImage);
+                        tmp.translateImg(p1);
+                        c.images.set(index, tmp);
                         refreshRaster(c);
                         break;
                     }
@@ -69,13 +73,16 @@ public class testController implements Initializable {
                     }
                 }
             }
+            tmp = null;
             main.g.removeOnCanvas(canvasLayout);
             main.g = null;
 
         }
         main.currentImage = c.getSelectedImage(p);
+        //main.currentImage = c.getSelectedImage(p);
         System.out.println(main.currentImage);
         if (main.currentImage != null) {
+            tmp = new CanvasEntity(main.currentImage);
             System.out.println("holi");
             main.g = new Gizmo(main.currentImage.getCorners(),
                     main.currentImage.getImage().getWidth(),
@@ -110,7 +117,7 @@ public class testController implements Initializable {
     }
 
     @FXML
-    void undoAction(ActionEvent event) {
+    void undoAction() {
         Canvas canvas = main.undo();
         if (canvas != null) {
             drawRaster();
@@ -119,7 +126,7 @@ public class testController implements Initializable {
     }
 
     @FXML
-    void redoAction(ActionEvent event) {
+    void redoAction() {
         Canvas canvas = main.redo();
         if (canvas != null) {
             drawRaster();

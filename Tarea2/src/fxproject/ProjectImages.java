@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import org.opencv.core.Core;
 
-
 public class ProjectImages extends Application {
 
     private static ProjectImages instance;
@@ -79,6 +78,10 @@ public class ProjectImages extends Application {
                         controller.putFront();
                     } else if (t.getCode() == KeyCode.B) {
                         controller.putBack();
+                    } else if (t.getCode() == KeyCode.Z && t.isControlDown()) {
+                        controller.undoAction();
+                    } else if (t.getCode() == KeyCode.Y && t.isControlDown()) {
+                        controller.redoAction();
                     }
                 }
 
