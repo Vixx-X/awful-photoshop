@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import fxproject.graphics.Canvas;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +23,8 @@ public class ProjectImages extends Application {
     private static ProjectImages instance;
     private static Stage primaryStage;
     private static VBox mainLayout;
-
-    private float widthCanvas;
-    private float heightCanvas;
+    public Canvas canvas;
+    
     //private ArrayList<RawImage> imageList = new ArrayList<>();
     private int currentState;
     public int i;
@@ -55,31 +55,9 @@ public class ProjectImages extends Application {
         launch(args);
     }
 
-    public float getWidth() {
-        return widthCanvas;
-    }
-
-    public void setWidth(float width) {
-        widthCanvas = width;
-    }
-
-    public float getHeight() {
-        return heightCanvas;
-    }
-
-    public void setHeight(float height) {
-        heightCanvas = height;
-    }
-
-    public void showPanel(float width, float height) throws IOException {
-        setWidth(width);
-        setHeight(height);
+    public void showPanel(int width, int height) throws IOException {
+        canvas = new Canvas(width, height);
         currentState = 0;
-        /*imageChoose = image;
-        imageList = new ArrayList<>();
-        imageList.add(imageChoose); */
-
-        //System.out.println("A veee ["+widthCanvas+", "+height+"]");
         VBox informationPanel = FXMLLoader.load(getClass().getResource("test.fxml"));
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);

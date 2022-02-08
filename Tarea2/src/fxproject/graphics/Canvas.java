@@ -21,6 +21,7 @@ public class Canvas {
     public Canvas(int width, int height) {
         this.w = width;
         this.h = height;
+        images = new ArrayList<>();
     }
 
     public CanvasEntity getSelectedImage(Point p) {

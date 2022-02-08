@@ -99,7 +99,7 @@ public class CanvasEntity {
     }
 
     public Image getImage() {
-        Mat tmpMat = null;
+        Mat tmpMat = new Mat();
         this.img.copyTo(tmpMat);
 
         if (this.angle > 0) {

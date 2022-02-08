@@ -4,16 +4,13 @@
  */
 package fxproject;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import fxproject.graphics.CanvasEntity;
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,25 +21,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javax.imageio.ImageIO;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
+import javafx.stage.FileChooser;
 
-/**
- * FXML Controller class
- *
- * @author Gaby
- */
+
 public class testController implements Initializable {
 
     /**
@@ -63,27 +50,15 @@ public class testController implements Initializable {
     @FXML
     private MenuItem redoButton;
 
-    private WritableImage layout;
-    private int width;
-    private int height;
+    //private WritableImage layout;
+    private ProjectImages main;
 
     @FXML
     void clickPanel(MouseEvent event) {
         System.out.println("[" + event.getX() + ", " + event.getY() + "]");
     }
 
-    public WritableImage createLayout() {
-        System.out.println("[" + width + ", " + height + "]");
-        WritableImage out = new WritableImage(width, height);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                out.getPixelWriter().setColor(x, y, Color.WHITESMOKE);
-            }
-        }
-        return out;
-    }
-
-    public Image createExampleImage() {
+    /*public Image createExampleImage() {
         int w = (int) (ProjectImages.getInstance().getWidth() / 3);
         int h = (int) (ProjectImages.getInstance().getHeight() / 3);
         System.out.println("[" + w + ", " + h + "]");
@@ -94,41 +69,9 @@ public class testController implements Initializable {
             }
         }
         return out;
-    }
-
-    public void putImage(ImagePortion c, Image i) {
-        for (int x = c.x1; x < c.x2; x++) {
-            for (int y = c.y1; y < c.y2; y++) {
-                layout.getPixelWriter().setColor(x, y, i.getPixelReader().getColor(x - c.x1, y - c.y1));
-            }
-        }
-    }
-
-    public void fillBorder(int srcX, int destX, int srcY, int destY, int[] p) {
-        for (int x = srcX; x < destX; x++) {
-            for (int y = srcY; y < destY; y++) {
-                if (x == p[0] || x == p[1] || y == p[2] || y == p[3]) {
-                    layout.getPixelWriter().setColor(x, y, Color.WHITE);
-                } else {
-                    layout.getPixelWriter().setColor(x, y, Color.DIMGRAY);
-                }
-            }
-        }
-    }
-
-    //Pass state of image f.e rotate, normal, etc
-    public void selectedImage(ImagePortion c, Image i) {
-        // Define borderSize
-        int bz = 4;
-        int[] p = {c.x1 - 1, c.x2 + 1, c.y1 - 1, c.y2 + 1};
-        fillBorder(c.x1 - bz, c.x1, c.y1 - bz, c.y2 + bz, p);
-        fillBorder(c.x1, c.x2 + bz, c.y1 - bz, c.y1, p);
-        fillBorder(c.x1, c.x2 + bz, c.y2, c.y2 + bz, p);
-        fillBorder(c.x2, c.x2 + bz, c.y1, c.y2, p);
-
-    }
-
-    public ImagePortion centerImage(Image image) {
+    } */
+    
+    /*public ImagePortion centerImage(Image image) {
 
         int wImage2 = (int) (image.getWidth() / 2);
         int hImage2 = (int) (image.getHeight() / 2);
@@ -137,7 +80,7 @@ public class testController implements Initializable {
 
         return new ImagePortion(w2 - wImage2, h2 - hImage2, (int) image.getWidth(),
                 (int) image.getHeight());
-    }
+    } */
 
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
@@ -183,30 +126,15 @@ public class testController implements Initializable {
 
     @FXML
     void uploadImage(ActionEvent event) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        String file = "C:\\Users\\Gaby\\Documents\\UCV\\Semestre7\\PDI\\awful-photoshop\\Tarea2\\src\\images";
-        //Mat image = Imgcodecs.imread(file);
-        //Image obj = Mat2WritableImage(image);
-        //ImageView mImageView;
-        //mImageView = (ImageView) findViewById(R.id.imageViewId);
-        //mImageView.setImageBitmap(BitmapFactory.decodeFile("pathToImageFile"));
-        System.out.println(file);
+        FileChooser fc = new FileChooser();
+        File file = fc.showOpenDialog(null);
+        if (file != null) {
+            main.canvas.addImage(file.getAbsolutePath());
+            System.out.println(file.getAbsolutePath());
+        }
+        drawRaster();
     }
 
-    /* public Image Mat2WritableImage(Mat mat){
-      //Encoding the image
-      MatOfByte matOfByte = new MatOfByte();
-      Imgcodecs.imencode(".jpg", mat, matOfByte);
-      //Storing the encoded Mat in a byte array
-      byte[] byteArray = matOfByte.toArray();
-      //Preparing the Buffered Image
-      InputStream in = new ByteArrayInputStream(byteArray);
-      BufferedImage bufImage = ImageIO.read(in);
-      System.out.println("Image Loaded");
-      WritableImage writableImage = SwingFXUtils.toFXImage(bufImage, null);
-      return writableImage;
-   }*/
     public void addEdge(int x, int y, int type) {
         Circle circle = new Circle(x, y, 6.5);
         circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
@@ -369,6 +297,18 @@ public class testController implements Initializable {
             mouseLocation.value = null;
         });
     }
+    
+    public void drawRaster(){
+        ArrayList<ImageView> visualImages = new ArrayList<>();
+        for (CanvasEntity i : main.canvas.images){
+            //ImageView imageV = new ImageView(i.getImage());
+            //imageV.relocate(i.x, i.y);
+            System.out.println(i.getImage());
+            //visualImages.add(imageV);
+            //canvasLayout.getChildren().add(imageV);
+        }
+        //canvasLayout.getChildren().addAll(visualImages);
+    } 
 
     static class Wrapper<T> {
 
@@ -377,22 +317,23 @@ public class testController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         // TODO
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
-        width = (int) ProjectImages.getInstance().getWidth();
-        height = (int) ProjectImages.getInstance().getHeight();
-        //layout = createLayout();
-        //putImage(c, i);
-        //System.out.println("coordenadas [" + c.x1 + ", " + c.y1 + "]");
-        //System.out.println("coordenadas [" + c.x2 + ", " + c.y2 + "]");
-        //selectedImage(c, i);
-        canvasLayout.setPrefSize(width, height);
-        canvasLayout.setMaxSize(width, height);
+        
+        main = ProjectImages.getInstance();
+        
+        int w = main.canvas.w;
+        int h = main.canvas.h;
+        canvasLayout.setPrefSize(w, h);
+        canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
+        System.out.println("aquiii " + main.canvas.w);
+        System.out.println("aquiii2 " + main.canvas.h);
         
         
-        Image i = createExampleImage();
+        /*Image i = createExampleImage();
         ImagePortion c = centerImage(i);
         ImageView iv1 = new ImageView(i);
         iv1.relocate(c.x1, c.y1);
@@ -410,7 +351,7 @@ public class testController implements Initializable {
             //Rectangle rect = createDraggableRectangle(200, 200, 400, 300);
             canvasLayout.getChildren().add(rect2);
             canvasLayout.getChildren().add(rect);
-        }); 
+        }); /
         // = createDraggableRectangle(200, 200, 400, 300);
         //rect.setFill(Color.NAVY);
         //});
