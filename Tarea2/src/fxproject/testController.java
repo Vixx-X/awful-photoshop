@@ -19,6 +19,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -27,6 +28,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
+import org.opencv.core.Point;
 
 public class testController implements Initializable {
 
@@ -50,34 +52,31 @@ public class testController implements Initializable {
 
     //private WritableImage layout;
     private ProjectImages main;
+    private Gizmo g;
+
+    private ArrayList<ImageView> visualImages;
 
     @FXML
     void clickPanel(MouseEvent event) {
+        Point p = new Point(event.getX(), event.getY());
+        if (g != null) {
+            //canvasLayout.getChildren().remove(g.resizeHandleNW);
+            //canvasLayout.getChildren().remove(g.resizeHandleSE);
+            //canvasLayout.getChildren().remove(g.mobileRect);
+            //canvasLayout.getChildren().remove(g.selectRect);
+
+        }
+        CanvasEntity i = main.canvas.getSelectedImage(p);
+        if (i != null) {
+            g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
+                    i.getImage().getHeight(), canvasLayout);
+            canvasLayout.getChildren().add(g.mobileRect);
+            canvasLayout.getChildren().add(g.selectRect);
+        }
+
         System.out.println("[" + event.getX() + ", " + event.getY() + "]");
     }
-
-    /*public Image createExampleImage() {
-        int w = (int) (ProjectImages.getInstance().getWidth() / 3);
-        int h = (int) (ProjectImages.getInstance().getHeight() / 3);
-        System.out.println("[" + w + ", " + h + "]");
-        WritableImage out = new WritableImage(w, h);
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                out.getPixelWriter().setColor(x, y, Color.BLUE);
-            }
-        }
-        return out;
-    } */
- /*public ImagePortion centerImage(Image image) {
-
-        int wImage2 = (int) (image.getWidth() / 2);
-        int hImage2 = (int) (image.getHeight() / 2);
-        int w2 = width / 2;
-        int h2 = height / 2;
-
-        return new ImagePortion(w2 - wImage2, h2 - hImage2, (int) image.getWidth(),
-                (int) image.getHeight());
-    } */
+    
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
             undoButton.setDisable(true);
@@ -130,179 +129,25 @@ public class testController implements Initializable {
         }
         drawRaster();
     }
-
-    public void addEdge(int x, int y, int type) {
-        Circle circle = new Circle(x, y, 6.5);
-        circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-        canvasLayout.getChildren().add(circle);
-        circle.setOnDragDetected(e -> {
-            //canvasLayout.getChildren().add(rect2);
-        });
-        /*switch (type) {
-            case 1 ->
-                img = SquareFilter.apply(choose, numberCol, numberRow,
-                        temp.x1, temp.y1, temp.x2, temp.y2);
-            case 2 ->
-                img = CircleFilter.apply(choose, numberCol, numberRow,
-                        temp.x1, temp.y1, temp.x2, temp.y2);
-            case 3 ->
-                img = GaussFilter.apply(choose, numberCol, numberRow,
-                        temp.x1, temp.y1, temp.x2, temp.y2);
-            default -> {
-                return;
-            }
-        } */
-    }
-
-    public Rectangle addBorder(double w, double h, ImagePortion c, Rectangle rect2) {
-        Rectangle rect = new Rectangle(c.x1 - 3, c.y1 - 3, w, h);
-        // rect.setStyle("-fx-background-color:white; -fx-border-style:solid; -fx-border-width:3; -fx-border-color:black;");
-        rect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
-
-        //int i = c.x1 - 3;
-        //int f = c.y1 - 3;
-        //rect.setFill(Color.WHITE);
-        //rect.relocate(i, f);
-        //canvasLayout.getChildren().add(rect);
-        final double handleRadius = 6.5;
-        final String style = "-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;";
-        //Circle circle = new Circle(x, y, 6.5);
-        //circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-
-        Circle resizeHandleNW = new Circle(handleRadius);
-        // bind to top left corner of Rectangle:
-        resizeHandleNW.centerXProperty().bind(rect.xProperty());
-        resizeHandleNW.centerYProperty().bind(rect.yProperty());
-        resizeHandleNW.setStyle(style);
-
-        // bottom right resize handle:
-        Circle resizeHandleSE = new Circle(handleRadius);
-        // bind to bottom right corner of Rectangle:
-        resizeHandleSE.centerXProperty().bind(rect.xProperty().add(rect.widthProperty()));
-        resizeHandleSE.centerYProperty().bind(rect.yProperty().add(rect.heightProperty()));
-        resizeHandleSE.setStyle(style);
-
-        rect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
-            for (Circle c1 : Arrays.asList(resizeHandleNW, resizeHandleSE)) {
-                Pane currentParent = (Pane) c1.getParent();
-                if (currentParent != null) {
-                    currentParent.getChildren().remove(c1);
-                }
-                ((Pane) newParent).getChildren().add(c1);
-            }
-        });
-
-        //addEdge(c.x1 - 2, c.y1 - 2, 1);
-        //addEdge(c.x2 + 2, c.y2 + 2, 2);
-        //addEdge(c.x2 + 2, c.y1 - 2, 3);
-        //addEdge(c.x1 - 2, c.y2 + 2, 4);
-        /*
-        rect.setOnMouseDragged(e -> {
-            rect2.relocate(i + e.getX(), f + e.getY());
-        });
-
-        rect.setOnMouseReleased(e -> {
-            System.out.println("[" + e.getY() + ", " + e.getX());
-            canvasLayout.getChildren().remove(rect2);
-        }); */
-        Wrapper<Point2D> mouseLocation = new Wrapper<>();
-
-        setUpDragging(resizeHandleNW, mouseLocation);
-        setUpDragging(resizeHandleSE, mouseLocation);
-        setUpDragging(rect, mouseLocation);
-
-        resizeHandleNW.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double newX = rect2.getX() + deltaX;
-                if (newX >= handleRadius
-                        && newX <= rect2.getX() + rect2.getWidth() - handleRadius) {
-                    rect2.setX(newX);
-                    rect2.setWidth(rect2.getWidth() - deltaX);
-                }
-                double newY = rect2.getY() + deltaY;
-                if (newY >= handleRadius
-                        && newY <= rect2.getY() + rect2.getHeight() - handleRadius) {
-                    rect2.setY(newY);
-                    rect2.setHeight(rect2.getHeight() - deltaY);
-                }
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
-            }
-        });
-
-        resizeHandleSE.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double newMaxX = rect2.getX() + rect2.getWidth() + deltaX;
-                if (newMaxX >= rect2.getX()
-                        && newMaxX <= rect2.getParent().getBoundsInLocal().getWidth() - handleRadius) {
-                    rect2.setWidth(rect2.getWidth() + deltaX);
-                }
-                double newMaxY = rect2.getY() + rect2.getHeight() + deltaY;
-                if (newMaxY >= rect2.getY()
-                        && newMaxY <= rect2.getParent().getBoundsInLocal().getHeight() - handleRadius) {
-                    rect2.setHeight(rect2.getHeight() + deltaY);
-                }
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
-            }
-        });
-
-        rect.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double newX = rect2.getX() + deltaX;
-                double newMaxX = newX + rect2.getWidth();
-                if (newX >= handleRadius
-                        && newMaxX <= rect2.getParent().getBoundsInLocal().getWidth() - handleRadius) {
-                    rect2.setX(newX);
-                }
-                double newY = rect2.getY() + deltaY;
-                double newMaxY = newY + rect2.getHeight();
-                if (newY >= handleRadius
-                        && newMaxY <= rect2.getParent().getBoundsInLocal().getHeight() - handleRadius) {
-                    rect2.setY(newY);
-                }
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
-            }
-
-        });
-
-        return rect;
-    }
-
-    private void setUpDragging(Shape circle, Wrapper<Point2D> mouseLocation) {
-
-        circle.setOnDragDetected(event -> {
-            circle.getParent().setCursor(Cursor.CLOSED_HAND);
-            mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
-        });
-
-        circle.setOnMouseReleased(event -> {
-            circle.getParent().setCursor(Cursor.DEFAULT);
-            mouseLocation.value = null;
-        });
-    }
-
+    
     public void drawRaster() {
-        ArrayList<ImageView> visualImages = new ArrayList<>();
-        System.out.println("AAAAAAA");
+        //canvasLayout.getChildren().removeAll(visualImages);
+        visualImages = new ArrayList<>();
+        System.out.println(main.canvas.images);
         for (CanvasEntity i : main.canvas.images) {
             System.out.println("PUTA");
             ImageView imageV = new ImageView(i.getImage());
             imageV.relocate(i.x, i.y);
+            /*imageV.setOnMouseClicked(e -> {
+                Gizmo g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
+                        i.getImage().getHeight(), canvasLayout);
+                canvasLayout.getChildren().add(g.mobileRect);
+                canvasLayout.getChildren().add(g.selectRect);
+            }); */
             System.out.println(i.getImage());
             visualImages.add(imageV);
-            canvasLayout.getChildren().add(imageV);
         }
         canvasLayout.getChildren().addAll(visualImages);
-    }
-
-    static class Wrapper<T> {
-
-        T value;
     }
 
     @Override
@@ -319,8 +164,8 @@ public class testController implements Initializable {
         canvasLayout.setPrefSize(w, h);
         canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
-        System.out.println("aquiii " + main.canvas.w);
-        System.out.println("aquiii2 " + main.canvas.h);
+        //System.out.println("aquiii " + main.canvas.w);
+        //System.out.println("aquiii2 " + main.canvas.h);
 
         /*Image i = createExampleImage();
         ImagePortion c = centerImage(i);

@@ -25,12 +25,13 @@ public class Canvas {
     }
 
     public CanvasEntity getSelectedImage(Point p) {
-        for (CanvasEntity image : reversed(images)) {
+        /*for (CanvasEntity image : reversed(images)) {
             if (image.contain(p)) {
                 return image;
             }
         }
-        return null;
+        return null; */
+        return images.get(0);
     }
 
     public boolean addImage(String filename) {

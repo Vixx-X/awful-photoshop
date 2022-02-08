@@ -37,7 +37,7 @@
                <content>
                   <StackPane fx:id="backgroundLayout" prefHeight="767.0" prefWidth="1180.0" style="-fx-background-color: #666666;">
                      <children>
-                        <Pane fx:id="canvasLayout" prefHeight="200.0" prefWidth="200.0" />
+                        <Pane fx:id="canvasLayout" onMouseClicked="#clickPanel" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </StackPane>
                </content>
