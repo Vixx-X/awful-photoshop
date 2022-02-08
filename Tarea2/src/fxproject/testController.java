@@ -44,6 +44,7 @@ public class testController implements Initializable {
     //private WritableImage layout;
     private ProjectImages main;
     private Gizmo g;
+    private CanvasEntity currentImage;
 
     private ArrayList<ImageView> visualImages;
 
@@ -51,20 +52,34 @@ public class testController implements Initializable {
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         if (g != null) {
+            
+            switch (g.type) {
+                case "translate" -> {
+                    Point p1 = new Point(g.mobileRect.getX(), g.mobileRect.getY());
+                    currentImage.translateImg(p1);
+                }
+                case "scale" -> {
+                    
+                }
+                default -> {
+                    
+                }
+            }
             g.removeOnCanvas(canvasLayout);
-            
+            drawRaster();
         }
-        CanvasEntity i = main.canvas.getSelectedImage(p);
-        System.out.println(i);
-        if (i != null) {
-            g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
-                    i.getImage().getHeight());
-            
-            i.getCorners();
+        //System.out.println("[" + event.getX() + ", " + event.getY() + "]");
+        currentImage = main.canvas.getSelectedImage(p);
+        System.out.println(currentImage);
+        if (currentImage != null) {
+            g = new Gizmo(currentImage.getCorners(), currentImage.getImage().getWidth(),
+                    currentImage.getImage().getHeight());
+
+            currentImage.getCorners();
             g.addOnCanvas(canvasLayout);
 
         }
-        System.out.println("[" + event.getX() + ", " + event.getY() + "]");
+
     }
 
     void enableToolsButtons() {
@@ -125,7 +140,6 @@ public class testController implements Initializable {
         visualImages = new ArrayList<>();
         System.out.println(main.canvas.images);
         for (CanvasEntity i : main.canvas.images) {
-            System.out.println("PUTA");
             ImageView imageV = new ImageView(i.getImage());
             imageV.relocate(i.x, i.y);
             /*imageV.setOnMouseClicked(e -> {
@@ -137,7 +151,7 @@ public class testController implements Initializable {
             System.out.println(i.getImage());
             visualImages.add(imageV);
         }
-        canvasLayout.getChildren().addAll(visualImages);
+        canvasLayout.getChildren().setAll(visualImages);
     }
 
     @Override

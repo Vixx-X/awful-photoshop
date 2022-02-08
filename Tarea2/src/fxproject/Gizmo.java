@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import static java.lang.Math.asin;
 import java.util.Arrays;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
@@ -13,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import org.opencv.core.Point;
 
 public final class Gizmo {
 
@@ -23,17 +25,43 @@ public final class Gizmo {
     public Circle resizeHandleNW;
     public Circle resizeHandleSE;
     private final double handleRadius;
+    public Point finalCorner;
+    public String type;
 
-    public Gizmo(int x, int y, double w, double h) {
+    public Gizmo(Point[] corners, double w, double h) {
         pd = 3;
         handleRadius = 6.5;
+        double x = corners[0].x;
+        double y = corners[0].y;
         selectRect = new Rectangle(x - pd, y - pd, w + 2 * pd, h + 2 * pd);
         selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
         mobileRect = new Rectangle(x - pd, y - pd, w + 2 * pd, h + 2 * pd);
         mobileRect.setStyle("-fx-fill: transparent; -fx-stroke: red; -fx-stroke-width: 1;");
-        resizeHandleNW = new Circle(handleRadius);
-        resizeHandleSE = new Circle(handleRadius);
+        resizeHandleNW = new Circle(x - pd, y - pd, handleRadius);
+        resizeHandleSE = new Circle(corners[2].x + pd, corners[2].y + pd, handleRadius);
+        resizeHandleNW.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+        resizeHandleSE.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+
+        rotate(corners);
         addBorder();
+
+    }
+
+    public double getAngle(Point[] corner){
+        double deltaX = corner[1].x - corner[0].x;
+        //System.out.println(deltaX);
+        double deltaY = corner[1].y - corner[0].y;
+        //System.out.println(deltaY);
+        //System.out.println(h);
+        return Math.atan(deltaY/deltaX) * 180 / Math.PI;
+    }
+    
+    public void rotate(Point[] corners) {
+        double angle = getAngle(corners);
+        selectRect.setRotate(angle);
+        //resizeHandleNW.setRotate(30);
+        //resizeHandleSE.setRotate(30);
+        mobileRect.setRotate(angle);
     }
 
     public void addBorder() {
@@ -42,18 +70,6 @@ public final class Gizmo {
         final String style = "-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;";
         //Circle circle = new Circle(x, y, 6.5);
         //circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-
-        // bind to top left corner of Rectangle:
-        resizeHandleNW.centerXProperty().bind(selectRect.xProperty());
-        resizeHandleNW.centerYProperty().bind(selectRect.yProperty());
-        resizeHandleNW.setStyle(style);
-
-        // bottom right resize handle:
-        // bind to bottom right corner of Rectangle:
-        resizeHandleSE.centerXProperty().bind(selectRect.xProperty().add(selectRect.widthProperty()));
-        resizeHandleSE.centerYProperty().bind(selectRect.yProperty().add(selectRect.heightProperty()));
-        resizeHandleSE.setStyle(style);
-
         /*selectRect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
             for (Circle c1 : Arrays.asList(resizeHandleNW, resizeHandleSE)) {
                 Pane currentParent = (Pane) c1.getParent();
@@ -88,6 +104,8 @@ public final class Gizmo {
                 }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
+            type = "scale";
+            //setNewPoint();
         });
 
         resizeHandleSE.setOnMouseDragged(event -> {
@@ -106,6 +124,8 @@ public final class Gizmo {
                 }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
+            type = "scale";
+            //setNewPoint();
         });
 
         selectRect.setOnMouseDragged(event -> {
@@ -126,8 +146,15 @@ public final class Gizmo {
                 }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
+            type = "translate";
 
         });
+    }
+    
+    public Point setNewPoint(){
+        finalCorner.x = mobileRect.getX();
+        finalCorner.y = mobileRect.getY();
+        return finalCorner;
     }
 
     private void setUpDragging(Shape circle, Wrapper<Point2D> mouseLocation) {
@@ -149,7 +176,7 @@ public final class Gizmo {
         canvasLayout.getChildren().remove(mobileRect);
         canvasLayout.getChildren().remove(selectRect);
     }
-    
+
     void addOnCanvas(Pane canvasLayout) {
         canvasLayout.getChildren().add(mobileRect);
         canvasLayout.getChildren().add(selectRect);

@@ -85,7 +85,7 @@ public class CanvasEntity {
         return false;
     }
 
-    void translateImg(Point p) {
+    public void translateImg(Point p) {
         this.x = (int) p.x;
         this.y = (int) p.y;
     }
