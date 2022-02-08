@@ -52,25 +52,31 @@ public class testController implements Initializable {
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         if (g != null) {
-
-            switch (g.type) {
-                case "translate" -> {
-                    Point p1 = new Point(g.mobileRect.getX(), g.mobileRect.getY());
-                    currentImage.translateImg(p1);
-                }
-                case "scale" -> {
-
-                }
-                default -> {
-
+            if (g.type != null) {
+                switch (g.type) {
+                    case "translate" -> {
+                        System.out.println("nsssaascas");
+                        Point p1 = new Point(g.mobileRect.getX(), g.mobileRect.getY());
+                        currentImage.translateImg(p1);
+                        drawRaster();
+                        break;
+                    }
+                    case "scale" -> {
+                        break;
+                    }
+                    default -> {
+                        break;
+                    }
                 }
             }
             g.removeOnCanvas(canvasLayout);
-            drawRaster();
+            g = null;
+
         }
         currentImage = main.canvas.getSelectedImage(p);
         System.out.println(currentImage);
         if (currentImage != null) {
+            System.out.println("holi");
             g = new Gizmo(currentImage.getCorners(), currentImage.getImage().getWidth(),
                     currentImage.getImage().getHeight());
 

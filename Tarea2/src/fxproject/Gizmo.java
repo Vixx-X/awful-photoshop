@@ -49,37 +49,17 @@ public final class Gizmo {
 
     public double getAngle(Point[] corner){
         double deltaX = corner[1].x - corner[0].x;
-        //System.out.println(deltaX);
         double deltaY = corner[1].y - corner[0].y;
-        //System.out.println(deltaY);
-        //System.out.println(h);
         return Math.atan(deltaY/deltaX) * 180 / Math.PI;
     }
     
     public void rotate(Point[] corners) {
         double angle = getAngle(corners);
         selectRect.setRotate(angle);
-        //resizeHandleNW.setRotate(30);
-        //resizeHandleSE.setRotate(30);
         mobileRect.setRotate(angle);
     }
 
     public void addBorder() {
-        // rect.setStyle("-fx-background-color:white; -fx-border-style:solid; -fx-border-width:3; -fx-border-color:black;");
-
-        final String style = "-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;";
-        //Circle circle = new Circle(x, y, 6.5);
-        //circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-        /*selectRect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
-            for (Circle c1 : Arrays.asList(resizeHandleNW, resizeHandleSE)) {
-                Pane currentParent = (Pane) c1.getParent();
-                if (currentParent != null) {
-                    currentParent.getChildren().remove(c1);
-                }
-                ((Pane) newParent).getChildren().add(c1);
-            }
-        }); */
-
         Wrapper<Point2D> mouseLocation = new Wrapper<>();
 
         setUpDragging(resizeHandleNW, mouseLocation);
@@ -105,7 +85,6 @@ public final class Gizmo {
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "scale";
-            //setNewPoint();
         });
 
         resizeHandleSE.setOnMouseDragged(event -> {
@@ -125,7 +104,6 @@ public final class Gizmo {
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "scale";
-            //setNewPoint();
         });
 
         selectRect.setOnMouseDragged(event -> {
