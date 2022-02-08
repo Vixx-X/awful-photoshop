@@ -60,11 +60,7 @@ public class testController implements Initializable {
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         if (g != null) {
-            //canvasLayout.getChildren().remove(g.resizeHandleNW);
-            //canvasLayout.getChildren().remove(g.resizeHandleSE);
-            //canvasLayout.getChildren().remove(g.mobileRect);
-            //canvasLayout.getChildren().remove(g.selectRect);
-
+            canvasLayout.getChildren().remove(g.mobileRect);
         }
         CanvasEntity i = main.canvas.getSelectedImage(p);
         if (i != null) {
@@ -72,6 +68,9 @@ public class testController implements Initializable {
                     i.getImage().getHeight(), canvasLayout);
             canvasLayout.getChildren().add(g.mobileRect);
             canvasLayout.getChildren().add(g.selectRect);
+        }else{
+            canvasLayout.getChildren().remove(g.resizeHandleNW);
+            canvasLayout.getChildren().remove(g.resizeHandleSE);
         }
 
         System.out.println("[" + event.getX() + ", " + event.getY() + "]");
