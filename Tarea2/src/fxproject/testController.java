@@ -58,7 +58,7 @@ public class testController implements Initializable {
 
         }
         CanvasEntity i = main.canvas.getSelectedImage(p);
-        System.out.println(i);
+        System.out.println(i.img.size());
         if (i != null) {
             g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
                     i.getImage().getHeight(), canvasLayout);
