@@ -54,7 +54,7 @@ public final class Gizmo {
         resizeHandleSE.centerYProperty().bind(selectRect.yProperty().add(selectRect.heightProperty()));
         resizeHandleSE.setStyle(style);
 
-        selectRect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
+        /*selectRect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
             for (Circle c1 : Arrays.asList(resizeHandleNW, resizeHandleSE)) {
                 Pane currentParent = (Pane) c1.getParent();
                 if (currentParent != null) {
@@ -62,7 +62,7 @@ public final class Gizmo {
                 }
                 ((Pane) newParent).getChildren().add(c1);
             }
-        });
+        }); */
 
         Wrapper<Point2D> mouseLocation = new Wrapper<>();
 
