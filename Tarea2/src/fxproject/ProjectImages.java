@@ -5,10 +5,14 @@
 package fxproject;
 
 import fxproject.graphics.Canvas;
+import fxproject.graphics.CanvasEntity;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,10 +28,12 @@ public class ProjectImages extends Application {
     private static Stage primaryStage;
     private static VBox mainLayout;
     public Canvas canvas;
-    
+
     //private ArrayList<RawImage> imageList = new ArrayList<>();
     private int currentState;
     public int i;
+    public Gizmo g;
+    public CanvasEntity currentImage;
 
     public ProjectImages() {
         currentState = 0;
@@ -58,11 +64,30 @@ public class ProjectImages extends Application {
     public void showPanel(int width, int height) throws IOException {
         canvas = new Canvas(width, height);
         currentState = 0;
-        VBox informationPanel = FXMLLoader.load(getClass().getResource("test.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
+        VBox informationPanel = loader.load();
+        testController controller = loader.getController();
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);
-        informationView.setScene(new Scene(informationPanel));
+        Scene scene = new Scene(informationPanel);
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent t) {
+                if (currentImage != null) {
+                    if (t.getCode() == KeyCode.F) {
+                        controller.putFront();
+                    } else if (t.getCode() == KeyCode.B) {
+                        controller.putBack();
+                    }
+                }
+
+            }
+
+        });
+
+        informationView.setScene(scene);
         informationView.showAndWait();
     }
 

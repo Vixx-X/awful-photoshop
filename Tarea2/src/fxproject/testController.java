@@ -43,21 +43,19 @@ public class testController implements Initializable {
 
     //private WritableImage layout;
     private ProjectImages main;
-    private Gizmo g;
-    private CanvasEntity currentImage;
 
     private ArrayList<ImageView> visualImages;
 
     @FXML
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
-        if (g != null) {
-            if (g.type != null) {
-                switch (g.type) {
+        if (main.g != null) {
+            if (main.g.type != null) {
+                switch (main.g.type) {
                     case "translate" -> {
-                        System.out.println("nsssaascas");
-                        Point p1 = new Point(g.mobileRect.getX(), g.mobileRect.getY());
-                        currentImage.translateImg(p1);
+                        Point p1 = new Point(main.g.mobileRect.getX(),
+                                main.g.mobileRect.getY());
+                        main.currentImage.translateImg(p1);
                         drawRaster();
                         break;
                     }
@@ -69,23 +67,40 @@ public class testController implements Initializable {
                     }
                 }
             }
-            g.removeOnCanvas(canvasLayout);
-            g = null;
+            main.g.removeOnCanvas(canvasLayout);
+            main.g = null;
 
         }
-        currentImage = main.canvas.getSelectedImage(p);
-        System.out.println(currentImage);
-        if (currentImage != null) {
+        main.currentImage = main.canvas.getSelectedImage(p);
+        System.out.println(main.currentImage);
+        if (main.currentImage != null) {
             System.out.println("holi");
-            g = new Gizmo(currentImage.getCorners(), currentImage.getImage().getWidth(),
-                    currentImage.getImage().getHeight());
+            main.g = new Gizmo(main.currentImage.getCorners(), 
+                    main.currentImage.getImage().getWidth(),
+                    main.currentImage.getImage().getHeight());
 
-            currentImage.getCorners();
-            g.addOnCanvas(canvasLayout);
+            main.currentImage.getCorners();
+            main.g.addOnCanvas(canvasLayout);
 
         }
 
     }
+    
+    public void putFront(){
+        int index = main.canvas.images.indexOf(main.currentImage);
+        main.canvas.images.remove(index);
+        main.canvas.images.add(main.currentImage);
+        drawRaster();
+    }
+    
+    public void putBack(){
+        int index = main.canvas.images.indexOf(main.currentImage);
+        main.canvas.images.remove(index);
+        main.canvas.images.add(0, main.currentImage);
+        drawRaster();
+    }
+
+    
 
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
