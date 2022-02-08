@@ -23,6 +23,13 @@ public class Canvas {
         this.h = height;
         images = new ArrayList<>();
     }
+    
+    //copy constructor
+    public Canvas(Canvas currentCanvas) {
+        this.w = currentCanvas.w;
+        this.h = currentCanvas.h;
+        this.images = new ArrayList<>(currentCanvas.images);
+    }
 
     public CanvasEntity getSelectedImage(Point p) {
         for (CanvasEntity image : reversed(images)) {

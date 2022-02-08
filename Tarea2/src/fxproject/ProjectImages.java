@@ -7,6 +7,7 @@ package fxproject;
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -18,20 +19,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import org.opencv.core.Core;
 
-/**
- *
- * @author Gaby
- */
+
 public class ProjectImages extends Application {
 
     private static ProjectImages instance;
     private static Stage primaryStage;
     private static VBox mainLayout;
-    public Canvas canvas;
+    private Canvas canvas;
 
-    //private ArrayList<RawImage> imageList = new ArrayList<>();
+    private ArrayList<Canvas> record = new ArrayList<>();
     private int currentState;
-    public int i;
+    public int index;
     public Gizmo g;
     public CanvasEntity currentImage;
 
@@ -64,6 +62,7 @@ public class ProjectImages extends Application {
     public void showPanel(int width, int height) throws IOException {
         canvas = new Canvas(width, height);
         currentState = 0;
+        record.add(canvas);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
         VBox informationPanel = loader.load();
         testController controller = loader.getController();
@@ -91,42 +90,46 @@ public class ProjectImages extends Application {
         informationView.showAndWait();
     }
 
+    public Canvas getCurrentCanvas() {
+        return record.get(currentState);
+    }
+
     public int getIndex() {
         return currentState;
     }
 
-    /* public int getStateListSize() {
-        return imageList.size();
+    public int getStateListSize() {
+        return record.size();
     }
 
-    public void pushImage(RawImage image) {
-        if (currentState != (imageList.size() - 1)) {
-            for (int i = currentState + 1; i < imageList.size(); i++) {
-                imageList.remove(i);
+    public void pushCanvas(Canvas c) {
+        if (currentState != (record.size() - 1)) {
+            for (int i = currentState + 1; i < record.size(); i++) {
+                record.remove(i);
             }
         }
         if (currentState == 9) {
-            imageList.remove(1);
+            record.remove(0);
         } else {
             currentState++;
         }
         //System.out.println(currentState);
-        imageList.add(image);
+        record.add(c);
     }
 
-    public RawImage undo() {
+    public Canvas undo() {
         if (currentState > 0) {
             currentState--;
-            return imageList.get(currentState);
+            return record.get(currentState);
         }
         return null;
     }
 
-    public RawImage redo() {
-        if ((imageList.size() - 1) > currentState) {
+    public Canvas redo() {
+        if ((record.size() - 1) > currentState) {
             currentState++;
-            return imageList.get(currentState);
+            return record.get(currentState);
         }
         return null;
-    } */
+    }
 }
