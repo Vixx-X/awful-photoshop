@@ -24,7 +24,7 @@ public final class Gizmo {
     public Circle resizeHandleSE;
     private final double handleRadius;
 
-    public Gizmo(int x, int y, double w, double h, Pane root) {
+    public Gizmo(int x, int y, double w, double h) {
         pd = 3;
         handleRadius = 6.5;
         selectRect = new Rectangle(x - pd, y - pd, w + 2 * pd, h + 2 * pd);
@@ -141,6 +141,20 @@ public final class Gizmo {
             circle.getParent().setCursor(Cursor.DEFAULT);
             mouseLocation.value = null;
         });
+    }
+
+    void removeOnCanvas(Pane canvasLayout) {
+        canvasLayout.getChildren().remove(resizeHandleNW);
+        canvasLayout.getChildren().remove(resizeHandleSE);
+        canvasLayout.getChildren().remove(mobileRect);
+        canvasLayout.getChildren().remove(selectRect);
+    }
+    
+    void addOnCanvas(Pane canvasLayout) {
+        canvasLayout.getChildren().add(mobileRect);
+        canvasLayout.getChildren().add(selectRect);
+        canvasLayout.getChildren().add(resizeHandleNW);
+        canvasLayout.getChildren().add(resizeHandleSE);
     }
 
     static class Wrapper<T> {

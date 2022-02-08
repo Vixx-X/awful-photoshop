@@ -51,20 +51,18 @@ public class testController implements Initializable {
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         if (g != null) {
-            canvasLayout.getChildren().remove(g.resizeHandleNW);
-            canvasLayout.getChildren().remove(g.resizeHandleSE);
-            canvasLayout.getChildren().remove(g.mobileRect);
-            canvasLayout.getChildren().remove(g.selectRect);
+            g.removeOnCanvas(canvasLayout);
+            
         }
         CanvasEntity i = main.canvas.getSelectedImage(p);
         System.out.println(i);
         if (i != null) {
             g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
-                    i.getImage().getHeight(), canvasLayout);
-            canvasLayout.getChildren().add(g.mobileRect);
-            canvasLayout.getChildren().add(g.selectRect);
-            canvasLayout.getChildren().add(g.resizeHandleNW);
-            canvasLayout.getChildren().add(g.resizeHandleSE);
+                    i.getImage().getHeight());
+            
+            i.getCorners();
+            g.addOnCanvas(canvasLayout);
+
         }
         System.out.println("[" + event.getX() + ", " + event.getY() + "]");
     }
