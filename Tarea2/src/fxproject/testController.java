@@ -19,7 +19,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -28,7 +27,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
-
 
 public class testController implements Initializable {
 
@@ -70,8 +68,7 @@ public class testController implements Initializable {
         }
         return out;
     } */
-    
-    /*public ImagePortion centerImage(Image image) {
+ /*public ImagePortion centerImage(Image image) {
 
         int wImage2 = (int) (image.getWidth() / 2);
         int hImage2 = (int) (image.getHeight() / 2);
@@ -81,7 +78,6 @@ public class testController implements Initializable {
         return new ImagePortion(w2 - wImage2, h2 - hImage2, (int) image.getWidth(),
                 (int) image.getHeight());
     } */
-
     void enableToolsButtons() {
         if (ProjectImages.getInstance().getIndex() == 0) {
             undoButton.setDisable(true);
@@ -129,7 +125,7 @@ public class testController implements Initializable {
         FileChooser fc = new FileChooser();
         File file = fc.showOpenDialog(null);
         if (file != null) {
-            main.canvas.addImage(file.getAbsolutePath());
+            System.out.println(main.canvas.addImage(file.getAbsolutePath()));
             System.out.println(file.getAbsolutePath());
         }
         drawRaster();
@@ -172,8 +168,7 @@ public class testController implements Initializable {
         final String style = "-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;";
         //Circle circle = new Circle(x, y, 6.5);
         //circle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-        
-        
+
         Circle resizeHandleNW = new Circle(handleRadius);
         // bind to top left corner of Rectangle:
         resizeHandleNW.centerXProperty().bind(rect.xProperty());
@@ -186,25 +181,21 @@ public class testController implements Initializable {
         resizeHandleSE.centerXProperty().bind(rect.xProperty().add(rect.widthProperty()));
         resizeHandleSE.centerYProperty().bind(rect.yProperty().add(rect.heightProperty()));
         resizeHandleSE.setStyle(style);
-        
+
         rect.parentProperty().addListener((ObservableValue<? extends Parent> obs, Parent oldParent, Parent newParent) -> {
             for (Circle c1 : Arrays.asList(resizeHandleNW, resizeHandleSE)) {
                 Pane currentParent = (Pane) c1.getParent();
                 if (currentParent != null) {
                     currentParent.getChildren().remove(c1);
                 }
-                ((Pane)newParent).getChildren().add(c1);
+                ((Pane) newParent).getChildren().add(c1);
             }
         });
-
 
         //addEdge(c.x1 - 2, c.y1 - 2, 1);
         //addEdge(c.x2 + 2, c.y2 + 2, 2);
         //addEdge(c.x2 + 2, c.y1 - 2, 3);
         //addEdge(c.x1 - 2, c.y2 + 2, 4);
-
-
-        
         /*
         rect.setOnMouseDragged(e -> {
             rect2.relocate(i + e.getX(), f + e.getY());
@@ -214,25 +205,24 @@ public class testController implements Initializable {
             System.out.println("[" + e.getY() + ", " + e.getX());
             canvasLayout.getChildren().remove(rect2);
         }); */
-        
         Wrapper<Point2D> mouseLocation = new Wrapper<>();
 
-        setUpDragging(resizeHandleNW, mouseLocation) ;
-        setUpDragging(resizeHandleSE, mouseLocation) ;
-        setUpDragging(rect, mouseLocation) ;
+        setUpDragging(resizeHandleNW, mouseLocation);
+        setUpDragging(resizeHandleSE, mouseLocation);
+        setUpDragging(rect, mouseLocation);
 
         resizeHandleNW.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double newX = rect2.getX() + deltaX ;
-                if (newX >= handleRadius 
+                double newX = rect2.getX() + deltaX;
+                if (newX >= handleRadius
                         && newX <= rect2.getX() + rect2.getWidth() - handleRadius) {
                     rect2.setX(newX);
                     rect2.setWidth(rect2.getWidth() - deltaX);
                 }
-                double newY = rect2.getY() + deltaY ;
-                if (newY >= handleRadius 
+                double newY = rect2.getY() + deltaY;
+                if (newY >= handleRadius
                         && newY <= rect2.getY() + rect2.getHeight() - handleRadius) {
                     rect2.setY(newY);
                     rect2.setHeight(rect2.getHeight() - deltaY);
@@ -245,20 +235,20 @@ public class testController implements Initializable {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double newMaxX = rect2.getX() + rect2.getWidth() + deltaX ;
-                if (newMaxX >= rect2.getX() 
+                double newMaxX = rect2.getX() + rect2.getWidth() + deltaX;
+                if (newMaxX >= rect2.getX()
                         && newMaxX <= rect2.getParent().getBoundsInLocal().getWidth() - handleRadius) {
                     rect2.setWidth(rect2.getWidth() + deltaX);
                 }
-                double newMaxY = rect2.getY() + rect2.getHeight() + deltaY ;
-                if (newMaxY >= rect2.getY() 
+                double newMaxY = rect2.getY() + rect2.getHeight() + deltaY;
+                if (newMaxY >= rect2.getY()
                         && newMaxY <= rect2.getParent().getBoundsInLocal().getHeight() - handleRadius) {
                     rect2.setHeight(rect2.getHeight() + deltaY);
                 }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
         });
-        
+
         rect.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
@@ -279,12 +269,10 @@ public class testController implements Initializable {
             }
 
         });
-        
-        
-        
+
         return rect;
     }
-    
+
     private void setUpDragging(Shape circle, Wrapper<Point2D> mouseLocation) {
 
         circle.setOnDragDetected(event -> {
@@ -297,18 +285,20 @@ public class testController implements Initializable {
             mouseLocation.value = null;
         });
     }
-    
-    public void drawRaster(){
+
+    public void drawRaster() {
         ArrayList<ImageView> visualImages = new ArrayList<>();
-        for (CanvasEntity i : main.canvas.images){
-            //ImageView imageV = new ImageView(i.getImage());
-            //imageV.relocate(i.x, i.y);
+        System.out.println("AAAAAAA");
+        for (CanvasEntity i : main.canvas.images) {
+            System.out.println("PUTA");
+            ImageView imageV = new ImageView(i.getImage());
+            imageV.relocate(i.x, i.y);
             System.out.println(i.getImage());
-            //visualImages.add(imageV);
-            //canvasLayout.getChildren().add(imageV);
+            visualImages.add(imageV);
+            canvasLayout.getChildren().add(imageV);
         }
-        //canvasLayout.getChildren().addAll(visualImages);
-    } 
+        canvasLayout.getChildren().addAll(visualImages);
+    }
 
     static class Wrapper<T> {
 
@@ -317,13 +307,13 @@ public class testController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         // TODO
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
-        
+
         main = ProjectImages.getInstance();
-        
+
         int w = main.canvas.w;
         int h = main.canvas.h;
         canvasLayout.setPrefSize(w, h);
@@ -331,8 +321,7 @@ public class testController implements Initializable {
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
         System.out.println("aquiii " + main.canvas.w);
         System.out.println("aquiii2 " + main.canvas.h);
-        
-        
+
         /*Image i = createExampleImage();
         ImagePortion c = centerImage(i);
         ImageView iv1 = new ImageView(i);
@@ -355,7 +344,7 @@ public class testController implements Initializable {
         // = createDraggableRectangle(200, 200, 400, 300);
         //rect.setFill(Color.NAVY);
         //});
-        
+
         //Rectangle rect = createDraggableRectangle(200, 200, 400, 300);
         //rect.setFill(Color.NAVY);
 

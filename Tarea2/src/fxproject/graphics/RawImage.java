@@ -20,7 +20,7 @@ public class RawImage extends Mat {
         this.filename = filename;
         Imgcodecs.imread(filename).assignTo(this);
 
-        return this.empty();
+        return !this.empty();
     }
 
     public boolean writeImage(String filename) {
