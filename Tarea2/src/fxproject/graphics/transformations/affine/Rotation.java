@@ -4,6 +4,8 @@
  */
 package fxproject.graphics.transformations.affine;
 
+import org.opencv.core.Mat;
+
 /**
  *
  * @author vixx_
@@ -12,4 +14,7 @@ public class Rotation {
     //   static Mat rotateMatrix(Mat src, int angle) {
     //      Mat rotMat = [[ cos(angle), -sin(angle)], [sin(angle), cos(angle)]];
     // }
+
+    public static void apply(Mat src, int angle) {
+    }
 }

@@ -4,6 +4,8 @@
  */
 package fxproject.graphics;
 
+import fxproject.graphics.transformations.affine.Rotation;
+import fxproject.graphics.transformations.affine.Scale;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -103,11 +105,11 @@ public class CanvasEntity {
         this.img.copyTo(tmpMat);
 
         if (this.angle > 0) {
-
+            Rotation.apply(tmpMat, this.angle);
         }
 
         if (this.scale != 1) {
-
+            Scale.apply(tmpMat, this.scale);
         }
 
         MatOfByte byteMat = new MatOfByte();
