@@ -52,23 +52,22 @@ public class testController implements Initializable {
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
         if (g != null) {
-            
+
             switch (g.type) {
                 case "translate" -> {
                     Point p1 = new Point(g.mobileRect.getX(), g.mobileRect.getY());
                     currentImage.translateImg(p1);
                 }
                 case "scale" -> {
-                    
+
                 }
                 default -> {
-                    
+
                 }
             }
             g.removeOnCanvas(canvasLayout);
             drawRaster();
         }
-        //System.out.println("[" + event.getX() + ", " + event.getY() + "]");
         currentImage = main.canvas.getSelectedImage(p);
         System.out.println(currentImage);
         if (currentImage != null) {
