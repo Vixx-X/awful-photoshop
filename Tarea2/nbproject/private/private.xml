@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
@@ -9,23 +8,12 @@
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/graphics/RawImage.java</file>
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/ImagePortion.java</file>
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/ProjectImages.java</file>
+            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/test.fxml</file>
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/graphics/Canvas.java</file>
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/graphics/CanvasEntity.java</file>
             <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/start.fxml</file>
+            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/Gizmo.java</file>
+            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/Vendors/Reversed.java</file>
         </group>
     </open-files>
 </project-private>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/testController.java</file>
-            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/startViewController.java</file>
-            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/ImagePortion.java</file>
-            <file>file:/C:/Users/Gaby/Documents/UCV/Semestre7/PDI/awful-photoshop/Tarea2/src/fxproject/ProjectImages.java</file>
-        </group>
-    </open-files>
-</project-private>
->>>>>>> 94845a8c27e3959fc82ea8bec56ef06333a6e061
