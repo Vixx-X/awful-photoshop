@@ -10,9 +10,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -27,6 +30,19 @@ public class testController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja",
+            "Cilíndrico", "Gauss");
+    ObservableList<String> algorithm = FXCollections.observableArrayList("Octree",
+            "Mediancut");
+    ObservableList<String> dimensions = FXCollections.observableArrayList("3x3",
+            "5x5", "7x7");
+    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel",
+            "Roberts", "Prewitt", "Perfilado");
+    ObservableList<String> methodList = FXCollections.observableArrayList("Interpolación "
+            + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano");
+    ObservableList<String> optionsThreshold = FXCollections.observableArrayList("Valor "
+            + "constante", "Rango");
+
     @FXML
     private StackPane backgroundLayout;
 
@@ -41,6 +57,24 @@ public class testController implements Initializable {
 
     @FXML
     private MenuItem redoButton;
+
+    @FXML
+    private ComboBox<String> smoothedFilters;
+
+    @FXML
+    private ComboBox<String> borderFilters;
+
+    @FXML
+    private ComboBox<String> threshold;
+
+    @FXML
+    private ComboBox<String> quantization;
+
+    @FXML
+    private ComboBox<String> morphology;
+
+    @FXML
+    private ComboBox<String> method;
 
     //private WritableImage layout;
     private ProjectImages main;
@@ -57,8 +91,9 @@ public class testController implements Initializable {
             if (main.g.type != null) {
                 switch (main.g.type) {
                     case "translate" -> {
-                        Point p1 = new Point(main.g.mobileRect.getX(),
-                                main.g.mobileRect.getY());
+                        Point p1 = new Point(main.g.mobileRect.getPoints().get(0),
+                                main.g.mobileRect.getPoints().get(1));
+                        System.out.println("Aaaaaa" + p1);
                         int index = c.images.indexOf(main.currentImage);
                         tmp.translateImg(p1);
                         c.images.set(index, tmp);
@@ -66,6 +101,13 @@ public class testController implements Initializable {
                         break;
                     }
                     case "scale" -> {
+                        int i = getMethod();
+                        //tmp.sclae(i);
+                        break;
+                    }
+                    case "rotate" -> {
+                        int i = getMethod();
+                        //tmp.rotate(i);
                         break;
                     }
                     default -> {
@@ -83,16 +125,38 @@ public class testController implements Initializable {
         System.out.println(main.currentImage);
         if (main.currentImage != null) {
             tmp = new CanvasEntity(main.currentImage);
-            System.out.println("holi");
-            main.g = new Gizmo(main.currentImage.getCorners(),
-                    main.currentImage.getImage().getWidth(),
-                    main.currentImage.getImage().getHeight());
-
+            //System.out.println("holi");
+            main.g = new Gizmo(main.currentImage.getCorners());
             main.currentImage.getCorners();
             main.g.addOnCanvas(canvasLayout);
 
         }
 
+    }
+
+    private int getMethod() {
+        String type = method.getValue();
+        if (type != null) {
+            switch (type) {
+                case "Interpolación bi-lineal" -> {
+                    System.out.println("Interpolación bi-lineal");
+                    return 1;
+                }
+                case "Interpolación bi-cúbica" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 2;
+                }
+                case "Vecino más cercano" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 3;
+                }
+                default -> {
+                    return 1;
+                }
+            }
+        } else {
+            return 1;
+        }
     }
 
     public void putFront() {
@@ -155,6 +219,69 @@ public class testController implements Initializable {
         }
     }
 
+    private void changeImage(CanvasEntity tmp) {
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        int index = c.images.indexOf(main.currentImage);
+        //System.out.println(index);
+        c.images.set(index, tmp);
+        main.currentImage = null;
+        refreshRaster(c);
+    }
+
+    @FXML
+    void applyMorphology(ActionEvent event) {
+        if (main.currentImage == null) {
+            return;
+        }
+        tmp = new CanvasEntity(main.currentImage);
+        String type = morphology.getValue();
+        if (type != null) {
+            switch (type) {
+                case "3x3" ->
+                    System.out.println("3x3");
+                case "5x5" ->
+                    System.out.println("5x5");
+                case "7x7" ->
+                    System.out.println("7x7");
+                default -> {
+                    break;
+                }
+            }
+        } else {
+            morphology.setValue("3x3");
+            System.out.println("Default 3x3");
+        }
+
+        //tmp.translateImg(p1);
+        changeImage(tmp);
+    }
+
+    @FXML
+    void applyQuantization(ActionEvent event
+    ) {
+        if (main.currentImage == null) {
+            return;
+        }
+        tmp = new CanvasEntity(main.currentImage);
+        String type = quantization.getValue();
+        if (type != null) {
+            switch (type) {
+                case "Octree" ->
+                    System.out.println("Octree");
+                case "Mediancut" ->
+                    System.out.println("MedianCut");
+                default -> {
+                    break;
+                }
+            }
+        } else {
+            quantization.setValue("Octree");
+            System.out.println("Default Octree");
+        }
+        //tmp.translateImg(p1);
+        changeImage(tmp);
+    }
+
     private void refreshRaster(Canvas c) {
         main.pushCanvas(c);
         enableToolsButtons();
@@ -177,16 +304,20 @@ public class testController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         // TODO
+        main = ProjectImages.getInstance();
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
-
-        main = ProjectImages.getInstance();
-
         int w = main.getCurrentCanvas().w;
         int h = main.getCurrentCanvas().h;
         canvasLayout.setPrefSize(w, h);
         canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
+        threshold.setItems(optionsThreshold);
+        smoothedFilters.setItems(smoothedList);
+        borderFilters.setItems(borderList);
+        quantization.setItems(algorithm);
+        morphology.setItems(dimensions);
+        method.setItems(methodList);
     }
 
 }

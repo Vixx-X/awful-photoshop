@@ -68,6 +68,8 @@ public class ProjectImages extends Application {
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);
+        informationView.setMaximized(true);
+        //informationView.setFullScreen(true);
         Scene scene = new Scene(informationPanel);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
