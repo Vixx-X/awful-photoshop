@@ -131,7 +131,6 @@ public class testController implements Initializable {
             main.g.addOnCanvas(canvasLayout);
 
         }
-
     }
 
     private int getMethod() {

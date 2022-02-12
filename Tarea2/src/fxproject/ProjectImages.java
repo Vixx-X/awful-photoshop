@@ -62,8 +62,11 @@ public class ProjectImages extends Application {
     public void showPanel(int width, int height) throws IOException {
         canvas = new Canvas(width, height);
         currentState = 0;
+        
         record.add(canvas);
+        System.out.println(width + "aaaaaa");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
+        System.out.println(width + "bbbbbb");
         VBox informationPanel = loader.load();
         mainController = loader.getController();
         Stage informationView = new Stage();

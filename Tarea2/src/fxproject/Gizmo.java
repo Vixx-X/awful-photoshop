@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+
 import fxproject.graphics.CanvasEntity;
 import static java.lang.Math.abs;
 import static java.lang.Math.atan;
@@ -185,8 +186,8 @@ public final class Gizmo {
                 int h = currentImage.getHeight();
                 
                 float newScale = (float) ((float)(p.x - currentImage.x)*(p.y - currentImage.y)/((float)w*h));
-                currentImage.translateImg(p);
-                currentImage.scaleImg(newScale);
+                currentImage.translate(p);
+                currentImage.scale(newScale);
                 setCorners(currentImage.getCorners());
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
 
@@ -206,10 +207,8 @@ public final class Gizmo {
                 
                 float newScale = (float) ((float)(p.x - currentImage.x)*(p.y - currentImage.y)/((float)w*h));
                 //System.out.println(newScale);
-                currentImage.scaleImg(newScale);
+                currentImage.scale(newScale);
                 setCorners(currentImage.getCorners());
-                
-
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "scale";
@@ -244,7 +243,7 @@ public final class Gizmo {
             System.out.println(angle + " " + atan(m3));
             //mobileRect.setRotate(angle);
 
-            currentImage.rotateImg((int) angle);
+            currentImage.rotate((int) angle);
             setCorners(currentImage.getCorners());
 
             /*double newMaxX = mobileRect.getX() + mobileRect.getWidth() + deltaX;
@@ -265,17 +264,10 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-
-                currentImage.translateImg(new Point(currentImage.x + deltaX,
+                currentImage.translate(new Point(currentImage.x + deltaX,
                         currentImage.y + deltaY));
 
                 setCorners(currentImage.getCorners());
-                //double limitf1 = mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius;
-                //double limitf2 = mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius;
-                /*for (int i = 0; i < 8; i++) {
-                    double delta = (i % 2 == 0) ? deltaX : deltaY;
-                    setPoint(mobileRect, i, delta);
-                } */
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "translate";
