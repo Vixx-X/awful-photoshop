@@ -28,13 +28,19 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="46.0" prefWidth="294.0" spacing="10.0">
                <children>
-                  <TextField fx:id="widthCanvas" prefHeight="25.0" prefWidth="87.0" />
+                  <TextField fx:id="widthCanvas" alignment="CENTER" prefHeight="25.0" prefWidth="87.0" text="1060">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="heightCanvas" prefHeight="25.0" prefWidth="94.0" />
+                  <TextField fx:id="heightCanvas" alignment="CENTER" prefHeight="25.0" prefWidth="94.0" text="640">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#createCanvas" prefHeight="25.0" prefWidth="110.0" text="CREAR LIENZO">

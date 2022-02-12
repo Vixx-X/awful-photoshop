@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
 import java.io.File;
 import java.net.URL;
@@ -43,62 +44,93 @@ public class testController implements Initializable {
 
     //private WritableImage layout;
     private ProjectImages main;
-    private Gizmo g;
 
     private ArrayList<ImageView> visualImages;
+
+    private CanvasEntity tmp;
 
     @FXML
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
-        if (g != null) {
-            //canvasLayout.getChildren().remove(g.resizeHandleNW);
-            //canvasLayout.getChildren().remove(g.resizeHandleSE);
-            //canvasLayout.getChildren().remove(g.mobileRect);
-            //canvasLayout.getChildren().remove(g.selectRect);
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        if (main.g != null && tmp != null) {
+            if (main.g.type != null) {
+                switch (main.g.type) {
+                    case "translate" -> {
+                        Point p1 = new Point(main.g.mobileRect.getX(),
+                                main.g.mobileRect.getY());
+                        int index = c.images.indexOf(main.currentImage);
+                        tmp.translateImg(p1);
+                        c.images.set(index, tmp);
+                        refreshRaster(c);
+                        break;
+                    }
+                    case "scale" -> {
+                        break;
+                    }
+                    default -> {
+                        break;
+                    }
+                }
+            }
+            tmp = null;
+            main.g.removeOnCanvas(canvasLayout);
+            main.g = null;
 
         }
-        CanvasEntity i = main.canvas.getSelectedImage(p);
-        System.out.println(i.img.size());
-        if (i != null) {
-            g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
-                    i.getImage().getHeight(), canvasLayout);
-            canvasLayout.getChildren().add(g.mobileRect);
-            canvasLayout.getChildren().add(g.selectRect);
-        }
+	main.currentImage = c.getSelectedImage(p);
+        //main.currentImage = c.getSelectedImage(p);
+        System.out.println(main.currentImage);
+        if (main.currentImage != null) {
+            tmp = new CanvasEntity(main.currentImage);
+            System.out.println("holi");
+            main.g = new Gizmo(main.currentImage.getCorners(),
+                    main.currentImage.getImage().getWidth(),
+                    main.currentImage.getImage().getHeight());
 
-        System.out.println("[" + event.getX() + ", " + event.getY() + "]");
+            main.currentImage.getCorners();
+            main.g.addOnCanvas(canvasLayout);
+
+        }
+    }
+
+    public void putFront() {
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        int index = c.images.indexOf(main.currentImage);
+        c.images.remove(index);
+        c.images.add(main.currentImage);
+        refreshRaster(c);
+    }
+
+    public void putBack() {
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        int index = c.images.indexOf(main.currentImage);
+        c.images.remove(index);
+        c.images.add(0, main.currentImage);
+        refreshRaster(c);
     }
 
     void enableToolsButtons() {
-        if (ProjectImages.getInstance().getIndex() == 0) {
-            undoButton.setDisable(true);
-        } else {
-            undoButton.setDisable(false);
+        undoButton.setDisable(main.getIndex() == 0);
+        redoButton.setDisable(main.getStateListSize() - 1 == main.getIndex());
+    }
+
+    @FXML
+    void undoAction() {
+        Canvas canvas = main.undo();
+        if (canvas != null) {
+            drawRaster();
+            enableToolsButtons();
         }
-        /* if (ProjectImages.getInstance().getStateListSize() - 1
-                == ProjectImages.getInstance().getIndex()) {
-            redoButton.setDisable(true);
-        } else {
-            redoButton.setDisable(false);
-        } */
     }
 
     @FXML
-    void undoAction(ActionEvent event) {
-        /*RawImage image = ProjectImages.getInstance().undo();
-        if (image != null) {
-            imageMain.setImage(image.getImage());
-        } */
-        enableToolsButtons();
-    }
-
-    @FXML
-    void redoAction(ActionEvent event) {
-        /*RawImage image = ProjectImages.getInstance().redo();
-        if (image != null) {
-            imageMain.setImage(image.getImage());
-        } */
-        enableToolsButtons();
+    void redoAction() {
+        Canvas canvas = main.redo();
+        if (canvas != null) {
+            drawRaster();
+            enableToolsButtons();
+        }
     }
 
     @FXML
@@ -116,30 +148,28 @@ public class testController implements Initializable {
         FileChooser fc = new FileChooser();
         File file = fc.showOpenDialog(null);
         if (file != null) {
-            System.out.println(main.canvas.addImage(file.getAbsolutePath()));
-            System.out.println(file.getAbsolutePath());
+            Canvas c = new Canvas(main.getCurrentCanvas());
+            c.addImage(file.getAbsolutePath());
+            refreshRaster(c);
         }
+    }
+
+    private void refreshRaster(Canvas c) {
+        main.pushCanvas(c);
+        enableToolsButtons();
         drawRaster();
     }
 
-    public void drawRaster() {
-        //canvasLayout.getChildren().removeAll(visualImages);
+    private void drawRaster() {
         visualImages = new ArrayList<>();
-        System.out.println(main.canvas.images);
-        for (CanvasEntity i : main.canvas.images) {
-            System.out.println("PUTA");
+        System.out.println(main.getCurrentCanvas().images);
+        for (CanvasEntity i : main.getCurrentCanvas().images) {
             ImageView imageV = new ImageView(i.getImage());
             imageV.relocate(i.x, i.y);
-            /*imageV.setOnMouseClicked(e -> {
-                Gizmo g = new Gizmo(i.x, i.y, i.getImage().getWidth(),
-                        i.getImage().getHeight(), canvasLayout);
-                canvasLayout.getChildren().add(g.mobileRect);
-                canvasLayout.getChildren().add(g.selectRect);
-            }); */
             System.out.println(i.getImage());
             visualImages.add(imageV);
         }
-        canvasLayout.getChildren().addAll(visualImages);
+        canvasLayout.getChildren().setAll(visualImages);
     }
 
     @Override
@@ -151,48 +181,11 @@ public class testController implements Initializable {
 
         main = ProjectImages.getInstance();
 
-        int w = main.canvas.w;
-        int h = main.canvas.h;
+        int w = main.getCurrentCanvas().w;
+        int h = main.getCurrentCanvas().h;
         canvasLayout.setPrefSize(w, h);
         canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
-        //System.out.println("aquiii " + main.canvas.w);
-        //System.out.println("aquiii2 " + main.canvas.h);
-
-        /*Image i = createExampleImage();
-        ImagePortion c = centerImage(i);
-        ImageView iv1 = new ImageView(i);
-        iv1.relocate(c.x1, c.y1);
-        //iv1.setImage(i);
-        iv1.setFitWidth(i.getWidth());
-        iv1.setFitHeight(i.getHeight());
-        iv1.setPreserveRatio(true);
-        canvasLayout.getChildren().addAll(iv1);
-        Rectangle rect2 = new Rectangle(c.x1 - 3, c.y1 - 3, i.getWidth() + 6, i.getHeight() + 6);
-        Rectangle rect = addBorder(i.getWidth() + 6, i.getHeight() + 6, c, rect2);
-        rect2.setStyle("-fx-fill: transparent; -fx-stroke: red; -fx-stroke-width: 1;");
-
-        iv1.setOnMouseClicked(e -> {
-            canvasLayout.getChildren().remove(rect2);
-            //Rectangle rect = createDraggableRectangle(200, 200, 400, 300);
-            canvasLayout.getChildren().add(rect2);
-            canvasLayout.getChildren().add(rect);
-        }); /
-        // = createDraggableRectangle(200, 200, 400, 300);
-        //rect.setFill(Color.NAVY);
-        //});
-
-        //Rectangle rect = createDraggableRectangle(200, 200, 400, 300);
-        //rect.setFill(Color.NAVY);
-
-        //canvasLayout.getChildren().add(rect);
-
-        //addBorder(i.getWidth() + 6, i.getHeight() + 6, c);
-        //Rectangle rect = new Rectangle(i.getWidth() + 6, i.getWidth() + 6);
-        /*iv1.setOnMouseDragEntered(e -> {
-            System.out.println("[chao]");
-           canvasLayout.getChildren().add(rect);
-        }); */
     }
 
 }

@@ -33,6 +33,14 @@ public class CanvasEntity {
         this.angle = 0;
         this.scale = 1;
     }
+    
+    public CanvasEntity(CanvasEntity other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.img = other.img;
+        this.angle = other.angle;
+        this.scale = other.scale;
+    }
 
     public CanvasEntity(int x, int y, RawImage img) {
         this.x = x;
@@ -85,7 +93,7 @@ public class CanvasEntity {
         return false;
     }
 
-    void translateImg(Point p) {
+    public void translateImg(Point p) {
         this.x = (int) p.x;
         this.y = (int) p.y;
     }
