@@ -4,24 +4,17 @@
  */
 package fxproject;
 
-import static java.lang.Math.asin;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-import java.util.Arrays;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import org.opencv.core.Point;
 
 public final class Gizmo {
@@ -200,8 +193,8 @@ public final class Gizmo {
                     double m2 = getSlope(NE.x, NE.y, SE.x, SE.y);
                     Point SE1 = getCoord(SE, m1, (deltaX + deltaY) / 2);
                     Point newSE = getCoord(SE1, m2, (deltaX + deltaY) / 2);
-                        Point newNE = getIntersection(NW, NE, newSE);
-                        Point newSW = getIntersection(NW, SW, newSE);
+                    Point newNE = getIntersection(NW, NE, newSE);
+                    Point newSW = getIntersection(NW, SW, newSE);
                     mobileRect.getPoints().set(2, newNE.x);
                     mobileRect.getPoints().set(3, newNE.y);
                     mobileRect.getPoints().set(4, newSE.x);
@@ -226,7 +219,7 @@ public final class Gizmo {
 
  /*if (newMaxY >= mobileRect.getY() && newMaxX >= mobileRect.getX()
                         && newMaxY <= mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius) {
-                    
+
                 }*/
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
@@ -259,24 +252,16 @@ public final class Gizmo {
                 double limitf1 = mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius;
                 double limitf2 = mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius;
 
-                if (checkBorder(mobileRect, handleRadius, limitf1, deltaX, 0)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 2)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 4)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 6)) {
-                    setPoint(mobileRect, 0, deltaX);
-                    setPoint(mobileRect, 2, deltaX);
-                    setPoint(mobileRect, 4, deltaX);
-                    setPoint(mobileRect, 6, deltaX);
-                }
-                if (checkBorder(mobileRect, handleRadius, limitf2, deltaY, 1)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 3)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 5)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 7)) {
-                    setPoint(mobileRect, 1, deltaY);
-                    setPoint(mobileRect, 3, deltaY);
-                    setPoint(mobileRect, 5, deltaY);
-                    setPoint(mobileRect, 7, deltaY);
-                }
+                setPoint(mobileRect, 0, deltaX);
+                setPoint(mobileRect, 2, deltaX);
+                setPoint(mobileRect, 4, deltaX);
+                setPoint(mobileRect, 6, deltaX);
+
+                setPoint(mobileRect, 1, deltaY);
+                setPoint(mobileRect, 3, deltaY);
+                setPoint(mobileRect, 5, deltaY);
+                setPoint(mobileRect, 7, deltaY);
+
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "translate";
