@@ -95,7 +95,7 @@ public class testController implements Initializable {
                                 main.g.mobileRect.getPoints().get(1));
                         System.out.println("Aaaaaa" + p1);
                         int index = c.images.indexOf(main.currentImage);
-                        tmp.translateImg(p1);
+                        tmp.translate(p1);
                         c.images.set(index, tmp);
                         refreshRaster(c);
                         break;
@@ -120,7 +120,7 @@ public class testController implements Initializable {
             main.g = null;
 
         }
-	main.currentImage = c.getSelectedImage(p);
+        main.currentImage = c.getSelectedImage(p);
         //main.currentImage = c.getSelectedImage(p);
         System.out.println(main.currentImage);
         if (main.currentImage != null) {

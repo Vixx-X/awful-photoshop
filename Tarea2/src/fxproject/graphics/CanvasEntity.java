@@ -33,7 +33,7 @@ public class CanvasEntity {
         this.angle = 0;
         this.scale = 1;
     }
-    
+
     public CanvasEntity(CanvasEntity other) {
         this.x = other.x;
         this.y = other.y;
@@ -93,30 +93,45 @@ public class CanvasEntity {
         return false;
     }
 
-    public void translateImg(Point p) {
+    public void translate(Point p) {
         this.x = (int) p.x;
         this.y = (int) p.y;
     }
 
-    void rotateImg(int angle) {
+    public void rotate(int angle) {
         this.angle = angle;
     }
 
-    void scaleImg(float scale) {
+    public void scale(float scale) {
         this.scale = scale;
+    }
+
+    static public Mat translateImg(Mat img, Point p) {
+        // if this was more low level, here we will translate using Mat.mult
+        return img;
+    }
+
+    static public Mat rotateImg(Mat img, int angle) {
+        if (angle % 360 == 0) {
+            return img;
+        }
+        return img;
+    }
+
+    static public Mat scaleImg(Mat img, float scale) {
+        if (scale == 1) {
+            return img;
+        }
+        return img;
     }
 
     public Image getImage() {
         Mat tmpMat = new Mat();
         this.img.copyTo(tmpMat);
 
-        if (this.angle > 0) {
-
-        }
-
-        if (this.scale != 1) {
-
-        }
+        //tmpMat = translateImg(tmpMat, point);
+        tmpMat = rotateImg(tmpMat, this.angle);
+        tmpMat = scaleImg(tmpMat, this.scale);
 
         MatOfByte byteMat = new MatOfByte();
         Imgcodecs.imencode(".bmp", tmpMat, byteMat);
