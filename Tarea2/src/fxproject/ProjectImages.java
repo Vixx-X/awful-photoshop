@@ -26,7 +26,7 @@ public class ProjectImages extends Application {
     private static VBox mainLayout;
     private Canvas canvas;
 
-    private ArrayList<Canvas> record = new ArrayList<>();
+    private final ArrayList<Canvas> record = new ArrayList<>();
     private int currentState;
     public int index;
     public Gizmo g;
@@ -62,11 +62,9 @@ public class ProjectImages extends Application {
     public void showPanel(int width, int height) throws IOException {
         canvas = new Canvas(width, height);
         currentState = 0;
-        
+
         record.add(canvas);
-        System.out.println(width + "aaaaaa");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
-        System.out.println(width + "bbbbbb");
         VBox informationPanel = loader.load();
         mainController = loader.getController();
         Stage informationView = new Stage();
@@ -122,7 +120,6 @@ public class ProjectImages extends Application {
         } else {
             currentState++;
         }
-        //System.out.println(currentState);
         record.add(c);
     }
 

@@ -4,8 +4,10 @@
  */
 package fxproject.graphics;
 
+import fxproject.graphics.transformations.affine.Rotation;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
+import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import javafx.scene.image.Image;
@@ -23,7 +25,7 @@ public class CanvasEntity {
 
     public int x, y;
     public RawImage img;
-    public int angle;
+    public float angle;
     public float scale;
 
     public CanvasEntity(int x, int y, String filename) {
@@ -51,35 +53,62 @@ public class CanvasEntity {
         this.scale = 1;
     }
 
-    static Point rotatePoint(Point p, Point center, int angle) {
+    public Point getCenter() {
+        int width = this.getUnrotatedCroppedWidth();
+        int height = this.getUnrotatedCroppedHeight();
+        int _x = this.getUnrotatedCroppedX();
+        int _y = this.getUnrotatedCroppedY();
+        return new Point(width / 2 + _x, height / 2 + _y);
+    }
+
+    public Point getRasterCoord() {
+        Point[] corners = this.getCorners();
+        Point ret = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        for (Point i : corners) {
+            ret.x = min(i.x, ret.x);
+            ret.y = min(i.y, ret.y);
+        }
+        return ret;
+    }
+
+    static Point rotatePoint(Point p, Point center, float angle) {
         return new Point(
                 cos(angle) * (p.x - center.x) - sin(angle) * (p.y - center.y) + center.x,
                 sin(angle) * (p.x - center.x) + cos(angle) * (p.y - center.y) + center.y
         );
     }
 
-    public int getWidth() {
+    public int getUnrotatedCroppedWidth() {
         Size size = this.img.size();
         return (int) round(size.width * this.scale);
     }
 
-    public int getHeight() {
+    public int getUnrotatedCroppedHeight() {
         Size size = this.img.size();
         return (int) round(size.height * this.scale);
+    }
+
+    public int getUnrotatedCroppedX() {
+        return this.x;
+    }
+
+    public int getUnrotatedCroppedY() {
+        return this.y;
     }
 
     public Point[] getCorners() {
         Point[] corners = new Point[4];
 
-        Size size = this.img.size();
-        int width = (int) round(size.width * this.scale);
-        int height = (int) round(size.height * this.scale);
-        Point center = new Point(width / 2 + this.x, height / 2 + this.y);
+        int width = this.getUnrotatedCroppedWidth();
+        int height = this.getUnrotatedCroppedHeight();
+        int _x = this.getUnrotatedCroppedX();
+        int _y = this.getUnrotatedCroppedY();
+        Point center = this.getCenter();
 
-        corners[0] = CanvasEntity.rotatePoint(new Point(0 + this.x, 0 + this.y), center, this.angle);
-        corners[1] = CanvasEntity.rotatePoint(new Point(width + this.x, 0 + this.y), center, this.angle);
-        corners[2] = CanvasEntity.rotatePoint(new Point(width + this.x, height + this.y), center, this.angle);
-        corners[3] = CanvasEntity.rotatePoint(new Point(0 + this.x, height + this.y), center, this.angle);
+        corners[0] = CanvasEntity.rotatePoint(new Point(0 + _x, 0 + _y), center, this.angle);
+        corners[1] = CanvasEntity.rotatePoint(new Point(width + _x, 0 + _y), center, this.angle);
+        corners[2] = CanvasEntity.rotatePoint(new Point(width + _x, height + _y), center, this.angle);
+        corners[3] = CanvasEntity.rotatePoint(new Point(0 + _x, height + _y), center, this.angle);
 
         return corners;
     }
@@ -106,23 +135,16 @@ public class CanvasEntity {
         return false;
     }
 
+    public void morphology(int dimension) {
+        //this.img = Erosion.apply(getImage(), dimension);
+    }
+
     public void translate(Point p) {
         this.x = (int) p.x;
         this.y = (int) p.y;
     }
 
-    public void morphology(int dimension) {
-        //this.img = Erosion.apply(getImage(), dimension);
-    }
-
-    public void rotateImg(int angle) {
-        this.angle = angle;
-    }
-
-    public void scaleImg(float scale) {
-        
-    }
-    public void rotate(int angle) {
+    public void rotate(float angle) {
         this.angle = angle;
     }
 
@@ -135,11 +157,13 @@ public class CanvasEntity {
         return img;
     }
 
-    static public Mat rotateImg(Mat img, int angle) {
+    static public Mat rotateImg(Mat img, float angle) {
         if (angle % 360 == 0) {
             return img;
         }
-        return img;
+        System.out.println("HERE " + angle);
+        Mat ret = Rotation.apply(img, angle);
+        return ret;
     }
 
     static public Mat scaleImg(Mat img, float scale) {
@@ -153,6 +177,8 @@ public class CanvasEntity {
         Mat tmpMat = new Mat();
         this.img.copyTo(tmpMat);
 
+        System.out.println("PUTA " + this.angle);
+
         //tmpMat = translateImg(tmpMat, point);
         tmpMat = rotateImg(tmpMat, this.angle);
         tmpMat = scaleImg(tmpMat, this.scale);
@@ -161,4 +187,5 @@ public class CanvasEntity {
         Imgcodecs.imencode(".bmp", tmpMat, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));
     }
+
 }

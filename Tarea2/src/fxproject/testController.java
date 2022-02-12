@@ -88,10 +88,6 @@ public class testController implements Initializable {
         if (main.g.type != null) {
             switch (main.g.type) {
                 case "translate" -> {
-                    System.out.println("lisasa " + main.g.mobileRect.getPoints().get(0) 
-                    + " " + main.g.mobileRect.getPoints().get(1));
-                    System.out.println("li2222 " + main.currentImage.x 
-                    + " " + main.currentImage.y);
                     refreshRaster(c);
                     break;
                 }
@@ -103,6 +99,7 @@ public class testController implements Initializable {
                 case "rotate" -> {
                     int i = getMethod();
                     //tmp.rotate(i);
+                    refreshRaster(c);
                     break;
                 }
                 default -> {
@@ -123,10 +120,8 @@ public class testController implements Initializable {
         c = new Canvas(main.getCurrentCanvas());
         main.currentImage = c.getSelectedImage(p);
         //main.currentImage = c.getSelectedImage(p);
-        System.out.println(main.currentImage);
         if (main.currentImage != null) {
             //tmp = new CanvasEntity(main.currentImage);
-            //System.out.println("holi");
             main.g = new Gizmo(main.currentImage);
             main.g.addOnCanvas(canvasLayout);
 
@@ -221,7 +216,6 @@ public class testController implements Initializable {
     private void changeImage(CanvasEntity tmp) {
         Canvas c = new Canvas(main.getCurrentCanvas());
         int index = c.images.indexOf(main.currentImage);
-        //System.out.println(index);
         c.images.set(index, tmp);
         main.currentImage = null;
         refreshRaster(c);
@@ -283,19 +277,16 @@ public class testController implements Initializable {
 
     private void refreshRaster(Canvas c) {
         main.pushCanvas(c);
-        System.out.println("eeeee" + c);
-        System.out.println("uuuuu" + main.getCurrentCanvas());
         enableToolsButtons();
         drawRaster();
     }
 
     private void drawRaster() {
         visualImages = new ArrayList<>();
-        System.out.println(main.getCurrentCanvas().images);
         for (CanvasEntity i : main.getCurrentCanvas().images) {
             ImageView imageV = new ImageView(i.getImage());
-            imageV.relocate(i.x, i.y);
-            System.out.println(i.getImage());
+            Point p = i.getRasterCoord();
+            imageV.relocate(p.x, p.y);
             visualImages.add(imageV);
         }
         canvasLayout.getChildren().setAll(visualImages);

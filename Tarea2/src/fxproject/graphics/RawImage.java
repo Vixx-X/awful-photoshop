@@ -14,10 +14,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class RawImage extends Mat {
 
     public String filename;
-    public int rotationAngle;
-    
-    
-    public RawImage copy(){
+
+    public RawImage copy() {
         RawImage aux = new RawImage();
         this.clone().assignTo(aux);
         aux.filename = this.filename;

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.opencv.core.Point;
 
 import static fxproject.Vendors.Reversed.reversed;
-import java.util.Arrays;
 
 /**
  *
@@ -25,7 +24,6 @@ public class Canvas {
         images = new ArrayList<>();
     }
 
-    //copy constructor
     public Canvas(Canvas currentCanvas) {
         this.w = currentCanvas.w;
         this.h = currentCanvas.h;
