@@ -4,6 +4,7 @@
  */
 package fxproject.graphics;
 
+import fxproject.Morphology.Erosion;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -96,6 +97,10 @@ public class CanvasEntity {
     public void translateImg(Point p) {
         this.x = (int) p.x;
         this.y = (int) p.y;
+    }
+    
+    public void morphology(int dimension) {
+        //this.img = Erosion.apply(getImage(), dimension);
     }
 
     void rotateImg(int angle) {

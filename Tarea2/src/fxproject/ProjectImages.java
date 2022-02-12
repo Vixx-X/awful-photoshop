@@ -31,6 +31,7 @@ public class ProjectImages extends Application {
     public int index;
     public Gizmo g;
     public CanvasEntity currentImage;
+    public testController mainController;
 
     public ProjectImages() {
         currentState = 0;
@@ -64,7 +65,7 @@ public class ProjectImages extends Application {
         record.add(canvas);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
         VBox informationPanel = loader.load();
-        testController controller = loader.getController();
+        mainController = loader.getController();
         Stage informationView = new Stage();
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);
@@ -77,13 +78,13 @@ public class ProjectImages extends Application {
             public void handle(KeyEvent t) {
                 if (currentImage != null) {
                     if (t.getCode() == KeyCode.F) {
-                        controller.putFront();
+                        mainController.putFront();
                     } else if (t.getCode() == KeyCode.B) {
-                        controller.putBack();
+                        mainController.putBack();
                     } else if (t.getCode() == KeyCode.Z && t.isControlDown()) {
-                        controller.undoAction();
+                        mainController.undoAction();
                     } else if (t.getCode() == KeyCode.Y && t.isControlDown()) {
-                        controller.redoAction();
+                        mainController.redoAction();
                     }
                 }
 

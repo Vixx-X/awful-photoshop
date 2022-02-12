@@ -82,43 +82,47 @@ public class testController implements Initializable {
     private ArrayList<ImageView> visualImages;
 
     private CanvasEntity tmp;
+    private Canvas c;
+
+    void moveActions(String type, Canvas c) {
+        if (main.g.type != null) {
+            switch (main.g.type) {
+                case "translate" -> {
+                    Point p1 = new Point(main.g.mobileRect.getPoints().get(0),
+                            main.g.mobileRect.getPoints().get(1));
+                    System.out.println("Aaaaaa" + p1);
+                    int index = c.images.indexOf(main.currentImage);
+                    tmp.translateImg(p1);
+                    c.images.set(index, tmp);
+                    refreshRaster(c);
+                    break;
+                }
+                case "scale" -> {
+                    int i = getMethod();
+                    //tmp.sclae(i);
+                    break;
+                }
+                case "rotate" -> {
+                    int i = getMethod();
+                    //tmp.rotate(i);
+                    break;
+                }
+                default -> {
+                    break;
+                }
+            }
+        }
+    }
 
     @FXML
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
-        Canvas c = new Canvas(main.getCurrentCanvas());
+        c = new Canvas(main.getCurrentCanvas());
         if (main.g != null && tmp != null) {
-            if (main.g.type != null) {
-                switch (main.g.type) {
-                    case "translate" -> {
-                        Point p1 = new Point(main.g.mobileRect.getPoints().get(0),
-                                main.g.mobileRect.getPoints().get(1));
-                        System.out.println("Aaaaaa" + p1);
-                        int index = c.images.indexOf(main.currentImage);
-                        tmp.translateImg(p1);
-                        c.images.set(index, tmp);
-                        refreshRaster(c);
-                        break;
-                    }
-                    case "scale" -> {
-                        int i = getMethod();
-                        //tmp.sclae(i);
-                        break;
-                    }
-                    case "rotate" -> {
-                        int i = getMethod();
-                        //tmp.rotate(i);
-                        break;
-                    }
-                    default -> {
-                        break;
-                    }
-                }
-            }
+            moveActions(main.g.type, c);
             tmp = null;
             main.g.removeOnCanvas(canvasLayout);
             main.g = null;
-
         }
         main.currentImage = c.getSelectedImage(p);
         //main.currentImage = c.getSelectedImage(p);

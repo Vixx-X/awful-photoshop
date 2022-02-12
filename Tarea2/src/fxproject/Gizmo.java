@@ -4,24 +4,19 @@
  */
 package fxproject;
 
-import static java.lang.Math.asin;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-import java.util.Arrays;
-import javafx.beans.value.ObservableValue;
+import static java.lang.Math.toDegrees;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import org.opencv.core.Point;
 
 public final class Gizmo {
@@ -185,10 +180,6 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-
-                //Scale s = new Scale((deltaX + deltaY) / 2, (deltaX + deltaY) / 2);
-                //System.out.println("holi");
-                //mobileRect.getTransforms().addAll(s);
                 Point NW = new Point(mobileRect.getPoints().get(0), mobileRect.getPoints().get(1));
                 Point NE = new Point(mobileRect.getPoints().get(2), mobileRect.getPoints().get(3));
                 Point SE = new Point(mobileRect.getPoints().get(4), mobileRect.getPoints().get(5));
@@ -200,8 +191,8 @@ public final class Gizmo {
                     double m2 = getSlope(NE.x, NE.y, SE.x, SE.y);
                     Point SE1 = getCoord(SE, m1, (deltaX + deltaY) / 2);
                     Point newSE = getCoord(SE1, m2, (deltaX + deltaY) / 2);
-                        Point newNE = getIntersection(NW, NE, newSE);
-                        Point newSW = getIntersection(NW, SW, newSE);
+                    Point newNE = getIntersection(NW, NE, newSE);
+                    Point newSW = getIntersection(NW, SW, newSE);
                     mobileRect.getPoints().set(2, newNE.x);
                     mobileRect.getPoints().set(3, newNE.y);
                     mobileRect.getPoints().set(4, newSE.x);
@@ -214,30 +205,41 @@ public final class Gizmo {
                     setPoint(mobileRect, 5, d);
                     setPoint(mobileRect, 7, d);
                 }
-
-                /* double newMaxX = mobileRect.getX() + mobileRect.getWidth() + deltaX;
-                double newMaxY = mobileRect.getY() + mobileRect.getHeight() + deltaY;
-                if (newMaxX >= mobileRect.getX() && newMaxY >= mobileRect.getY()
-                        && newMaxX <= mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius
-                        && newMaxY <= mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius) {
-                    mobileRect.setWidth(mobileRect.getWidth() + (deltaX + deltaY) / 2);
-                    mobileRect.setHeight(mobileRect.getHeight() + (deltaX + deltaY) / 2);
-                }*/
-
- /*if (newMaxY >= mobileRect.getY() && newMaxX >= mobileRect.getX()
-                        && newMaxY <= mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius) {
-                    
-                }*/
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "scale";
         });
 
         rotateHandle.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                /*double newMaxX = mobileRect.getX() + mobileRect.getWidth() + deltaX;
+            if (mouseLocation.value == null) {
+                return;
+            }
+            //double deltaX = event.getSceneX() - mouseLocation.value.getX();
+            //double deltaY = event.getSceneY() - mouseLocation.value.getY();
+
+            ObservableList<Double> points = mobileRect.getPoints();
+
+            Point middle = new Point((points.get(0) + points.get(2)) / 2,
+                    (points.get(1) + points.get(3)) / 2);
+            double angle1;
+            if (points.get(3) - points.get(1) == 0) {
+                angle1 = 90;
+            } else if (points.get(2) - points.get(0) == 0) {
+                angle1 = 0;
+            } else {
+                double m = getSlope(points.get(0), points.get(1), points.get(2), points.get(3));
+                double m2 = -1 / m;
+                angle1 = toDegrees(atan(m2));
+
+            }
+            double m3 = getSlope(event.getX(), event.getY(), middle.x, middle.y);
+
+            double angle = 360 - (angle1 - toDegrees(atan(m3)));
+
+            System.out.println(angle + " " + atan(m3));
+            mobileRect.setRotate(angle);
+
+            /*double newMaxX = mobileRect.getX() + mobileRect.getWidth() + deltaX;
                 if (newMaxX >= mobileRect.getX()
                         && newMaxX <= mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius) {
                     mobileRect.setWidth(mobileRect.getWidth() + deltaX);
@@ -247,35 +249,19 @@ public final class Gizmo {
                         && newMaxY <= mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius) {
                     mobileRect.setHeight(mobileRect.getHeight() + deltaY);
                 } */
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
-            }
-            type = "scale";
+            mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+            type = "rotate";
         });
 
         selectRect.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                double limitf1 = mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius;
-                double limitf2 = mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius;
-
-                if (checkBorder(mobileRect, handleRadius, limitf1, deltaX, 0)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 2)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 4)
-                        && checkBorder(mobileRect, handleRadius, limitf1, deltaX, 6)) {
-                    setPoint(mobileRect, 0, deltaX);
-                    setPoint(mobileRect, 2, deltaX);
-                    setPoint(mobileRect, 4, deltaX);
-                    setPoint(mobileRect, 6, deltaX);
-                }
-                if (checkBorder(mobileRect, handleRadius, limitf2, deltaY, 1)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 3)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 5)
-                        && checkBorder(mobileRect, handleRadius, limitf2, deltaY, 7)) {
-                    setPoint(mobileRect, 1, deltaY);
-                    setPoint(mobileRect, 3, deltaY);
-                    setPoint(mobileRect, 5, deltaY);
-                    setPoint(mobileRect, 7, deltaY);
+                //double limitf1 = mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius;
+                //double limitf2 = mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius;
+                for (int i = 0; i < 8; i++) {
+                    double delta = (i % 2 == 0) ? deltaX : deltaY;
+                    setPoint(mobileRect, i, delta);
                 }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
@@ -285,20 +271,15 @@ public final class Gizmo {
         );
     }
 
-    /*public Point setNewPoint() {
-        finalCorner.x = mobileRect.getX();
-        finalCorner.y = mobileRect.getY();
-        return finalCorner;
-    } */
-    private void setUpDragging(Shape circle, Wrapper<Point2D> mouseLocation) {
+    private void setUpDragging(Shape shape, Wrapper<Point2D> mouseLocation) {
 
-        circle.setOnDragDetected(event -> {
-            circle.getParent().setCursor(Cursor.CLOSED_HAND);
+        shape.setOnDragDetected(event -> {
+            shape.getParent().setCursor(Cursor.CLOSED_HAND);
             mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
         });
 
-        circle.setOnMouseReleased(event -> {
-            circle.getParent().setCursor(Cursor.DEFAULT);
+        shape.setOnMouseReleased(event -> {
+            shape.getParent().setCursor(Cursor.DEFAULT);
             mouseLocation.value = null;
         });
     }
