@@ -148,8 +148,9 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-
+                
                 float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
+
                 Point p = new Point(mobileRect.getPoints().get(4) + d,
                         mobileRect.getPoints().get(5) + d);
 
@@ -158,7 +159,7 @@ public final class Gizmo {
                 int x = currentImage.getUnrotatedCroppedX();
                 int y = currentImage.getUnrotatedCroppedY();
 
-                float newScale = (float) ((float) (p.x - x) * (p.y - y) / ((float) w * h));
+                float newScale = (float) ((float) currentImage.scale * (p.x - x) * (p.y - y) / ((float) w * h));
 
                 currentImage.scale(newScale);
 
