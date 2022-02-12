@@ -74,7 +74,9 @@ public final class Gizmo {
     private void createLine(Point[] corners) {
         Point mid = new Point((corners[0].x + corners[1].x) / 2, (corners[0].y + corners[1].y) / 2);
         double slope = getSlope(corners[1].x, corners[1].y, corners[2].x, corners[2].y);
-        double angle = atan(slope);
+        double angle = corners[1].x == corners[2].x ? Math.PI / 2 : Math.atan(slope);
+
+        angle *= Math.signum(corners[1].y - corners[2].y);
 
         rotationHandlePoint = new Point(handleLine * cos(angle) + mid.x, handleLine * sin(angle) + mid.y);
 
