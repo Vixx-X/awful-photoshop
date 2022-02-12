@@ -7,6 +7,7 @@ package fxproject.graphics;
 import fxproject.Morphology.Erosion;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
+import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import javafx.scene.image.Image;
 import org.opencv.core.Mat;
@@ -34,11 +35,11 @@ public class CanvasEntity {
         this.angle = 0;
         this.scale = 1;
     }
-    
+
     public CanvasEntity(CanvasEntity other) {
         this.x = other.x;
         this.y = other.y;
-        this.img = other.img;
+        this.img = other.img.copy();
         this.angle = other.angle;
         this.scale = other.scale;
     }
@@ -58,16 +59,28 @@ public class CanvasEntity {
         );
     }
 
+    public int getWidth() {
+        Size size = this.img.size();
+        return (int) round(size.width * this.scale);
+    }
+
+    public int getHeight() {
+        Size size = this.img.size();
+        return (int) round(size.height * this.scale);
+    }
+
     public Point[] getCorners() {
         Point[] corners = new Point[4];
 
         Size size = this.img.size();
-        Point center = new Point(size.height / 2, size.width / 2);
+        int width = (int) round(size.width * this.scale);
+        int height = (int) round(size.height * this.scale);
+        Point center = new Point(width / 2 + this.x, height / 2 + this.y);
 
         corners[0] = CanvasEntity.rotatePoint(new Point(0 + this.x, 0 + this.y), center, this.angle);
-        corners[1] = CanvasEntity.rotatePoint(new Point(size.width + this.x, 0 + this.y), center, this.angle);
-        corners[2] = CanvasEntity.rotatePoint(new Point(size.width + this.x, size.height + this.y), center, this.angle);
-        corners[3] = CanvasEntity.rotatePoint(new Point(0 + this.x, size.height + this.y), center, this.angle);
+        corners[1] = CanvasEntity.rotatePoint(new Point(width + this.x, 0 + this.y), center, this.angle);
+        corners[2] = CanvasEntity.rotatePoint(new Point(width + this.x, height + this.y), center, this.angle);
+        corners[3] = CanvasEntity.rotatePoint(new Point(0 + this.x, height + this.y), center, this.angle);
 
         return corners;
     }
@@ -98,16 +111,16 @@ public class CanvasEntity {
         this.x = (int) p.x;
         this.y = (int) p.y;
     }
-    
+
     public void morphology(int dimension) {
         //this.img = Erosion.apply(getImage(), dimension);
     }
 
-    void rotateImg(int angle) {
+    public void rotateImg(int angle) {
         this.angle = angle;
     }
 
-    void scaleImg(float scale) {
+    public void scaleImg(float scale) {
         this.scale = scale;
     }
 
@@ -126,5 +139,9 @@ public class CanvasEntity {
         MatOfByte byteMat = new MatOfByte();
         Imgcodecs.imencode(".bmp", tmpMat, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));
+    }
+
+    CanvasEntity copy() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

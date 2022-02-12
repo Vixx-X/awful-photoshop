@@ -15,6 +15,14 @@ public class RawImage extends Mat {
 
     public String filename;
     public int rotationAngle;
+    
+    
+    public RawImage copy(){
+        RawImage aux = new RawImage();
+        this.clone().assignTo(aux);
+        aux.filename = this.filename;
+        return aux;
+    }
 
     public boolean readImage(String filename) {
         this.filename = filename;

@@ -4,8 +4,11 @@
  */
 package fxproject;
 
+import fxproject.graphics.CanvasEntity;
+import static java.lang.Math.abs;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
+import static java.lang.Math.max;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.toDegrees;
@@ -31,11 +34,18 @@ public final class Gizmo {
     public Circle resizeHandleSE;
     public Circle rotateHandle;
     public Line rotateLine;
-    private final double handleRadius;
+    private double handleRadius;
     public Point finalCorner;
     public String type;
+    public CanvasEntity currentImage;
 
-    public Gizmo(Point[] corners) {
+    public Gizmo(CanvasEntity img) {
+        currentImage = img;
+        drawGizmo();
+    }
+
+    public void drawGizmo() {
+        Point[] corners = currentImage.getCorners();
         pd = 0;
         handleRadius = 6.5;
         double x = corners[0].x;
@@ -109,6 +119,13 @@ public final class Gizmo {
         pol.getPoints().set(ind, pol.getPoints().get(ind) + d);
     }
 
+    public void setCorners(Point[] corners) {
+        for (int i = 0; i < 4; i++) {
+            mobileRect.getPoints().set(i * 2, corners[i].x);
+            mobileRect.getPoints().set(i * 2 + 1, corners[i].y);
+        }
+    }
+
     public boolean checkBorder(Polygon p, double limiti, double limitf, double delta, int ind) {
         if (p.getPoints().get(ind) + delta >= limiti
                 && p.getPoints().get(ind) + delta <= limitf) {
@@ -160,16 +177,17 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                /*double newX = mobileRect.getX() + (deltaX + deltaY) / 2;
-                double newY = mobileRect.getY() + (deltaX + deltaY) / 2;
-                if (newX >= handleRadius && newY >= handleRadius
-                        && newX <= mobileRect.getX() + mobileRect.getWidth() - handleRadius
-                        && newY <= mobileRect.getY() + mobileRect.getHeight() - handleRadius) {
-                    mobileRect.setX(newX);
-                    mobileRect.setWidth(mobileRect.getWidth() - (deltaX + deltaY) / 2);
-                    mobileRect.setY(newY);
-                    mobileRect.setHeight(mobileRect.getHeight() - (deltaX + deltaY) / 2);
-                } */
+
+                float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
+                Point p = new Point(mobileRect.getPoints().get(0) + d,
+                        mobileRect.getPoints().get(1) + d);
+                int w = currentImage.getWidth();
+                int h = currentImage.getHeight();
+                
+                float newScale = (float) ((float)(p.x - currentImage.x)*(p.y - currentImage.y)/((float)w*h));
+                currentImage.translateImg(p);
+                currentImage.scaleImg(newScale);
+                setCorners(currentImage.getCorners());
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
 
             }
@@ -180,31 +198,18 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                Point NW = new Point(mobileRect.getPoints().get(0), mobileRect.getPoints().get(1));
-                Point NE = new Point(mobileRect.getPoints().get(2), mobileRect.getPoints().get(3));
-                Point SE = new Point(mobileRect.getPoints().get(4), mobileRect.getPoints().get(5));
-                Point SW = new Point(mobileRect.getPoints().get(6), mobileRect.getPoints().get(7));
+                float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
+                Point p = new Point(mobileRect.getPoints().get(4) + d,
+                        mobileRect.getPoints().get(5) + d);
+                int w = currentImage.getWidth();
+                int h = currentImage.getHeight();
+                
+                float newScale = (float) ((float)(p.x - currentImage.x)*(p.y - currentImage.y)/((float)w*h));
+                //System.out.println(newScale);
+                currentImage.scaleImg(newScale);
+                setCorners(currentImage.getCorners());
+                
 
-                double d = (deltaX + deltaY) / 2;
-                double m1 = getSlope(SW.x, SW.y, SE.x, SE.y);
-                if (m1 != 0) {
-                    double m2 = getSlope(NE.x, NE.y, SE.x, SE.y);
-                    Point SE1 = getCoord(SE, m1, (deltaX + deltaY) / 2);
-                    Point newSE = getCoord(SE1, m2, (deltaX + deltaY) / 2);
-                    Point newNE = getIntersection(NW, NE, newSE);
-                    Point newSW = getIntersection(NW, SW, newSE);
-                    mobileRect.getPoints().set(2, newNE.x);
-                    mobileRect.getPoints().set(3, newNE.y);
-                    mobileRect.getPoints().set(4, newSE.x);
-                    mobileRect.getPoints().set(5, newSE.y);
-                    mobileRect.getPoints().set(6, newSW.x);
-                    mobileRect.getPoints().set(7, newSW.y);
-                } else {
-                    setPoint(mobileRect, 2, d);
-                    setPoint(mobileRect, 4, d);
-                    setPoint(mobileRect, 5, d);
-                    setPoint(mobileRect, 7, d);
-                }
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "scale";
@@ -237,7 +242,10 @@ public final class Gizmo {
             double angle = 360 - (angle1 - toDegrees(atan(m3)));
 
             System.out.println(angle + " " + atan(m3));
-            mobileRect.setRotate(angle);
+            //mobileRect.setRotate(angle);
+
+            currentImage.rotateImg((int) angle);
+            setCorners(currentImage.getCorners());
 
             /*double newMaxX = mobileRect.getX() + mobileRect.getWidth() + deltaX;
                 if (newMaxX >= mobileRect.getX()
@@ -257,12 +265,17 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
+
+                currentImage.translateImg(new Point(currentImage.x + deltaX,
+                        currentImage.y + deltaY));
+
+                setCorners(currentImage.getCorners());
                 //double limitf1 = mobileRect.getParent().getBoundsInLocal().getWidth() - handleRadius;
                 //double limitf2 = mobileRect.getParent().getBoundsInLocal().getHeight() - handleRadius;
-                for (int i = 0; i < 8; i++) {
+                /*for (int i = 0; i < 8; i++) {
                     double delta = (i % 2 == 0) ? deltaX : deltaY;
                     setPoint(mobileRect, i, delta);
-                }
+                } */
                 mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
             }
             type = "translate";

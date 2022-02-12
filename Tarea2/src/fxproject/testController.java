@@ -88,12 +88,10 @@ public class testController implements Initializable {
         if (main.g.type != null) {
             switch (main.g.type) {
                 case "translate" -> {
-                    Point p1 = new Point(main.g.mobileRect.getPoints().get(0),
-                            main.g.mobileRect.getPoints().get(1));
-                    System.out.println("Aaaaaa" + p1);
-                    int index = c.images.indexOf(main.currentImage);
-                    tmp.translateImg(p1);
-                    c.images.set(index, tmp);
+                    System.out.println("lisasa " + main.g.mobileRect.getPoints().get(0) 
+                    + " " + main.g.mobileRect.getPoints().get(1));
+                    System.out.println("li2222 " + main.currentImage.x 
+                    + " " + main.currentImage.y);
                     refreshRaster(c);
                     break;
                 }
@@ -117,21 +115,19 @@ public class testController implements Initializable {
     @FXML
     void clickPanel(MouseEvent event) {
         Point p = new Point(event.getX(), event.getY());
-        c = new Canvas(main.getCurrentCanvas());
-        if (main.g != null && tmp != null) {
+        if (main.g != null) {
             moveActions(main.g.type, c);
-            tmp = null;
             main.g.removeOnCanvas(canvasLayout);
             main.g = null;
         }
+        c = new Canvas(main.getCurrentCanvas());
         main.currentImage = c.getSelectedImage(p);
         //main.currentImage = c.getSelectedImage(p);
         System.out.println(main.currentImage);
         if (main.currentImage != null) {
-            tmp = new CanvasEntity(main.currentImage);
+            //tmp = new CanvasEntity(main.currentImage);
             //System.out.println("holi");
-            main.g = new Gizmo(main.currentImage.getCorners());
-            main.currentImage.getCorners();
+            main.g = new Gizmo(main.currentImage);
             main.g.addOnCanvas(canvasLayout);
 
         }
@@ -288,6 +284,8 @@ public class testController implements Initializable {
 
     private void refreshRaster(Canvas c) {
         main.pushCanvas(c);
+        System.out.println("eeeee" + c);
+        System.out.println("uuuuu" + main.getCurrentCanvas());
         enableToolsButtons();
         drawRaster();
     }
