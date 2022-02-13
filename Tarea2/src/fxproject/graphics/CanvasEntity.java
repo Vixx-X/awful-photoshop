@@ -5,13 +5,13 @@
 package fxproject.graphics;
 
 import fxproject.graphics.transformations.affine.Rotation;
+import fxproject.graphics.transformations.affine.Scale;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import javafx.scene.image.Image;
-import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
@@ -26,7 +26,7 @@ public class CanvasEntity {
     public int x, y;
     public RawImage img;
     public double angle;
-    public float scale;
+    public double scale;
 
     public CanvasEntity(int x, int y, String filename) {
         this.x = x;
@@ -162,7 +162,7 @@ public class CanvasEntity {
         this.angle = angle;
     }
 
-    public void scale(float scale) {
+    public void scale(double scale) {
         this.scale = scale;
     }
 
@@ -175,21 +175,26 @@ public class CanvasEntity {
         if (angle % 360 == 0) {
             return img;
         }
-        System.out.println("HERE " + angle);
         RawImage ret = Rotation.apply(img, angle);
         return ret;
     }
 
-    static public RawImage scaleImg(RawImage img, float scale) {
+    static public RawImage scaleImg(RawImage img, double scale) {
+        System.out.println(scale);
         if (scale == 1) {
             return img;
         }
-        return img;
+        System.out.println("PUTA");
+        RawImage ret = Scale.apply(img, scale);
+        return ret;
     }
 
     public Image getImage() {
         RawImage tmpMat = new RawImage();
         this.img.copyTo(tmpMat);
+
+        System.out.println("PUTA");
+
         //tmpMat = translateImg(tmpMat, point);
         tmpMat = rotateImg(tmpMat, this.angle);
         tmpMat = scaleImg(tmpMat, this.scale);

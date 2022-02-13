@@ -7,6 +7,7 @@ package fxproject.graphics;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -34,6 +35,7 @@ public class RawImage extends Mat {
     public boolean readImage(String filename) {
         this.filename = filename;
         Imgcodecs.imread(filename, -1).assignTo(this);
+        Imgproc.cvtColor(this, this, 0);
 
         return !this.empty();
     }

@@ -87,6 +87,7 @@ public class testController implements Initializable {
                 case "scale" -> {
                     int i = getMethod();
                     //tmp.sclae(i);
+                    refreshRaster(c);
                     break;
                 }
                 case "rotate" -> {
