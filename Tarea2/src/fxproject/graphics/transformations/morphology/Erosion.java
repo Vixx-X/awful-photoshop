@@ -37,7 +37,7 @@ public class Erosion {
 
                     }
                 }
-                imgCopy.put(y, x, new double[]{minRed, minBlue, minGreen});
+                imgCopy.put(y, x, new double[]{minRed, minBlue, minGreen, 255});
             }
         }
 

@@ -36,7 +36,7 @@ public class Dilation {
 
                     }
                 }
-                imgCopy.put(y, x, new double[]{maxRed, maxBlue, maxGreen});
+                imgCopy.put(y, x, new double[]{maxRed, maxBlue, maxGreen, 255});
             }
         }
 
