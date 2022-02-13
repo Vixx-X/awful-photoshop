@@ -88,6 +88,16 @@ public class CanvasEntity {
         return (int) round(size.height * this.scale);
     }
 
+    public int getUnrotatedUnscaledCroppedWidth() {
+        Size size = this.img.size();
+        return (int) round(size.width);
+    }
+
+    public int getUnrotatedUnscaledCroppedHeight() {
+        Size size = this.img.size();
+        return (int) round(size.height);
+    }
+
     public int getUnrotatedCroppedX() {
         return this.x;
     }
@@ -177,14 +187,12 @@ public class CanvasEntity {
         Mat tmpMat = new Mat();
         this.img.copyTo(tmpMat);
 
-        System.out.println("PUTA " + this.angle);
-
         //tmpMat = translateImg(tmpMat, point);
         tmpMat = rotateImg(tmpMat, this.angle);
         tmpMat = scaleImg(tmpMat, this.scale);
 
         MatOfByte byteMat = new MatOfByte();
-        Imgcodecs.imencode(".bmp", tmpMat, byteMat);
+        Imgcodecs.imencode(".png", tmpMat, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));
     }
 

@@ -24,7 +24,7 @@ public class RawImage extends Mat {
 
     public boolean readImage(String filename) {
         this.filename = filename;
-        Imgcodecs.imread(filename).assignTo(this);
+        Imgcodecs.imread(filename, -1).assignTo(this);
 
         return !this.empty();
     }
