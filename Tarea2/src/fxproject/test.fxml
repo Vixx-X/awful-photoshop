@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
@@ -104,8 +105,19 @@
                                                                   <Separator prefWidth="200.0" />
                                                                </children>
                                                             </VBox>
-                                                            <ComboBox fx:id="morphology" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione las dimensiones" />
-                                                            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyMorphology" prefHeight="25.0" prefWidth="107.0" text="Aplicar" textAlignment="CENTER" />
+                                                            <ComboBox fx:id="morphology" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione la morfología" />
+                                                            <HBox prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                                     <children>
+                                                                        <RadioButton fx:id="r3b" mnemonicParsing="false" text="3x3" />
+                                                                        <RadioButton fx:id="r5b" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="5x5" />
+                                                                        <RadioButton fx:id="r7b" layoutX="97.0" layoutY="10.0" mnemonicParsing="false" text="7x7" />
+                                                                     </children>
+                                                                  </HBox>
+                                                                  <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyMorphology" prefHeight="25.0" prefWidth="107.0" text="Aplicar" textAlignment="CENTER" />
+                                                               </children>
+                                                            </HBox>
                                                          </children>
                                                       </VBox>
                                                    </children>

@@ -6,6 +6,10 @@ package fxproject;
 
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
+import fxproject.graphics.transformations.morphology.Closing;
+import fxproject.graphics.transformations.morphology.Dilation;
+import fxproject.graphics.transformations.morphology.Erosion;
+import fxproject.graphics.transformations.morphology.Opening;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,7 +21,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -34,8 +40,8 @@ public class testController implements Initializable {
             "Cilíndrico", "Gauss");
     ObservableList<String> algorithm = FXCollections.observableArrayList("Octree",
             "Mediancut");
-    ObservableList<String> dimensions = FXCollections.observableArrayList("3x3",
-            "5x5", "7x7");
+    ObservableList<String> morphologyList = FXCollections.observableArrayList("Erosión",
+            "Dilatación", "Apertura", "Cierre");
     ObservableList<String> borderList = FXCollections.observableArrayList("Sobel",
             "Roberts", "Prewitt", "Perfilado");
     ObservableList<String> methodList = FXCollections.observableArrayList("Interpolación "
@@ -53,28 +59,14 @@ public class testController implements Initializable {
     private ScrollPane leftPanel;
 
     @FXML
-    private MenuItem undoButton;
+    private MenuItem undoButton, redoButton;
 
     @FXML
-    private MenuItem redoButton;
+    private RadioButton r3b, r5b, r7b;
 
     @FXML
-    private ComboBox<String> smoothedFilters;
-
-    @FXML
-    private ComboBox<String> borderFilters;
-
-    @FXML
-    private ComboBox<String> threshold;
-
-    @FXML
-    private ComboBox<String> quantization;
-
-    @FXML
-    private ComboBox<String> morphology;
-
-    @FXML
-    private ComboBox<String> method;
+    private ComboBox<String> smoothedFilters, borderFilters, threshold,
+            quantization, morphology, method;
 
     //private WritableImage layout;
     private ProjectImages main;
@@ -83,6 +75,7 @@ public class testController implements Initializable {
 
     private CanvasEntity tmp;
     private Canvas c;
+    private Point p;
 
     void moveActions(String type, Canvas c) {
         if (main.g.type != null) {
@@ -111,7 +104,7 @@ public class testController implements Initializable {
 
     @FXML
     void clickPanel(MouseEvent event) {
-        Point p = new Point(event.getX(), event.getY());
+        p = new Point(event.getX(), event.getY());
         if (main.g != null) {
             moveActions(main.g.type, c);
             main.g.removeOnCanvas(canvasLayout);
@@ -221,32 +214,44 @@ public class testController implements Initializable {
         refreshRaster(c);
     }
 
+    private int getDimension() {
+        if (r5b.isSelected()) {
+            return 5;
+        } else if (r7b.isSelected()) {
+            return 7;
+        } else {
+            return 3;
+        }
+    }
+
     @FXML
     void applyMorphology(ActionEvent event) {
+
+        int dim = getDimension();
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        main.currentImage = c.getSelectedImage(p);
         if (main.currentImage == null) {
             return;
         }
-        tmp = new CanvasEntity(main.currentImage);
         String type = morphology.getValue();
         if (type != null) {
             switch (type) {
-                case "3x3" ->
-                    System.out.println("3x3");
-                case "5x5" ->
-                    System.out.println("5x5");
-                case "7x7" ->
-                    System.out.println("7x7");
+                case "Erosión" ->
+                    main.currentImage.img = Erosion.apply(main.currentImage.img, dim);
+                case "Dilatación" ->
+                    main.currentImage.img = Dilation.apply(main.currentImage.img, dim);
+                case "Apertura" ->
+                    main.currentImage.img = Opening.apply(main.currentImage.img, dim);
+                case "Cierre" ->
+                    main.currentImage.img = Closing.apply(main.currentImage.img, dim);
                 default -> {
                     break;
                 }
             }
         } else {
-            morphology.setValue("3x3");
-            System.out.println("Default 3x3");
+            morphology.setValue("Erosión");
         }
-
-        //tmp.translateImg(p1);
-        changeImage(tmp);
+        refreshRaster(c);
     }
 
     @FXML
@@ -308,8 +313,12 @@ public class testController implements Initializable {
         smoothedFilters.setItems(smoothedList);
         borderFilters.setItems(borderList);
         quantization.setItems(algorithm);
-        morphology.setItems(dimensions);
+        morphology.setItems(morphologyList);
         method.setItems(methodList);
+        ToggleGroup group = new ToggleGroup();
+        r3b.setToggleGroup(group);
+        r5b.setToggleGroup(group);
+        r7b.setToggleGroup(group);
     }
 
 }
