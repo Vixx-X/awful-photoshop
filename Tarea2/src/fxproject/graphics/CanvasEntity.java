@@ -5,13 +5,13 @@
 package fxproject.graphics;
 
 import fxproject.graphics.transformations.affine.Rotation;
+import fxproject.graphics.transformations.affine.Scale;
 import java.io.ByteArrayInputStream;
 import static java.lang.Math.cos;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import javafx.scene.image.Image;
-import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
@@ -25,8 +25,8 @@ public class CanvasEntity {
 
     public int x, y;
     public RawImage img;
-    public float angle;
-    public float scale;
+    public double angle;
+    public double scale;
 
     public CanvasEntity(int x, int y, String filename) {
         this.x = x;
@@ -71,10 +71,13 @@ public class CanvasEntity {
         return ret;
     }
 
-    static Point rotatePoint(Point p, Point center, float angle) {
+    static Point rotatePoint(Point p, Point center, double angle) {
+        double c = cos(angle);
+        double s = sin(angle);
+
         return new Point(
-                cos(angle) * (p.x - center.x) - sin(angle) * (p.y - center.y) + center.x,
-                sin(angle) * (p.x - center.x) + cos(angle) * (p.y - center.y) + center.y
+                c * (p.x - center.x) - s * (p.y - center.y) + center.x,
+                s * (p.x - center.x) + c * (p.y - center.y) + center.y
         );
     }
 
@@ -108,23 +111,24 @@ public class CanvasEntity {
 
     public Point[] getCorners() {
         Point[] corners = new Point[4];
-
         int width = this.getUnrotatedCroppedWidth();
         int height = this.getUnrotatedCroppedHeight();
         int _x = this.getUnrotatedCroppedX();
         int _y = this.getUnrotatedCroppedY();
         Point center = this.getCenter();
 
-        corners[0] = CanvasEntity.rotatePoint(new Point(0 + _x, 0 + _y), center, this.angle);
-        corners[1] = CanvasEntity.rotatePoint(new Point(width + _x, 0 + _y), center, this.angle);
-        corners[2] = CanvasEntity.rotatePoint(new Point(width + _x, height + _y), center, this.angle);
-        corners[3] = CanvasEntity.rotatePoint(new Point(0 + _x, height + _y), center, this.angle);
+        double _angle = this.angle * Math.PI / 180;
+
+        corners[0] = CanvasEntity.rotatePoint(new Point(0 + _x, 0 + _y), center, _angle);
+        corners[1] = CanvasEntity.rotatePoint(new Point(width + _x, 0 + _y), center, _angle);
+        corners[2] = CanvasEntity.rotatePoint(new Point(width + _x, height + _y), center, _angle);
+        corners[3] = CanvasEntity.rotatePoint(new Point(0 + _x, height + _y), center, _angle);
 
         return corners;
     }
 
     public boolean contain(Point pTest) {
-        // https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
+        // https://math.stackexchange.com/questions/19011/how-to-check-if-a-point-is-inside-a-rectangle
 
         Point[] corners = this.getCorners();
 
@@ -154,38 +158,42 @@ public class CanvasEntity {
         this.y = (int) p.y;
     }
 
-    public void rotate(float angle) {
+    public void rotate(double angle) {
         this.angle = angle;
     }
 
-    public void scale(float scale) {
+    public void scale(double scale) {
         this.scale = scale;
     }
 
-    static public Mat translateImg(Mat img, Point p) {
+    static public RawImage translateImg(RawImage img, Point p) {
         // if this was more low level, here we will translate using Mat.mult
         return img;
     }
 
-    static public Mat rotateImg(Mat img, float angle) {
+    static public RawImage rotateImg(RawImage img, double angle) {
         if (angle % 360 == 0) {
             return img;
         }
-        System.out.println("HERE " + angle);
-        Mat ret = Rotation.apply(img, angle);
+        RawImage ret = Rotation.apply(img, angle);
         return ret;
     }
 
-    static public Mat scaleImg(Mat img, float scale) {
+    static public RawImage scaleImg(RawImage img, double scale) {
+        System.out.println(scale);
         if (scale == 1) {
             return img;
         }
-        return img;
+        System.out.println("PUTA");
+        RawImage ret = Scale.apply(img, scale);
+        return ret;
     }
 
     public Image getImage() {
-        Mat tmpMat = new Mat();
+        RawImage tmpMat = new RawImage();
         this.img.copyTo(tmpMat);
+
+        System.out.println("PUTA");
 
         //tmpMat = translateImg(tmpMat, point);
         tmpMat = rotateImg(tmpMat, this.angle);

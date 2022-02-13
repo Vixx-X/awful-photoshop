@@ -4,12 +4,12 @@
  */
 package fxproject.graphics.transformations.affine;
 
+import fxproject.graphics.RawImage;
 import static java.lang.Math.PI;
-import static java.lang.Math.abs;
 import static java.lang.Math.cos;
-import static java.lang.Math.round;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.lang.Math.sin;
-import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
 
@@ -19,39 +19,58 @@ import org.opencv.core.Size;
  */
 public class Rotation {
 
-    static public Mat apply(Mat src, float angle) {
-        float rad = (float) (angle / 180.0f * PI);
+    private static final double[] kernel = new double[4];
+
+    static public Point getRotatedPoint(Point src, Point center, boolean transpose) {
+        int dx = transpose ? 1 : 0;
+        return new Point(
+                kernel[0] * (src.x - center.x) + kernel[1 + dx] * (src.y - center.y) + center.x,
+                kernel[2 - dx] * (src.x - center.x) + kernel[3] * (src.y - center.y) + center.y
+        );
+    }
+
+    static public RawImage apply(RawImage src, double angle) {
+        double rad = (angle / 180.0f * PI);
+
+        double c = cos(rad);
+        double s = sin(rad);
+
+        kernel[0] = c;
+        kernel[1] = -s;
+        kernel[2] = s;
+        kernel[3] = c;
 
         Size size = src.size();
-        int w = (int) size.width;
-        int h = (int) size.height;
+        Point center = new Point(size.width / 2, size.height / 2);
+
+        Point A = getRotatedPoint(new Point(0, 0), center, false);
+        Point B = getRotatedPoint(new Point(size.width, 0), center, false);
+        Point C = getRotatedPoint(new Point(size.width, size.height), center, false);
+        Point D = getRotatedPoint(new Point(0, size.height), center, false);
+
         Size newDim = new Size(
-                round(w * abs(sin(rad)) + h * abs(cos(rad))),
-                round(w * abs(cos(rad)) + h * abs(sin(rad)))
+                max(max(A.x, B.x), max(C.x, D.x)) - min(min(A.x, B.x), min(C.x, D.x)),
+                max(max(A.y, B.y), max(C.y, D.y)) - min(min(A.y, B.y), min(C.y, D.y))
         );
 
-        Point center = new Point((w - 1) / 2, (h - 1) / 2);
-        Point newCenter = new Point((newDim.width - 1) / 2, (newDim.height - 1) / 2);
+        Point newCenter = new Point(newDim.width / 2, newDim.height / 2);
 
-        Mat out = new Mat(newDim, src.type());
-        Point p1 = new Point();
-
-        int paddY = (int) (-newCenter.y * cos(rad) + newCenter.x + sin(rad) + center.y);
-        int paddX = (int) (-newCenter.y * cos(rad) - newCenter.x + sin(rad) + center.x);
+        RawImage out = new RawImage(newDim, src.type());
 
         for (int i = 0; i < newDim.height; i++) {
             for (int j = 0; j < newDim.width; j++) {
-                p1.y = i * cos(rad) - j * sin(rad) + 0.5 + paddY;
-                p1.x = i * cos(rad) + j * sin(rad) + 0.5 + paddX;
+                Point p1 = getRotatedPoint(new Point(j, i), newCenter, true);
+                p1.x += -newCenter.x + center.x;
+                p1.y += -newCenter.y + center.y;
 
-                if (p1.x > 0 && p1.y > 0 && p1.x < newDim.width && p1.y < newDim.height) {
+                if (p1.x > 0 && p1.y > 0 && p1.x < size.width && p1.y < size.height) {
                     double[] data = src.get((int) p1.y, (int) p1.x);
 
                     if (data != null) {
                         out.put(i, j, data);
                     }
                 } else {
-                    double[] data = {0, 0, 0, 255};
+                    double[] data = {0, 0, 0, 0};
                     out.put(i, j, data);
                 }
 
@@ -61,38 +80,3 @@ public class Rotation {
         return out;
     }
 }
-
-//     static public Mat apply(Mat src, float angle) {
-//         float rad = (float) (angle / 180.0f * PI);
-//         Size size = src.size();
-//         int w = (int) size.width;
-//         int h = (int) size.height;
-//         Size newDim = new Size(
-//                 round(w * abs(sin(rad)) + h * abs(cos(rad))),
-//                 round(w * abs(cos(rad)) + h * abs(sin(rad)))
-//         );
-//         Point center = new Point(w / 2, h / 2);
-//         Point newCenter = new Point(round(newDim.width / 2), round(newDim.height / 2));
-//         double kernel[] = {cos(-angle), sin(-angle), -sin(-angle), cos(-angle)};
-//         Mat out = new Mat(newDim, CvType.CV_16F);
-//         Point p = new Point();
-//         Point p1 = new Point();
-//         System.out.println(newDim);
-//         for (int i = 0; i < newDim.height; i++) {
-//             for (int j = 0; j < newDim.width; j++) {
-//                 p.y = i - newCenter.y;
-//                 p.x = j - newCenter.x;
-//                 p1.x = round(p.x * kernel[0] + p.y * kernel[1]) + center.x;
-//                 p1.y = round(p.x * kernel[2] + p.y * kernel[3]) + center.y;
-//                 if (p1.x > 0 && p1.y > 0 && p1.x < newDim.width && p1.y < newDim.height) {
-//                     double[] data = src.get((int) p1.y, (int) p1.x);
-//                     if (data != null) {
-//                         out.put(i, j, data);
-//                     }
-//                 }
-//             }
-//         }
-//         System.out.println("Terminó");
-//         return out;
-//     }
-// }
