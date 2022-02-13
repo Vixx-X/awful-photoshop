@@ -4,6 +4,7 @@
  */
 package fxproject.graphics.transformations.affine;
 
+import fxproject.graphics.RawImage;
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -20,8 +21,8 @@ import org.opencv.core.Size;
  */
 public class Rotation {
 
-    static public Mat apply(Mat src, float angle) {
-        float rad = (float) (angle / 180.0f * PI);
+    static public RawImage apply(RawImage src, double angle) {
+        double rad = (angle / 180.0f * PI);
 
         Size size = src.size();
         int w = (int) size.width;
@@ -36,7 +37,7 @@ public class Rotation {
 
         double kernel[] = {cos(-angle), sin(-angle), -sin(-angle), cos(-angle)};
 
-        Mat out = new Mat(newDim, CvType.CV_16F);
+        RawImage out = new RawImage(newDim, CvType.CV_16F);
         Point p = new Point();
         Point p1 = new Point();
 

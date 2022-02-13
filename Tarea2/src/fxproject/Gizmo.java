@@ -11,6 +11,7 @@ import static java.lang.Math.atan;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
@@ -33,6 +34,9 @@ public final class Gizmo {
     private Point rotationHandlePoint;
     public String type;
     public CanvasEntity currentImage;
+    public double handleAngle;
+
+    public Line proof;
 
     public Gizmo(CanvasEntity img) {
         initGizmo(img);
@@ -42,7 +46,7 @@ public final class Gizmo {
 
     private void initGizmo(CanvasEntity img) {
         currentImage = img;
-
+        proof = new Line(0, 0, 0, 0);
         Point[] corners = currentImage.getCorners();
         handleRadius = 6.5;
         handleLine = 20;
@@ -74,11 +78,11 @@ public final class Gizmo {
     private void createLine(Point[] corners) {
         Point mid = new Point((corners[0].x + corners[1].x) / 2, (corners[0].y + corners[1].y) / 2);
         double slope = getSlope(corners[1].x, corners[1].y, corners[2].x, corners[2].y);
-        double angle = corners[1].x == corners[2].x ? Math.PI / 2 : Math.atan(slope);
+        handleAngle = corners[1].x == corners[2].x ? Math.PI / 2 : Math.atan(slope);
 
-        angle *= Math.signum(corners[1].y - corners[2].y);
+        handleAngle *= Math.signum(corners[1].y - corners[2].y);
 
-        rotationHandlePoint = new Point(handleLine * cos(angle) + mid.x, handleLine * sin(angle) + mid.y);
+        rotationHandlePoint = new Point(handleLine * cos(handleAngle) + mid.x, handleLine * sin(handleAngle) + mid.y);
 
         rotateLine = new Line(mid.x, mid.y, rotationHandlePoint.x, rotationHandlePoint.y);
         rotateHandle = new Circle(rotationHandlePoint.x, rotationHandlePoint.y, handleRadius);
@@ -148,7 +152,7 @@ public final class Gizmo {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
                 double deltaY = event.getSceneY() - mouseLocation.value.getY();
-                
+
                 float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
 
                 Point p = new Point(mobileRect.getPoints().get(4) + d,
@@ -159,8 +163,15 @@ public final class Gizmo {
                 int x = currentImage.getUnrotatedCroppedX();
                 int y = currentImage.getUnrotatedCroppedY();
 
-                float newScale = (float) ((float) currentImage.scale * (p.x - x) * (p.y - y) / ((float) w * h));
+                System.out.println("width " + w);
+                System.out.println("height " + h);
 
+                System.out.println("puntoX " + p.x + " + " + x);
+                System.out.println("puntoY " + p.y + " + " + y);
+
+                float newScale = (float) ((float) currentImage.scale * abs((p.x - x) * (p.y - y) / ((float) w * h)));
+
+                System.out.println("Escalaaaaa " + newScale);
                 currentImage.scale(newScale);
 
                 drawGizmo();
@@ -177,12 +188,18 @@ public final class Gizmo {
 
             Point mid = currentImage.getCenter();
 
-            double x = event.getSceneX() - mouseLocation.value.getX() - mid.x;
-            double y = event.getSceneY() - mouseLocation.value.getY() - mid.y;
+            double x = event.getX() - mid.x;
+            double y = event.getY() - mid.y;
 
-            float angle = (float) (atan2(y, x) * 180 / PI);
+            float angle = (float) ((handleAngle - atan2(y, x)) * 180 / PI);
+            System.out.println("angulito " + (handleAngle * 180 / PI) + " - " + (atan2(y, x) * 180 / PI));
+            proof.setStartX(mid.x);
+            proof.setStartY(mid.y);
+            proof.setEndX(x + mid.x);
+            proof.setEndY(y + mid.y);
+            System.out.println("angulito " + -angle);
 
-            currentImage.rotate(angle);
+            currentImage.rotate(-angle);
 
             drawGizmo();
             mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
@@ -228,6 +245,7 @@ public final class Gizmo {
     }
 
     void addOnCanvas(Pane canvasLayout) {
+        canvasLayout.getChildren().add(proof);
         canvasLayout.getChildren().addAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
