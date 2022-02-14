@@ -44,9 +44,9 @@
             </Menu>
          </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.7947882736156352">
+      <SplitPane dividerPositions="0.7833876221498371">
          <items>
-            <ScrollPane fx:id="leftPanel" prefHeight="1098.0" prefWidth="1479.0">
+            <ScrollPane fx:id="leftPanel" prefHeight="1098.0" prefWidth="1425.0">
                <content>
                   <StackPane fx:id="backgroundLayout" prefHeight="767.0" prefWidth="1180.0" style="-fx-background-color: #666666;">
                      <children>
@@ -55,7 +55,7 @@
                   </StackPane>
                </content>
             </ScrollPane>
-            <TabPane prefHeight="119.0" prefWidth="905.0">
+            <TabPane fx:id="rightPanel" prefHeight="119.0" prefWidth="905.0">
                <tabs>
                   <Tab text=" Básicos">
                      <content>
@@ -64,6 +64,11 @@
                               <Insets bottom="10.0" top="20.0" />
                            </padding>
                            <children>
+                              <StackPane fx:id="staticPaneSelected" prefHeight="372.0" prefWidth="396.0" style="-fx-background-color: #dddddd;">
+                                 <children>
+                                    <Pane fx:id="paneImageSelected" prefHeight="337.0" prefWidth="396.0" />
+                                 </children>
+                              </StackPane>
                               <VBox alignment="CENTER" prefHeight="144.0" prefWidth="299.0" spacing="50.0">
                                  <children>
                                     <VBox spacing="15.0">

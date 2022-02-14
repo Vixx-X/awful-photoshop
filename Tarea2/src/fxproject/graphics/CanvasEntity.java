@@ -27,8 +27,16 @@ public class CanvasEntity {
     public RawImage img;
     public double angle;
     public double scale;
+    public int padTop;
+    public int padRight;
+    public int padBottom;
+    public int padLeft;
 
     public CanvasEntity(int x, int y, String filename) {
+        this.padTop = 0;
+        this.padRight = 0;
+        this.padBottom = 0;
+        this.padLeft = 0;
         this.x = x;
         this.y = y;
         this.img = new RawImage();
@@ -38,6 +46,10 @@ public class CanvasEntity {
     }
 
     public CanvasEntity(CanvasEntity other) {
+        this.padTop = other.padTop;
+        this.padRight = other.padRight;
+        this.padBottom = other.padBottom;
+        this.padLeft = other.padLeft;
         this.x = other.x;
         this.y = other.y;
         this.img = other.img.copy();
@@ -46,6 +58,10 @@ public class CanvasEntity {
     }
 
     public CanvasEntity(int x, int y, RawImage img) {
+        this.padTop = 0;
+        this.padRight = 0;
+        this.padBottom = 0;
+        this.padLeft = 0;
         this.x = x;
         this.y = y;
         this.img = img;
@@ -164,6 +180,13 @@ public class CanvasEntity {
 
     public void scale(double scale) {
         this.scale = scale;
+    }
+
+    public void crop(int padTop, int padRight, int padBot, int padLeft) {
+        this.padTop = padTop;
+        this.padRight = padRight;
+        this.padBottom = padBot;
+        this.padLeft = padLeft;
     }
 
     static public RawImage translateImg(RawImage img, Point p) {
