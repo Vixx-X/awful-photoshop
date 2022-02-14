@@ -15,6 +15,7 @@ import fxproject.graphics.transformations.morphology.Opening;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,8 +85,8 @@ public class imageEditorController implements Initializable {
 
     private ArrayList<ImageView> visualImages;
 
-    private CanvasEntity tmp;
-    private Canvas c;
+    private CanvasEntity copyImage;
+    private Canvas copyCanvas;
     public GizmoCrop gizmoCrop;
 
     private Point p;
@@ -94,19 +95,19 @@ public class imageEditorController implements Initializable {
         if (main.g.type != null) {
             switch (main.g.type) {
                 case "translate" -> {
-                    refreshRaster(c);
+                    changeState(c);
                     break;
                 }
                 case "scale" -> {
                     int i = getMethod();
                     //tmp.sclae(i);
-                    refreshRaster(c);
+                    changeState(c);
                     break;
                 }
                 case "rotate" -> {
                     int i = getMethod();
                     //tmp.rotate(i);
-                    refreshRaster(c);
+                    changeState(c);
                     break;
                 }
                 default -> {
@@ -120,15 +121,19 @@ public class imageEditorController implements Initializable {
     void clickPanel(MouseEvent event) {
         p = new Point(event.getX(), event.getY());
         if (main.g != null) {
-            moveActions(main.g.type, c);
+            moveActions(main.g.type, copyCanvas);
             main.g.removeOnCanvas(canvasLayout);
             main.g = null;
         }
-        c = new Canvas(main.getCurrentCanvas());
-        main.currentImage = c.getSelectedImage(p);
-        compositeSelected();
+        main.getCurrentCanvas().setSelectedImage(p);
+        copyCanvas = new Canvas(main.getCurrentCanvas());
+        refreshImage();
+        main.currentImage = copyCanvas.getSelectedImage();
+        copyImage = new CanvasEntity(copyCanvas.getSelectedImage());
+
         //main.currentImage = c.getSelectedImage(p);
-        if (main.currentImage != null) {
+        //main.currentImage = c.getSelectedImage(p);
+        if (copyImage != null) {
             //tmp = new CanvasEntity(main.currentImage);
             main.g = new Gizmo(main.currentImage);
             main.g.addOnCanvas(canvasLayout);
@@ -163,18 +168,23 @@ public class imageEditorController implements Initializable {
 
     public void putFront() {
         Canvas c = new Canvas(main.getCurrentCanvas());
-        int index = c.images.indexOf(main.currentImage);
-        c.images.remove(index);
-        c.images.add(main.currentImage);
-        refreshRaster(c);
+        c.images.add(c.getSelectedImage());
+        c.images.remove(c.currentIndex);
+        c.currentIndex = c.images.size() - 1;
+        changeState(c);
     }
 
     public void putBack() {
         Canvas c = new Canvas(main.getCurrentCanvas());
-        int index = c.images.indexOf(main.currentImage);
-        c.images.remove(index);
-        c.images.add(0, main.currentImage);
-        refreshRaster(c);
+        System.out.println(c.currentIndex + " tamañito 2 " + c.images.size());
+        
+        for (int i = 0; i < c.images.size(); i++) {
+            System.out.println(c.images.get(i));
+        }
+        c.images.add(0, c.getSelectedImage());
+        c.images.remove(c.currentIndex+1);
+        c.currentIndex = 0;
+        changeState(c);
     }
 
     void enableToolsButtons() {
@@ -186,8 +196,7 @@ public class imageEditorController implements Initializable {
     void undoAction() {
         Canvas canvas = main.undo();
         if (canvas != null) {
-            drawRaster();
-            enableToolsButtons();
+            refresh();
         }
     }
 
@@ -195,8 +204,7 @@ public class imageEditorController implements Initializable {
     void redoAction() {
         Canvas canvas = main.redo();
         if (canvas != null) {
-            drawRaster();
-            enableToolsButtons();
+            refresh();
         }
     }
 
@@ -217,8 +225,26 @@ public class imageEditorController implements Initializable {
         if (file != null) {
             Canvas c = new Canvas(main.getCurrentCanvas());
             c.addImage(file.getAbsolutePath());
-            refreshRaster(c);
+            main.currentImage = c.images.get(c.images.size() - 1);
+            setImageSize();
+            changeState(c);
         }
+    }
+
+    void setImageSize() {
+        float w = main.currentImage.getUnrotatedUnscaledCroppedWidth();
+        float h = main.currentImage.getUnrotatedUnscaledCroppedHeight();
+        float scale = (w <= h) ? w / h : h / w;
+        if (w <= main.getCurrentCanvas().w && h <= main.getCurrentCanvas().h) {
+            return;
+        }
+        float width = ((w <= h) ? scale * main.getCurrentCanvas().w
+                : main.getCurrentCanvas().w);
+        float height = ((w <= h) ? main.getCurrentCanvas().h
+                : scale * main.getCurrentCanvas().h);
+        scale = ((width / w) <= (height / h)) ? width / w : height / h;
+        main.currentImage.scale(scale);
+
     }
 
     private void changeImage(CanvasEntity tmp) {
@@ -226,7 +252,8 @@ public class imageEditorController implements Initializable {
         int index = c.images.indexOf(main.currentImage);
         c.images.set(index, tmp);
         main.currentImage = null;
-        refreshRaster(c);
+        changeState(c);
+
     }
 
     private int getDimension() {
@@ -238,7 +265,7 @@ public class imageEditorController implements Initializable {
 
         int dim = getDimension();
         Canvas c = new Canvas(main.getCurrentCanvas());
-        main.currentImage = c.getSelectedImage(p);
+        main.currentImage = c.getSelectedImage();
         if (main.currentImage == null) {
             return;
         }
@@ -261,7 +288,7 @@ public class imageEditorController implements Initializable {
             morphology.setValue("Erosión");
             main.currentImage.img = Erosion.apply(main.currentImage.img, dim);
         }
-        refreshRaster(c);
+        changeState(c);
     }
 
     @FXML
@@ -271,7 +298,7 @@ public class imageEditorController implements Initializable {
                 ? Integer.parseInt(indexColors.getText()) : 256;
 
         Canvas c = new Canvas(main.getCurrentCanvas());
-        main.currentImage = c.getSelectedImage(p);
+        main.currentImage = c.getSelectedImage();
         if (main.currentImage == null) {
             return;
         }
@@ -291,15 +318,31 @@ public class imageEditorController implements Initializable {
             indexColors.setText(String.valueOf(index));
             System.out.println("Default Octree");
         }
-        refreshRaster(c);
+        changeState(c);
         //tmp.translateImg(p1);
         //changeImage(tmp);
     }
 
-    private void refreshRaster(Canvas c) {
+    private void changeState(Canvas c) {
         main.pushCanvas(c);
+        refresh();
+    }
+
+    public void refresh() {
+        refreshCanvas();
+        refreshImage();
         enableToolsButtons();
+    }
+
+    public void refreshCanvas() {
+        copyCanvas = main.getCurrentCanvas();
         drawRaster();
+        //main.currentImage = c.getSelectedImage(p);
+    }
+
+    private void refreshImage() {
+        main.currentImage = copyCanvas.getSelectedImage();
+        compositeSelected();
     }
 
     private void drawRaster() {

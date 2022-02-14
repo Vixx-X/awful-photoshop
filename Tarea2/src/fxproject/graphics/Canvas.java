@@ -17,14 +17,17 @@ public class Canvas {
 
     public ArrayList<CanvasEntity> images;
     public int w, h;
+    public int currentIndex;
 
     public Canvas(int width, int height) {
+        currentIndex = 0;
         this.w = width;
         this.h = height;
         images = new ArrayList<>();
     }
 
     public Canvas(Canvas currentCanvas) {
+        currentIndex = currentCanvas.currentIndex;
         this.w = currentCanvas.w;
         this.h = currentCanvas.h;
         this.images = new ArrayList<>();
@@ -34,13 +37,24 @@ public class Canvas {
         }
     }
 
-    public CanvasEntity getSelectedImage(Point p) {
+    private CanvasEntity getSelectedImage(Point p) {
         for (CanvasEntity image : reversed(images)) {
             if (image.contain(p)) {
                 return image;
             }
         }
         return null;
+    }
+
+    public void setSelectedImage(Point p) {
+        if (getSelectedImage(p) == null) {
+            return;
+        }
+        currentIndex = images.indexOf(getSelectedImage(p));
+    }
+
+    public CanvasEntity getSelectedImage() {
+        return images.get(currentIndex);
     }
 
     public boolean addImage(String filename) {
