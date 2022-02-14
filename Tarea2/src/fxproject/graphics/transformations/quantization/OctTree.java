@@ -179,6 +179,8 @@ public class OctTree {
 
             for (int level = MAX_DEPTH - 1; level > -1; --level) {
                 if (levels[level] != null) {
+                    levels[level].sort((OctTreeNode a, OctTreeNode b) -> a.count - b.count);
+
                     for (OctTreeNode node : levels[level]) {
                         leaf_cnt -= node.removeLeaves();
                         if (leaf_cnt <= colorN) {
