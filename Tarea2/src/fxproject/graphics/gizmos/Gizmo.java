@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fxproject;
+package fxproject.graphics.gizmos;
 
 import fxproject.graphics.CanvasEntity;
 import static java.lang.Math.PI;
@@ -257,12 +257,12 @@ public final class Gizmo {
        addOnCanvas(canvasLayout);
     }
 
-    void removeOnCanvas(Pane canvasLayout) {
+    public void removeOnCanvas(Pane canvasLayout) {
         canvasLayout.getChildren().removeAll(mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
     }
 
-    void addOnCanvas(Pane canvasLayout) {
+    public void addOnCanvas(Pane canvasLayout) {
         canvasLayout.getChildren().add(proof);
         canvasLayout.getChildren().addAll(
                 mobileRect, selectRect, resizeHandleNW,

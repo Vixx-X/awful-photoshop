@@ -4,8 +4,10 @@
  */
 package fxproject;
 
+import fxproject.graphics.gizmos.Gizmo;
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
+import fxproject.graphics.gizmos.GizmoCrop;
 import fxproject.graphics.transformations.morphology.Closing;
 import fxproject.graphics.transformations.morphology.Dilation;
 import fxproject.graphics.transformations.morphology.Erosion;
@@ -19,12 +21,14 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -53,13 +57,16 @@ public class imageEditorController implements Initializable {
             + "constante", "Rango");
 
     @FXML
-    private StackPane backgroundLayout;
+    private StackPane backgroundLayout, staticPaneSelected;
 
     @FXML
-    private Pane canvasLayout;
+    private Pane canvasLayout, paneImageSelected;
 
     @FXML
     private ScrollPane leftPanel;
+
+    @FXML
+    private TabPane rightPanel;
 
     @FXML
     private MenuItem undoButton, redoButton;
@@ -81,6 +88,8 @@ public class imageEditorController implements Initializable {
 
     private CanvasEntity tmp;
     private Canvas c;
+    public GizmoCrop gizmoCrop;
+
     private Point p;
 
     void moveActions(String type, Canvas c) {
@@ -119,6 +128,7 @@ public class imageEditorController implements Initializable {
         }
         c = new Canvas(main.getCurrentCanvas());
         main.currentImage = c.getSelectedImage(p);
+        compositeSelected();
         //main.currentImage = c.getSelectedImage(p);
         if (main.currentImage != null) {
             //tmp = new CanvasEntity(main.currentImage);
@@ -305,6 +315,45 @@ public class imageEditorController implements Initializable {
         canvasLayout.getChildren().setAll(visualImages);
     }
 
+    private void compositeSelected() {
+        if (main.currentImage == null) {
+            return;
+        }
+        //CanvasEntity tmpImage = new CanvasEntity(main.currentImage);
+        float w = main.currentImage.getUnrotatedUnscaledCroppedWidth();
+        float h = main.currentImage.getUnrotatedUnscaledCroppedHeight();
+        float scale = (w <= h) ? w / h : h / w;
+
+        int width = (int) ((w <= h) ? scale * staticPaneSelected.getWidth()
+                : staticPaneSelected.getWidth());
+        int height = (int) ((w <= h) ? staticPaneSelected.getHeight()
+                : scale * staticPaneSelected.getHeight());
+        paneImageSelected.setPrefSize(width, height);
+        paneImageSelected.setMaxSize(width, height);
+        paneImageSelected.setStyle("-fx-background-color: #f5f5f5;");
+
+        scale = (float) w / width;
+        drawImage(main.currentImage, scale, width, height);
+
+    }
+
+    private void drawImage(CanvasEntity img, float scale, int width, int height) {
+        CanvasEntity tmpImg = new CanvasEntity(img);
+        tmpImg.angle = 0;
+        tmpImg.scale = (float) 1 / scale;
+        ImageView imageV = new ImageView(tmpImg.getImage());
+        imageV.relocate(0, 0);
+        paneImageSelected.getChildren().setAll(imageV);
+
+        imageV.setOnMouseClicked(event -> {
+            if (gizmoCrop != null) {
+                return;
+            }
+            gizmoCrop = new GizmoCrop(img, width, height);
+            gizmoCrop.addOnCanvas(paneImageSelected);
+        });
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -312,6 +361,12 @@ public class imageEditorController implements Initializable {
         main = ProjectImages.getInstance();
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
+
+        staticPaneSelected.prefWidthProperty().bind(rightPanel.widthProperty());
+        staticPaneSelected.prefHeightProperty().bind(rightPanel.widthProperty());
+        staticPaneSelected.setMaxSize(350, 350);
+
+        //staticPaneSelected.setPrefSize(300, 300);
         int w = main.getCurrentCanvas().w;
         int h = main.getCurrentCanvas().h;
         canvasLayout.setPrefSize(w, h);

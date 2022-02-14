@@ -4,6 +4,7 @@
  */
 package fxproject;
 
+import fxproject.graphics.gizmos.Gizmo;
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
 import java.io.IOException;
