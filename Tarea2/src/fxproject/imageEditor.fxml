@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="mainLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="1124.0" prefWidth="1844.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.testController">
+<VBox fx:id="mainLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="1124.0" prefWidth="1844.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxproject.imageEditorController">
    <children>
       <MenuBar prefWidth="863.0">
          <menus>
@@ -90,7 +90,26 @@
                                                                </children>
                                                             </VBox>
                                                             <ComboBox fx:id="quantization" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione un algoritmo" />
-                                                            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyQuantization" prefHeight="25.0" prefWidth="107.0" text="Aplicar" textAlignment="CENTER" />
+                                                            <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <VBox prefHeight="42.0" prefWidth="217.0" spacing="5.0">
+                                                                     <children>
+                                                                        <Label text="Valor entre 2 y 256" textFill="#9a9a9a">
+                                                                           <font>
+                                                                              <Font name="System Italic" size="12.0" />
+                                                                           </font>
+                                                                        </Label>
+                                                                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="212.0" spacing="15.0">
+                                                                           <children>
+                                                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="K:" />
+                                                                              <TextField fx:id="indexColors" prefHeight="25.0" prefWidth="47.0" promptText="256" />
+                                                                           </children>
+                                                                        </HBox>
+                                                                     </children>
+                                                                  </VBox>
+                                                                  <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#applyQuantization" prefHeight="25.0" prefWidth="107.0" text="Aplicar" textAlignment="CENTER" />
+                                                               </children>
+                                                            </HBox>
                                                          </children>
                                                       </VBox>
                                                       <VBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="247.0" spacing="15.0">
@@ -108,7 +127,7 @@
                                                             <ComboBox fx:id="morphology" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione la morfología" />
                                                             <HBox prefHeight="100.0" prefWidth="200.0">
                                                                <children>
-                                                                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                                  <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="222.0" spacing="15.0">
                                                                      <children>
                                                                         <RadioButton fx:id="r3b" mnemonicParsing="false" text="3x3" />
                                                                         <RadioButton fx:id="r5b" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="5x5" />

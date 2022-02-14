@@ -31,7 +31,7 @@ public class ProjectImages extends Application {
     public int index;
     public Gizmo g;
     public CanvasEntity currentImage;
-    public testController mainController;
+    public imageEditorController mainController;
 
     public ProjectImages() {
         currentState = 0;
@@ -64,7 +64,7 @@ public class ProjectImages extends Application {
         currentState = 0;
 
         record.add(canvas);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("test.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("imageEditor.fxml"));
         VBox informationPanel = loader.load();
         mainController = loader.getController();
         Stage informationView = new Stage();

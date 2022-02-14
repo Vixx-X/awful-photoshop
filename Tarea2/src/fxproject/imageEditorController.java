@@ -32,7 +32,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import org.opencv.core.Point;
 
-public class testController implements Initializable {
+public class imageEditorController implements Initializable {
 
     /**
      * Initializes the controller class.
