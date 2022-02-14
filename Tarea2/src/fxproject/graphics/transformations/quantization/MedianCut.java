@@ -211,7 +211,7 @@ public class MedianCut {
         }
 
         int _log = binlog(colors);
-        int _pow = 2 << (_log - 1);
+        int _pow = 1 << _log;
 
         splitBuckets(0, flat_array.length, _pow != colors ? _log + 1 : _log);
         return ret;
