@@ -20,7 +20,7 @@ public class Canvas {
     public int currentIndex;
 
     public Canvas(int width, int height) {
-        currentIndex = 0;
+        currentIndex = -1;
         this.w = width;
         this.h = height;
         images = new ArrayList<>();
@@ -48,13 +48,16 @@ public class Canvas {
 
     public void setSelectedImage(Point p) {
         if (getSelectedImage(p) == null) {
-            return;
+            currentIndex = -1;
         }
         currentIndex = images.indexOf(getSelectedImage(p));
     }
 
     public CanvasEntity getSelectedImage() {
-        return images.get(currentIndex);
+        if (currentIndex != -1) {
+            return images.get(currentIndex);
+        }
+        return null;
     }
 
     public boolean addImage(String filename) {

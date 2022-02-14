@@ -80,6 +80,8 @@ public class imageEditorController implements Initializable {
     @FXML
     private TextField indexColors;
 
+    private ImageView imageV;
+
     //private WritableImage layout;
     private ProjectImages main;
 
@@ -106,7 +108,7 @@ public class imageEditorController implements Initializable {
                 }
                 case "rotate" -> {
                     int i = getMethod();
-                    //tmp.rotate(i);
+                    System.out.println("Rotaaaaaaaaaaaaaaa me encanta la vaca");
                     changeState(c);
                     break;
                 }
@@ -117,9 +119,11 @@ public class imageEditorController implements Initializable {
         }
     }
 
+
     @FXML
     void clickPanel(MouseEvent event) {
         p = new Point(event.getX(), event.getY());
+        //System.out.println("BRRRRRRR " + main.getCurrentCanvas().currentIndex);
         if (main.g != null) {
             moveActions(main.g.type, copyCanvas);
             main.g.removeOnCanvas(canvasLayout);
@@ -128,17 +132,6 @@ public class imageEditorController implements Initializable {
         main.getCurrentCanvas().setSelectedImage(p);
         copyCanvas = new Canvas(main.getCurrentCanvas());
         refreshImage();
-        main.currentImage = copyCanvas.getSelectedImage();
-        copyImage = new CanvasEntity(copyCanvas.getSelectedImage());
-
-        //main.currentImage = c.getSelectedImage(p);
-        //main.currentImage = c.getSelectedImage(p);
-        if (copyImage != null) {
-            //tmp = new CanvasEntity(main.currentImage);
-            main.g = new Gizmo(main.currentImage);
-            main.g.addOnCanvas(canvasLayout);
-
-        }
     }
 
     private int getMethod() {
@@ -177,12 +170,12 @@ public class imageEditorController implements Initializable {
     public void putBack() {
         Canvas c = new Canvas(main.getCurrentCanvas());
         System.out.println(c.currentIndex + " tamañito 2 " + c.images.size());
-        
+
         for (int i = 0; i < c.images.size(); i++) {
             System.out.println(c.images.get(i));
         }
         c.images.add(0, c.getSelectedImage());
-        c.images.remove(c.currentIndex+1);
+        c.images.remove(c.currentIndex + 1);
         c.currentIndex = 0;
         changeState(c);
     }
@@ -225,6 +218,7 @@ public class imageEditorController implements Initializable {
         if (file != null) {
             Canvas c = new Canvas(main.getCurrentCanvas());
             c.addImage(file.getAbsolutePath());
+            c.currentIndex = c.images.size() - 1;
             main.currentImage = c.images.get(c.images.size() - 1);
             setImageSize();
             changeState(c);
@@ -334,6 +328,11 @@ public class imageEditorController implements Initializable {
         enableToolsButtons();
     }
 
+    public void selectImage() {
+        main.g = new Gizmo(main.currentImage);
+        main.g.addOnCanvas(canvasLayout);
+    }
+
     public void refreshCanvas() {
         copyCanvas = main.getCurrentCanvas();
         drawRaster();
@@ -342,7 +341,22 @@ public class imageEditorController implements Initializable {
 
     private void refreshImage() {
         main.currentImage = copyCanvas.getSelectedImage();
+        if (main.currentImage == null) {
+            cleanSelectImage();
+            return;
+        }
+        selectImage();
         compositeSelected();
+    }
+
+    private void cleanSelectImage() {
+        paneImageSelected.getChildren().remove(imageV);
+        paneImageSelected.setStyle("-fx-background-color: transparent;");
+        if (gizmoCrop != null) {
+            gizmoCrop.removeOnCanvas(paneImageSelected);
+            gizmoCrop = null;
+        }
+
     }
 
     private void drawRaster() {
@@ -382,7 +396,7 @@ public class imageEditorController implements Initializable {
         CanvasEntity tmpImg = new CanvasEntity(img);
         tmpImg.angle = 0;
         tmpImg.scale = (float) 1 / scale;
-        ImageView imageV = new ImageView(tmpImg.getImage());
+        imageV = new ImageView(tmpImg.getImage());
         imageV.relocate(0, 0);
         paneImageSelected.getChildren().setAll(imageV);
 
