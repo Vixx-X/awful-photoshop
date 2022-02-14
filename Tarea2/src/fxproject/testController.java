@@ -23,6 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -67,6 +68,9 @@ public class testController implements Initializable {
     @FXML
     private ComboBox<String> smoothedFilters, borderFilters, threshold,
             quantization, morphology, method;
+    
+    @FXML
+    private TextField indexColors;
 
     //private WritableImage layout;
     private ProjectImages main;
@@ -216,13 +220,7 @@ public class testController implements Initializable {
     }
 
     private int getDimension() {
-        if (r5b.isSelected()) {
-            return 5;
-        } else if (r7b.isSelected()) {
-            return 7;
-        } else {
-            return 3;
-        }
+        return (r5b.isSelected()) ? 5 : (r7b.isSelected() ? 7 : 3);
     }
 
     @FXML
@@ -251,6 +249,7 @@ public class testController implements Initializable {
             }
         } else {
             morphology.setValue("Erosión");
+            main.currentImage.img = Erosion.apply(main.currentImage.img, dim);
         }
         refreshRaster(c);
     }
@@ -258,27 +257,32 @@ public class testController implements Initializable {
     @FXML
     void applyQuantization(ActionEvent event
     ) {
+        int index = (!indexColors.getText().isEmpty())
+                ? Integer.parseInt(indexColors.getText()) : 256;
+
+        Canvas c = new Canvas(main.getCurrentCanvas());
+        main.currentImage = c.getSelectedImage(p);
         if (main.currentImage == null) {
             return;
         }
-        tmp = new CanvasEntity(main.currentImage);
         String type = quantization.getValue();
         if (type != null) {
             switch (type) {
                 case "Octree" ->
-                    System.out.println("Octree");
+                    System.out.println("Octree " + index);
                 case "Mediancut" ->
-                    System.out.println("MedianCut");
+                    System.out.println("MedianCut " + index);
                 default -> {
                     break;
                 }
             }
         } else {
             quantization.setValue("Octree");
+            indexColors.setText(String.valueOf(index));
             System.out.println("Default Octree");
         }
         //tmp.translateImg(p1);
-        changeImage(tmp);
+        //changeImage(tmp);
     }
 
     private void refreshRaster(Canvas c) {

@@ -33,6 +33,7 @@ public final class Gizmo {
     public String type;
     public CanvasEntity currentImage;
     public double handleAngle;
+    public Circle[] cropBorders;
 
     public Line proof;
 
@@ -43,6 +44,7 @@ public final class Gizmo {
     }
 
     private void initGizmo(CanvasEntity img) {
+        cropBorders = null;
         currentImage = img;
         proof = new Line(0, 0, 0, 0);
         Point[] corners = currentImage.getCorners();
@@ -233,6 +235,26 @@ public final class Gizmo {
             shape.getParent().setCursor(Cursor.DEFAULT);
             mouseLocation.value = null;
         });
+    }
+    
+    
+    public void cropMode(Pane canvasLayout) {
+        removeOnCanvas(canvasLayout);
+        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: grey; -fx-stroke-width: 1;");
+        Point[] corners = currentImage.getCorners();
+        for (int i = 0; i < 4; i++) {
+            cropBorders[i] = new Circle(corners[i].x, corners[i].y, handleRadius);
+            cropBorders[i].setStyle("-fx-fill: white; -fx-stroke: grey; -fx-stroke-width: 0.8;");
+        }
+        canvasLayout.getChildren().add(selectRect);
+        canvasLayout.getChildren().addAll(cropBorders);
+    }
+    
+    public void selectMode(Pane canvasLayout){
+       canvasLayout.getChildren().removeAll(cropBorders);
+       canvasLayout.getChildren().remove(selectRect);
+       selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+       addOnCanvas(canvasLayout);
     }
 
     void removeOnCanvas(Pane canvasLayout) {
