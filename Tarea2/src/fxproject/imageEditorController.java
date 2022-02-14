@@ -10,6 +10,7 @@ import fxproject.graphics.transformations.morphology.Closing;
 import fxproject.graphics.transformations.morphology.Dilation;
 import fxproject.graphics.transformations.morphology.Erosion;
 import fxproject.graphics.transformations.morphology.Opening;
+import fxproject.graphics.transformations.quantization.MedianCut;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class imageEditorController implements Initializable {
     @FXML
     private ComboBox<String> smoothedFilters, borderFilters, threshold,
             quantization, morphology, method;
-    
+
     @FXML
     private TextField indexColors;
 
@@ -271,7 +272,7 @@ public class imageEditorController implements Initializable {
                 case "Octree" ->
                     System.out.println("Octree " + index);
                 case "Mediancut" ->
-                    System.out.println("MedianCut " + index);
+                    main.currentImage.img = MedianCut.apply(main.currentImage.img, index);
                 default -> {
                     break;
                 }
@@ -281,6 +282,7 @@ public class imageEditorController implements Initializable {
             indexColors.setText(String.valueOf(index));
             System.out.println("Default Octree");
         }
+        refreshRaster(c);
         //tmp.translateImg(p1);
         //changeImage(tmp);
     }
