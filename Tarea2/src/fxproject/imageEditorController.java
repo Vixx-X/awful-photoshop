@@ -12,6 +12,8 @@ import fxproject.graphics.transformations.morphology.Closing;
 import fxproject.graphics.transformations.morphology.Dilation;
 import fxproject.graphics.transformations.morphology.Erosion;
 import fxproject.graphics.transformations.morphology.Opening;
+import fxproject.graphics.transformations.quantization.MedianCut;
+import fxproject.graphics.transformations.quantization.OctTree;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -288,9 +290,9 @@ public class imageEditorController implements Initializable {
         if (type != null) {
             switch (type) {
                 case "Octree" ->
-                    System.out.println("Octree " + index);
+                    main.currentImage.img = OctTree.apply(main.currentImage.img, index);
                 case "Mediancut" ->
-                    System.out.println("MedianCut " + index);
+                    main.currentImage.img = MedianCut.apply(main.currentImage.img, index);
                 default -> {
                     break;
                 }
