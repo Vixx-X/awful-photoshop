@@ -204,7 +204,6 @@ public class CanvasEntity {
     }
 
     static public RawImage scaleImg(RawImage img, double scale) {
-        System.out.println(scale);
         if (scale == 1) {
             return img;
         }

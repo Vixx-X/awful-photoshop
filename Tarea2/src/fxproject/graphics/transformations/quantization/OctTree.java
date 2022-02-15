@@ -101,8 +101,7 @@ public class OctTree {
                     return children[i].getPaletteIndex(c, level + 1);
                 }
             }
-            System.out.println("XDDDDD");
-            return -1;
+            return -1; // unreachable ?
         }
 
         public int removeLeaves() {
@@ -164,7 +163,6 @@ public class OctTree {
         }
 
         public void addLevelNode(int level, OctTreeNode node) {
-            //System.out.println(level);
             levels[level].add(node);
         }
 

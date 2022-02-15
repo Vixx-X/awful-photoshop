@@ -109,7 +109,7 @@ public class imageEditorController implements Initializable {
                     break;
                 }
                 default -> {
-                    break;
+                    return;
                 }
             }
             saveState();
@@ -185,6 +185,7 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void undoAction() {
+        System.out.println("Undo");
         Canvas canvas = main.undo();
         if (canvas != null) {
             refresh();
@@ -306,7 +307,7 @@ public class imageEditorController implements Initializable {
     }
 
     private void saveState() {
-        System.out.println("AAAAALALALALALA");
+        System.out.println("Saved!");
         main.pushCanvas(new Canvas(current));
     }
 
@@ -317,13 +318,11 @@ public class imageEditorController implements Initializable {
     }
 
     public void addGizmo() {
-        System.out.println("ME PONGO\n");
         main.g = new Gizmo(main.currentImage);
         main.g.addOnCanvas(canvasLayout);
     }
 
     public void removeGizmo() {
-        System.out.println("ME QUITO ");
         main.g.removeOnCanvas(canvasLayout);
         main.g = null;
     }

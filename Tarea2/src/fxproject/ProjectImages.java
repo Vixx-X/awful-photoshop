@@ -29,7 +29,6 @@ public class ProjectImages extends Application {
 
     private final ArrayList<Canvas> record = new ArrayList<>();
     private int currentState;
-    public int index;
     public Gizmo g;
     public CanvasEntity currentImage;
     public imageEditorController mainController;
@@ -38,7 +37,6 @@ public class ProjectImages extends Application {
         currentState = 0;
     }
 
-    //ProjectImages.getInstance().showImagePanel(images[0]);
     public static ProjectImages getInstance() {
         if (instance == null) {
             instance = new ProjectImages();
@@ -65,6 +63,7 @@ public class ProjectImages extends Application {
         currentState = 0;
 
         record.add(canvas);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("imageEditor.fxml"));
         VBox informationPanel = loader.load();
         mainController = loader.getController();
@@ -125,19 +124,15 @@ public class ProjectImages extends Application {
         record.add(c);
     }
 
-    public Canvas undo() {
+    public void undo() {
         if (currentState > 0) {
             currentState--;
-            return record.get(currentState);
         }
-        return null;
     }
 
-    public Canvas redo() {
+    public void redo() {
         if ((record.size() - 1) > currentState) {
             currentState++;
-            return record.get(currentState);
         }
-        return null;
     }
 }

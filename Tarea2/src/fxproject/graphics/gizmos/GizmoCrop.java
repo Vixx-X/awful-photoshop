@@ -105,7 +105,6 @@ public final class GizmoCrop {
         }
 
         cropPoints[0].setOnMouseDragged(event -> {
-            //System.out.println(this);
             this.top = (int) min(max(0, (event.getY() / scale)), height - bottom);
             img.crop(top, right, bottom, left);
             drawGizmo();

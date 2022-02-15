@@ -22,7 +22,6 @@ public class Scale {
                 round(size.height * scale)
         );
 
-        System.out.println(size + " " + newDim);
         RawImage out = new RawImage(newDim, src.type());
 
         for (int i = 0; i < newDim.height; i++) {

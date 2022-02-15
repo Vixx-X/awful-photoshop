@@ -216,8 +216,8 @@ public final class Gizmo {
                             currentImage.y + deltaY
                     )
             );
-            drawGizmo();
 
+            drawGizmo();
             mouseLocation.value = new Point(event.getX(), event.getY());
 
             type = "translate";
