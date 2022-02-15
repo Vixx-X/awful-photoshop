@@ -16,12 +16,17 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.core.Range;
 
 /**
  *
  * @author vixx_
  */
 public class CanvasEntity {
+
+    private static RawImage img(Range range, Range range0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public int x, y;
     public RawImage img;
@@ -99,30 +104,30 @@ public class CanvasEntity {
 
     public int getUnrotatedCroppedWidth() {
         Size size = this.img.size();
-        return (int) round(size.width * this.scale);
+        return (int) round((size.width - this.padLeft - this.padRight) * this.scale);
     }
 
     public int getUnrotatedCroppedHeight() {
         Size size = this.img.size();
-        return (int) round(size.height * this.scale);
+        return (int) round((size.height - this.padTop - this.padBottom) * this.scale);
     }
 
     public int getUnrotatedUnscaledCroppedWidth() {
         Size size = this.img.size();
-        return (int) round(size.width);
+        return (int) round(size.width - this.padLeft - this.padRight);
     }
 
     public int getUnrotatedUnscaledCroppedHeight() {
         Size size = this.img.size();
-        return (int) round(size.height);
+        return (int) round(size.height - this.padTop - this.padBottom);
     }
 
     public int getUnrotatedCroppedX() {
-        return this.x;
+        return this.x + this.padLeft;
     }
 
     public int getUnrotatedCroppedY() {
-        return this.y;
+        return this.y + this.padTop;
     }
 
     public Point[] getCorners() {
@@ -165,13 +170,9 @@ public class CanvasEntity {
         return false;
     }
 
-    public void morphology(int dimension) {
-        //this.img = Erosion.apply(getImage(), dimension);
-    }
-
     public void translate(Point p) {
-        this.x = (int) p.x;
-        this.y = (int) p.y;
+        this.x = (int) p.x - this.padLeft;
+        this.y = (int) p.y - this.padTop;
     }
 
     public void rotate(double angle) {
@@ -207,16 +208,17 @@ public class CanvasEntity {
         if (scale == 1) {
             return img;
         }
-        System.out.println("PUTA");
         RawImage ret = Scale.apply(img, scale);
         return ret;
+    }
+
+    static public RawImage cropImg(RawImage img, int padTop, int padRight, int padBot, int padLeft) {
+        return img(new Range(padTop, img.height() - padBot), new Range(padLeft, img.width() - padRight));
     }
 
     public Image getImage() {
         RawImage tmpMat = new RawImage();
         this.img.copyTo(tmpMat);
-
-        System.out.println("PUTA");
 
         //tmpMat = translateImg(tmpMat, point);
         tmpMat = rotateImg(tmpMat, this.angle);
