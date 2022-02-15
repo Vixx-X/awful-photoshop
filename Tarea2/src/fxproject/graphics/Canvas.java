@@ -37,7 +37,18 @@ public class Canvas {
         }
     }
 
-    private CanvasEntity getSelectedImage(Point p) {
+    private int getSelectedImageIndex(Point p) {
+        int idx = images.size() - 1;
+        for (CanvasEntity image : reversed(images)) {
+            if (image.contain(p)) {
+                return idx;
+            }
+            idx--;
+        }
+        return -1;
+    }
+
+    public CanvasEntity getSelectedImage(Point p) {
         for (CanvasEntity image : reversed(images)) {
             if (image.contain(p)) {
                 return image;
@@ -47,10 +58,11 @@ public class Canvas {
     }
 
     public void setSelectedImage(Point p) {
-        if (getSelectedImage(p) == null) {
-            currentIndex = -1;
-        }
-        currentIndex = images.indexOf(getSelectedImage(p));
+        System.out.println("A " + p);
+        System.out.println("B " + getSelectedImage(p));
+        System.out.println("C " + getSelectedImageIndex(p));
+        currentIndex = getSelectedImageIndex(p);
+        System.out.println("D " + getSelectedImage());
     }
 
     public CanvasEntity getSelectedImage() {

@@ -8,7 +8,6 @@ import fxproject.graphics.gizmos.Gizmo;
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
 import java.io.IOException;
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -22,19 +21,28 @@ import org.opencv.core.Core;
 
 public class ProjectImages extends Application {
 
+    int MAX_RECORDS_SIZE = 9;
+
     private static ProjectImages instance;
     private static Stage primaryStage;
     private static VBox mainLayout;
     private Canvas canvas;
+    private boolean firstIsProtected;
 
-    private final ArrayList<Canvas> record = new ArrayList<>();
+    private final Canvas[] record;
+    ;
     private int currentState;
+    private int size;
+
     public Gizmo g;
     public CanvasEntity currentImage;
     public imageEditorController mainController;
 
     public ProjectImages() {
-        currentState = 0;
+        record = new Canvas[MAX_RECORDS_SIZE];
+        currentState = -1;
+        size = 0;
+        firstIsProtected = true;
     }
 
     public static ProjectImages getInstance() {
@@ -60,18 +68,18 @@ public class ProjectImages extends Application {
 
     public void showPanel(int width, int height) throws IOException {
         canvas = new Canvas(width, height);
-        currentState = 0;
-
-        record.add(canvas);
+        pushCanvas(canvas); // blank canvas
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("imageEditor.fxml"));
         VBox informationPanel = loader.load();
         mainController = loader.getController();
         Stage informationView = new Stage();
+
         informationView.initModality(Modality.WINDOW_MODAL);
         informationView.initOwner(primaryStage);
         informationView.setMaximized(true);
         //informationView.setFullScreen(true);
+
         Scene scene = new Scene(informationPanel);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -99,7 +107,15 @@ public class ProjectImages extends Application {
     }
 
     public Canvas getCurrentCanvas() {
-        return record.get(currentState);
+        return new Canvas(record[currentState]);
+    }
+
+    public boolean canRedo() {
+        return currentState < size - 1;
+    }
+
+    public boolean canUndo() {
+        return currentState > 0;
     }
 
     public int getIndex() {
@@ -107,21 +123,28 @@ public class ProjectImages extends Application {
     }
 
     public int getStateListSize() {
-        return record.size();
+        return size;
     }
 
     public void pushCanvas(Canvas c) {
-        if (currentState != (record.size() - 1)) {
-            for (int i = currentState + 1; i < record.size(); i++) {
-                record.remove(i);
+        if (size == MAX_RECORDS_SIZE && currentState == size - 1) {
+            firstIsProtected = false;
+            for (int i = 0; i < size - 1; ++i) {
+                record[i] = record[i + 1];
             }
+            record[currentState] = c;
+            return;
         }
-        if (currentState == 9) {
-            record.remove(0);
+
+        if (currentState == size - 1) {
+            size++;
         } else {
-            currentState++;
+            size = currentState + 2;
         }
-        record.add(c);
+
+        currentState++;
+
+        record[currentState] = c;
     }
 
     public void undo() {
@@ -131,7 +154,7 @@ public class ProjectImages extends Application {
     }
 
     public void redo() {
-        if ((record.size() - 1) > currentState) {
+        if (size - 1 > currentState) {
             currentState++;
         }
     }
