@@ -389,6 +389,9 @@ public class imageEditorController implements Initializable {
             visualImages.add(_imageV);
         }
         canvasLayout.getChildren().setAll(visualImages);
+        if (main.g != null) {
+            main.g.addOnCanvas(canvasLayout);
+        }
     }
 
     private void compositeSelected() {

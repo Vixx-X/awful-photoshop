@@ -10,6 +10,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import java.util.Arrays;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -50,7 +51,9 @@ public final class Gizmo {
     }
 
     public void drawGizmo() {
-        setRefresh();
+        if (!isEditing) {
+            setRefresh();
+        }
         drawInternalGizmo();
         addBorder();
     }
@@ -94,7 +97,9 @@ public final class Gizmo {
             corners[3].x, corners[3].y
         };
 
+        System.out.println("PUNTOS " + Arrays.toString(points));
         selectRect.getPoints().setAll(points);
+        System.out.println("PUNTOS " + Arrays.toString(points));
 
         mobileRect.getPoints().setAll(points);
 
