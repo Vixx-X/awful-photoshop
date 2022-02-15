@@ -58,11 +58,7 @@ public class Canvas {
     }
 
     public void setSelectedImage(Point p) {
-        System.out.println("A " + p);
-        System.out.println("B " + getSelectedImage(p));
-        System.out.println("C " + getSelectedImageIndex(p));
         currentIndex = getSelectedImageIndex(p);
-        System.out.println("D " + getSelectedImage());
     }
 
     public CanvasEntity getSelectedImage() {
