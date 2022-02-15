@@ -186,18 +186,14 @@ public class imageEditorController implements Initializable {
     @FXML
     void undoAction() {
         System.out.println("Undo");
-        Canvas canvas = main.undo();
-        if (canvas != null) {
-            refresh();
-        }
+        main.undo();
+        refresh();
     }
 
     @FXML
     void redoAction() {
-        Canvas canvas = main.redo();
-        if (canvas != null) {
-            refresh();
-        }
+        main.redo();
+        refresh();
     }
 
     @FXML
