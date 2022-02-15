@@ -117,19 +117,28 @@ public class imageEditorController implements Initializable {
         }
     }
 
+    void selectImage(Point p) {
+        System.out.println("SELECTING");
+        if (main.g != null && main.g.isEditing) {
+            System.out.println("IS EDITING SKIP");
+            return;
+        }
+        current.setSelectedImage(p);
+    }
+
     @FXML
     void clickPanel(MouseEvent event) {
-        p = new Point(event.getX(), event.getY());
-        main.getCurrentCanvas().setSelectedImage(p);
-        if (current.getSelectedImage() != null) {
+        if (main.g != null && main.g.type != null) {
             moveActions(main.g.type, current);
         }
+        p = new Point(event.getX(), event.getY());
+        selectImage(p);
     }
 
     @FXML
     void clickSelect(MouseEvent event) {
         p = new Point(event.getX(), event.getY());
-        main.getCurrentCanvas().setSelectedImage(p);
+        selectImage(p);
         refreshImage();
     }
 
@@ -158,8 +167,12 @@ public class imageEditorController implements Initializable {
         }
     }
 
-    public Canvas getCurrentCanvas() {
+    public Canvas loadCurrentCanvas() {
         return main.getCurrentCanvas();
+    }
+
+    public Canvas getCurrentCanvas() {
+        return current;
     }
 
     public void putFront() {
@@ -179,20 +192,23 @@ public class imageEditorController implements Initializable {
     }
 
     void enableToolsButtons() {
-        undoButton.setDisable(main.getIndex() == 0);
-        redoButton.setDisable(main.getStateListSize() - 1 == main.getIndex());
+        undoButton.setDisable(!main.canUndo());
+        redoButton.setDisable(!main.canRedo());
     }
 
     @FXML
     void undoAction() {
         System.out.println("Undo");
         main.undo();
+        loadState();
         refresh();
     }
 
     @FXML
     void redoAction() {
+        System.out.println("Redo");
         main.redo();
+        loadState();
         refresh();
     }
 
@@ -242,7 +258,6 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void applyMorphology(ActionEvent event) {
-
         int dim = getDimension();
         Canvas c = new Canvas(main.getCurrentCanvas());
         main.currentImage = c.getSelectedImage();
@@ -273,8 +288,7 @@ public class imageEditorController implements Initializable {
     }
 
     @FXML
-    void applyQuantization(ActionEvent event
-    ) {
+    void applyQuantization(ActionEvent event) {
         int index = (!indexColors.getText().isEmpty())
                 ? Integer.parseInt(indexColors.getText()) : 256;
 
@@ -307,6 +321,11 @@ public class imageEditorController implements Initializable {
         main.pushCanvas(new Canvas(current));
     }
 
+    private void loadState() {
+        System.out.println("Load!");
+        current = loadCurrentCanvas();
+    }
+
     public void refresh() {
         refreshCanvas();
         refreshImage();
@@ -324,15 +343,13 @@ public class imageEditorController implements Initializable {
     }
 
     public void refreshCanvas() {
-        current = getCurrentCanvas();
         drawRaster(current.images);
     }
 
     private void refreshImage() {
-        System.out.println("REFRESCAAAAR");
         main.currentImage = current.getSelectedImage();
 
-        if (main.g != null && main.currentImage != main.g.currentImage) {
+        if (main.g != null && (main.currentImage == null || (main.currentImage != null && main.currentImage.id != main.g.currentImage.id))) {
             removeGizmo();
         }
 
@@ -343,6 +360,9 @@ public class imageEditorController implements Initializable {
 
         if (main.g == null) {
             addGizmo();
+        } else {
+            main.g.currentImage = main.currentImage;
+            main.g.drawGizmo();
         }
 
         compositeSelected();
@@ -410,10 +430,8 @@ public class imageEditorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // TODO
         main = ProjectImages.getInstance();
-        current = getCurrentCanvas();
+        current = loadCurrentCanvas();
 
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());

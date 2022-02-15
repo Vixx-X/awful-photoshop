@@ -33,6 +33,7 @@ public final class Gizmo {
     public CanvasEntity currentImage;
     public double handleAngle;
     public Circle[] cropBorders;
+    public boolean isEditing = false;
     public Wrapper<Point> mouseLocation = new Wrapper<>();
 
     public Line proof;
@@ -40,16 +41,17 @@ public final class Gizmo {
     public Gizmo(CanvasEntity img, Point origin) {
         initGizmo(img);
         drawGizmo();
-        addBorder();
         mouseLocation.value = origin;
     }
 
     public Gizmo(CanvasEntity img) {
         initGizmo(img);
         drawGizmo();
+    }
+
+    public void drawGizmo() {
+        drawInternalGizmo();
         addBorder();
-        Point[] coord = img.getCorners();
-        mouseLocation.value = coord[0];
     }
 
     private void initGizmo(CanvasEntity img) {
@@ -95,7 +97,7 @@ public final class Gizmo {
         rotateHandle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
     }
 
-    public void drawGizmo() {
+    public void drawInternalGizmo() {
         Point[] corners = currentImage.getCorners();
         setCorners(corners);
     }
@@ -118,64 +120,75 @@ public final class Gizmo {
             return 0;
         }
         return (y2 - y1) / (x2 - x1);
+
     }
 
     public void addBorder() {
 
-        setUpDragging(resizeHandleNW, mouseLocation);
-        setUpDragging(resizeHandleSE, mouseLocation);
-        setUpDragging(selectRect, mouseLocation);
-        setUpDragging(rotateHandle, mouseLocation);
+        setUpSelecting(resizeHandleNW);
+        setUpSelecting(resizeHandleSE);
+        setUpSelecting(rotateHandle);
+
+        setUpDragging(resizeHandleNW);
+        setUpDragging(resizeHandleSE);
+        setUpDragging(selectRect);
+        setUpDragging(rotateHandle);
 
         resizeHandleNW.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getX() - mouseLocation.value.x;
-                double deltaY = event.getY() - mouseLocation.value.y;
-
-                float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
-                Point p = new Point(mobileRect.getPoints().get(0) + d,
-                        mobileRect.getPoints().get(1) + d);
-
-                int w = currentImage.getUnrotatedCroppedWidth();
-                int h = currentImage.getUnrotatedCroppedHeight();
-                int x = currentImage.getUnrotatedCroppedX();
-                int y = currentImage.getUnrotatedCroppedY();
-
-                float newScale = (float) ((float) (p.x - x) * (p.y - y) / ((float) w * h));
-
-                currentImage.translate(p);
-                currentImage.scale(newScale);
-
-                drawGizmo();
-
-                mouseLocation.value = new Point(event.getX(), event.getY());
+            if (mouseLocation.value == null) {
+                return;
             }
+
+            double deltaX = event.getSceneX() - mouseLocation.value.x;
+            double deltaY = event.getSceneY() - mouseLocation.value.y;
+
+            float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
+            Point p = new Point(mobileRect.getPoints().get(0) + d,
+                    mobileRect.getPoints().get(1) + d);
+
+            int w = currentImage.getUnrotatedCroppedWidth();
+            int h = currentImage.getUnrotatedCroppedHeight();
+            int x = currentImage.getUnrotatedCroppedX();
+            int y = currentImage.getUnrotatedCroppedY();
+
+            float newScale = (float) ((float) (p.x - x) * (p.y - y) / ((float) w * h));
+
+            currentImage.translate(p);
+            currentImage.scale(newScale);
+
+            drawInternalGizmo();
+
+            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
+
             type = "scale";
         });
 
         resizeHandleSE.setOnMouseDragged(event -> {
-            if (mouseLocation.value != null) {
-                double deltaX = event.getX() - mouseLocation.value.x;
-                double deltaY = event.getY() - mouseLocation.value.y;
-
-                float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
-
-                Point p = new Point(mobileRect.getPoints().get(4) + d,
-                        mobileRect.getPoints().get(5) + d);
-
-                int w = currentImage.getUnrotatedCroppedWidth();
-                int h = currentImage.getUnrotatedCroppedHeight();
-                int x = currentImage.getUnrotatedCroppedX();
-                int y = currentImage.getUnrotatedCroppedY();
-
-                double newScale = (currentImage.scale * abs((p.x - x) * (p.y - y) / ((double) w * h)));
-
-                currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
-
-                drawGizmo();
-
-                mouseLocation.value = new Point(event.getX(), event.getY());
+            if (mouseLocation.value == null) {
+                return;
             }
+
+            double deltaX = event.getSceneX() - mouseLocation.value.x;
+            double deltaY = event.getSceneY() - mouseLocation.value.y;
+
+            float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
+
+            Point p = new Point(mobileRect.getPoints().get(4) + d,
+                    mobileRect.getPoints().get(5) + d);
+
+            int w = currentImage.getUnrotatedCroppedWidth();
+            int h = currentImage.getUnrotatedCroppedHeight();
+            int x = currentImage.getUnrotatedCroppedX();
+            int y = currentImage.getUnrotatedCroppedY();
+
+            double newScale = (currentImage.scale * abs((p.x - x) * (p.y - y) / ((double) w * h)));
+
+            currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
+
+            drawInternalGizmo();
+
+            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
+
             type = "scale";
         });
 
@@ -186,8 +199,8 @@ public final class Gizmo {
 
             Point mid = currentImage.getCenter();
 
-            double x = event.getX() - mid.x;
-            double y = event.getY() - mid.y;
+            double x = event.getSceneX() - mid.x;
+            double y = event.getSceneY() - mid.y;
 
             float angle = (float) ((handleAngle - atan2(y, x)) * 180 / PI);
             proof.setStartX(mid.x);
@@ -197,8 +210,8 @@ public final class Gizmo {
 
             currentImage.rotate(-angle);
 
-            drawGizmo();
-            mouseLocation.value = new Point(event.getX(), event.getY());
+            drawInternalGizmo();
+            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
 
             type = "rotate";
         });
@@ -208,8 +221,8 @@ public final class Gizmo {
                 return;
             }
 
-            double deltaX = event.getX() - mouseLocation.value.x;
-            double deltaY = event.getY() - mouseLocation.value.y;
+            double deltaX = event.getSceneX() - mouseLocation.value.x;
+            double deltaY = event.getSceneY() - mouseLocation.value.y;
             currentImage.translate(
                     new Point(
                             currentImage.x + deltaX,
@@ -217,52 +230,50 @@ public final class Gizmo {
                     )
             );
 
-            drawGizmo();
-            mouseLocation.value = new Point(event.getX(), event.getY());
+            drawInternalGizmo();
+            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
 
             type = "translate";
         }
         );
 
-        selectRect.setOnMousePressed(event -> {
-            mouseLocation.value = new Point(event.getX(), event.getY());
+    }
+
+    private void setUpSelecting(Shape shape) {
+        shape.setOnMouseClicked(event -> {
+            System.out.println("AAAAA");
+            isEditing = true;
+        });
+        shape.setOnMousePressed(event -> {
+            System.out.println("BBBB");
+            isEditing = true;
+        });
+        shape.setOnMouseReleased(event -> {
+            System.out.println("CCCC");
+            isEditing = false;
         });
     }
 
-    private void setUpDragging(Shape shape, Wrapper<Point> mouseLocation) {
+    private void setUpDragging(Shape shape) {
 
         shape.setOnDragDetected(event -> {
-            shape.getParent().setCursor(Cursor.CLOSED_HAND);
-            mouseLocation.value = new Point(event.getX(), event.getY());
+            shape.setCursor(Cursor.CLOSED_HAND);
+            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
+            isEditing = true;
+            System.out.println("DRAGGING");
         });
 
         shape.setOnMouseReleased(event -> {
-            shape.getParent().setCursor(Cursor.DEFAULT);
+            shape.setCursor(Cursor.DEFAULT);
             mouseLocation.value = null;
+            isEditing = false;
+            System.out.println("REALESED");
         });
     }
 
-    public void cropMode(Pane canvasLayout) {
-        removeOnCanvas(canvasLayout);
-        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: grey; -fx-stroke-width: 1;");
-        Point[] corners = currentImage.getCorners();
-        for (int i = 0; i < 4; i++) {
-            cropBorders[i] = new Circle(corners[i].x, corners[i].y, handleRadius);
-            cropBorders[i].setStyle("-fx-fill: white; -fx-stroke: grey; -fx-stroke-width: 0.8;");
-        }
-        canvasLayout.getChildren().add(selectRect);
-        canvasLayout.getChildren().addAll(cropBorders);
-    }
-
-    public void selectMode(Pane canvasLayout) {
-        canvasLayout.getChildren().removeAll(cropBorders);
-        canvasLayout.getChildren().remove(selectRect);
-        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
-        addOnCanvas(canvasLayout);
-    }
-
     public void removeOnCanvas(Pane canvasLayout) {
-        canvasLayout.getChildren().removeAll(mobileRect, selectRect, resizeHandleNW,
+        canvasLayout.getChildren().removeAll(
+                mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
     }
 
