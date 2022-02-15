@@ -46,19 +46,19 @@ public class Bicubic {
         double[][] cols = new double[][]{
             getRGBColors(
             points[0][0], points[0][1], points[0][2],
-            points[0][3], ydelta),
+            points[0][3], 1-ydelta),
             getRGBColors(
             points[1][0], points[1][1], points[1][2],
-            points[1][3], ydelta),
+            points[1][3], 1-ydelta),
             getRGBColors(
             points[2][0], points[2][1], points[2][2],
-            points[2][3], 1 - ydelta),
+            points[2][3], ydelta),
             getRGBColors(
             points[3][0], points[3][1], points[3][2],
-            points[3][3], 1 - ydelta)
+            points[3][3], ydelta)
         };
 
-        double[] copy = getRGBColors(cols[0], cols[1], cols[2], cols[3], 1 - xdelta);
+        double[] copy = getRGBColors(cols[0], cols[1], cols[2], cols[3], 1-xdelta);
 
         ret[0] = copy[0];
         ret[1] = copy[1];

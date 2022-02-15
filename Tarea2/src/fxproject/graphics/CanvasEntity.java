@@ -12,6 +12,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static java.lang.Math.sin;
+import java.util.UUID;
 import javafx.scene.image.Image;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
@@ -36,6 +37,7 @@ public class CanvasEntity {
     public int padRight;
     public int padBottom;
     public int padLeft;
+    public UUID id;
 
     public CanvasEntity(int x, int y, String filename) {
         this.padTop = 0;
@@ -48,6 +50,7 @@ public class CanvasEntity {
         this.img.readImage(filename);
         this.angle = 0;
         this.scale = 1;
+        this.id = UUID.randomUUID();
     }
 
     public CanvasEntity(CanvasEntity other) {
@@ -60,6 +63,7 @@ public class CanvasEntity {
         this.img = other.img.copy();
         this.angle = other.angle;
         this.scale = other.scale;
+        this.id = other.id;
     }
 
     public CanvasEntity(int x, int y, RawImage img) {
@@ -72,6 +76,7 @@ public class CanvasEntity {
         this.img = img;
         this.angle = 0;
         this.scale = 1;
+        this.id = UUID.randomUUID();
     }
 
     public Point getCenter() {
