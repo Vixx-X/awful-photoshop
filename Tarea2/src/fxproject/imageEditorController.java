@@ -119,17 +119,24 @@ public class imageEditorController implements Initializable {
         }
     }
 
-
     @FXML
     void clickPanel(MouseEvent event) {
         p = new Point(event.getX(), event.getY());
-        //System.out.println("BRRRRRRR " + main.getCurrentCanvas().currentIndex);
-        if (main.g != null) {
-            moveActions(main.g.type, copyCanvas);
-            main.g.removeOnCanvas(canvasLayout);
-            main.g = null;
-        }
         main.getCurrentCanvas().setSelectedImage(p);
+        System.out.println("TE QUIERO VITTO");
+        System.out.println(event.getX() + " " + event.getY());
+        //System.out.println("TE QUIERO GABY");
+        if (copyCanvas.getSelectedImage() != null) {
+            //System.out.println("TE QUIERO VITTO");
+            moveActions(main.g.type, copyCanvas);
+        }
+    }
+
+    @FXML
+    void clickSelect(MouseEvent event) {
+        p = new Point(event.getX(), event.getY());
+        main.getCurrentCanvas().setSelectedImage(p);
+        System.out.println("indiceeee " + main.getCurrentCanvas().currentIndex);
         copyCanvas = new Canvas(main.getCurrentCanvas());
         refreshImage();
     }
@@ -216,12 +223,12 @@ public class imageEditorController implements Initializable {
         FileChooser fc = new FileChooser();
         File file = fc.showOpenDialog(null);
         if (file != null) {
-            Canvas c = new Canvas(main.getCurrentCanvas());
-            c.addImage(file.getAbsolutePath());
-            c.currentIndex = c.images.size() - 1;
-            main.currentImage = c.images.get(c.images.size() - 1);
+            copyCanvas = new Canvas(main.getCurrentCanvas());
+            copyCanvas.addImage(file.getAbsolutePath());
+            copyCanvas.currentIndex = copyCanvas.images.size() - 1;
+            main.currentImage = copyCanvas.images.get(copyCanvas.images.size() - 1);
             setImageSize();
-            changeState(c);
+            changeState(copyCanvas);
         }
     }
 
@@ -328,24 +335,38 @@ public class imageEditorController implements Initializable {
         enableToolsButtons();
     }
 
-    public void selectImage() {
+    public void addGizmo() {
+        System.out.println("ME PONGO\n");
         main.g = new Gizmo(main.currentImage);
         main.g.addOnCanvas(canvasLayout);
+
+    }
+
+    public void removeGizmo() {
+        System.out.println("ME QUITO ");
+        main.g.removeOnCanvas(canvasLayout);
+        main.g = null;
     }
 
     public void refreshCanvas() {
         copyCanvas = main.getCurrentCanvas();
-        drawRaster();
-        //main.currentImage = c.getSelectedImage(p);
+        drawRaster(copyCanvas.images);
     }
 
     private void refreshImage() {
+        System.out.println("REFRESCAAAAR");
         main.currentImage = copyCanvas.getSelectedImage();
+        if (main.g != null && main.currentImage == null) {
+            removeGizmo();
+        }
         if (main.currentImage == null) {
             cleanSelectImage();
             return;
         }
-        selectImage();
+        if (main.g == null) {
+            addGizmo();
+        }
+
         compositeSelected();
     }
 
@@ -359,13 +380,13 @@ public class imageEditorController implements Initializable {
 
     }
 
-    private void drawRaster() {
+    private void drawRaster(ArrayList<CanvasEntity> images) {
         visualImages = new ArrayList<>();
-        for (CanvasEntity i : main.getCurrentCanvas().images) {
-            ImageView imageV = new ImageView(i.getImage());
+        for (CanvasEntity i : images) {
+            ImageView _imageV = new ImageView(i.getImage());
             Point p = i.getRasterCoord();
-            imageV.relocate(p.x, p.y);
-            visualImages.add(imageV);
+            _imageV.relocate(p.x, p.y);
+            visualImages.add(_imageV);
         }
         canvasLayout.getChildren().setAll(visualImages);
     }

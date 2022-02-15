@@ -114,11 +114,10 @@ public final class Gizmo {
     public void addBorder() {
         Wrapper<Point2D> mouseLocation = new Wrapper<>();
 
-        setUpDragging(resizeHandleNW, mouseLocation);
-        setUpDragging(resizeHandleSE, mouseLocation);
-        setUpDragging(selectRect, mouseLocation);
-        setUpDragging(rotateHandle, mouseLocation);
-
+        //setUpDragging(resizeHandleNW, mouseLocation);
+        //setUpDragging(resizeHandleSE, mouseLocation);
+        //setUpDragging(selectRect, mouseLocation);
+        //setUpDragging(rotateHandle, mouseLocation);
         resizeHandleNW.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
                 double deltaX = event.getSceneX() - mouseLocation.value.getX();
@@ -202,9 +201,10 @@ public final class Gizmo {
         });
 
         selectRect.setOnMouseDragged(event -> {
-            if (mouseLocation.value == null) {
+            System.out.println("VITTO ES INCREIBLE ");
+            /*if (mouseLocation.value == null) {
                 return;
-            }
+            } */
 
             double deltaX = event.getSceneX() - mouseLocation.value.getX();
             double deltaY = event.getSceneY() - mouseLocation.value.getY();
@@ -214,10 +214,10 @@ public final class Gizmo {
                             currentImage.y + deltaY
                     )
             );
-
+            System.out.println("VITTO ES HERMOSO");
             drawGizmo();
 
-            mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+            //mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
 
             type = "translate";
         }
@@ -236,8 +236,7 @@ public final class Gizmo {
             mouseLocation.value = null;
         });
     }
-    
-    
+
     public void cropMode(Pane canvasLayout) {
         removeOnCanvas(canvasLayout);
         selectRect.setStyle("-fx-fill: transparent; -fx-stroke: grey; -fx-stroke-width: 1;");
@@ -249,12 +248,12 @@ public final class Gizmo {
         canvasLayout.getChildren().add(selectRect);
         canvasLayout.getChildren().addAll(cropBorders);
     }
-    
-    public void selectMode(Pane canvasLayout){
-       canvasLayout.getChildren().removeAll(cropBorders);
-       canvasLayout.getChildren().remove(selectRect);
-       selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
-       addOnCanvas(canvasLayout);
+
+    public void selectMode(Pane canvasLayout) {
+        canvasLayout.getChildren().removeAll(cropBorders);
+        canvasLayout.getChildren().remove(selectRect);
+        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+        addOnCanvas(canvasLayout);
     }
 
     public void removeOnCanvas(Pane canvasLayout) {
