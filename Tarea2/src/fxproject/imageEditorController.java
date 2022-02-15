@@ -82,40 +82,14 @@ public class imageEditorController implements Initializable {
 
     private ImageView imageV;
 
-    //private WritableImage layout;
     private ProjectImages main;
 
     private ArrayList<ImageView> visualImages;
 
-    private CanvasEntity copyImage;
     private Canvas current;
     public GizmoCrop gizmoCrop;
 
     private Point p;
-
-    void moveActions(String type, Canvas c) {
-        if (main.g.type != null) {
-            switch (main.g.type) {
-                case "translate" -> {
-                    break;
-                }
-                case "scale" -> {
-                    int i = getMethod();
-                    //tmp.sclae(i);
-                    break;
-                }
-                case "rotate" -> {
-                    int i = getMethod();
-                    break;
-                }
-                default -> {
-                    return;
-                }
-            }
-            saveState();
-            refresh();
-        }
-    }
 
     void selectImage(Point p) {
         System.out.println("SELECTING");
@@ -140,31 +114,6 @@ public class imageEditorController implements Initializable {
         p = new Point(event.getX(), event.getY());
         selectImage(p);
         refreshImage();
-    }
-
-    private int getMethod() {
-        String type = method.getValue();
-        if (type != null) {
-            switch (type) {
-                case "Interpolación bi-lineal" -> {
-                    System.out.println("Interpolación bi-lineal");
-                    return 1;
-                }
-                case "Interpolación bi-cúbica" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 2;
-                }
-                case "Vecino más cercano" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 3;
-                }
-                default -> {
-                    return 1;
-                }
-            }
-        } else {
-            return 1;
-        }
     }
 
     public Canvas loadCurrentCanvas() {
@@ -256,6 +205,55 @@ public class imageEditorController implements Initializable {
         return (r5b.isSelected()) ? 5 : (r7b.isSelected() ? 7 : 3);
     }
 
+    private int getMethod() {
+        String type = method.getValue();
+        if (type != null) {
+            switch (type) {
+                case "Interpolación bi-lineal" -> {
+                    System.out.println("Interpolación bi-lineal");
+                    return 1;
+                }
+                case "Interpolación bi-cúbica" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 2;
+                }
+                case "Vecino más cercano" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 3;
+                }
+                default -> {
+                    return 1;
+                }
+            }
+        } else {
+            return 1;
+        }
+    }
+
+    void moveActions(String type, Canvas c) {
+        if (main.g.type != null) {
+            switch (main.g.type) {
+                case "translate" -> {
+                    break;
+                }
+                case "scale" -> {
+                    int i = getMethod();
+                    //tmp.sclae(i);
+                    break;
+                }
+                case "rotate" -> {
+                    int i = getMethod();
+                    break;
+                }
+                default -> {
+                    return;
+                }
+            }
+            saveState();
+            refresh();
+        }
+    }
+
     @FXML
     void applyMorphology(ActionEvent event) {
         int dim = getDimension();
@@ -338,6 +336,7 @@ public class imageEditorController implements Initializable {
     }
 
     public void removeGizmo() {
+        System.out.println("REMOVE CANVAS");
         main.g.removeOnCanvas(canvasLayout);
         main.g = null;
     }
@@ -351,6 +350,7 @@ public class imageEditorController implements Initializable {
 
         if (main.g != null && (main.currentImage == null || (main.currentImage != null && main.currentImage.id != main.g.currentImage.id))) {
             removeGizmo();
+            System.out.println("DELETING GIZMO");
         }
 
         if (main.currentImage == null) {
@@ -360,9 +360,11 @@ public class imageEditorController implements Initializable {
 
         if (main.g == null) {
             addGizmo();
+            System.out.println("ADDING GIZMO");
         } else {
             main.g.currentImage = main.currentImage;
             main.g.drawGizmo();
+            System.out.println("REFRESH GIZMO");
         }
 
         compositeSelected();
