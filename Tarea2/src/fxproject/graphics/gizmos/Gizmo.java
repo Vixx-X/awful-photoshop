@@ -10,6 +10,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import java.util.Arrays;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -50,6 +51,9 @@ public final class Gizmo {
     }
 
     public void drawGizmo() {
+        if (!isEditing) {
+            setRefresh();
+        }
         drawInternalGizmo();
         addBorder();
     }
@@ -58,32 +62,52 @@ public final class Gizmo {
         cropBorders = null;
         currentImage = img;
         proof = new Line(0, 0, 0, 0);
-        Point[] corners = currentImage.getCorners();
+
         handleRadius = 6.5;
         handleLine = 20;
-        double x = corners[0].x;
-        double y = corners[0].y;
 
+        selectRect = new Polygon();
+        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+
+        mobileRect = new Polygon();
+        mobileRect.setStyle("-fx-fill: transparent; -fx-stroke: red; -fx-stroke-width: 1;");
+
+        resizeHandleNW = new Circle(0, 0, handleRadius);
+        resizeHandleSE = new Circle(0, 0, handleRadius);
+
+        resizeHandleNW.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+        resizeHandleSE.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+
+        rotateLine = new Line();
+        rotateHandle = new Circle(0, 0, handleRadius);
+        rotateHandle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+
+        setRefresh();
+    }
+
+    private void setRefresh() {
+        System.out.println("SET REFRESH");
+        Point[] corners = currentImage.getCorners();
         createLine(corners);
 
-        double[] points = new double[]{
+        Double[] points = new Double[]{
             corners[0].x, corners[0].y,
             corners[1].x, corners[1].y,
             corners[2].x, corners[2].y,
             corners[3].x, corners[3].y
         };
 
-        selectRect = new Polygon(points);
-        selectRect.setStyle("-fx-fill: transparent; -fx-stroke: black; -fx-stroke-width: 1;");
+        System.out.println("PUNTOS " + Arrays.toString(points));
+        selectRect.getPoints().setAll(points);
+        System.out.println("PUNTOS " + Arrays.toString(points));
 
-        mobileRect = new Polygon(points);
-        mobileRect.setStyle("-fx-fill: transparent; -fx-stroke: red; -fx-stroke-width: 1;");
+        mobileRect.getPoints().setAll(points);
 
-        resizeHandleNW = new Circle(x, y, handleRadius);
-        resizeHandleSE = new Circle(corners[2].x, corners[2].y, handleRadius);
+        resizeHandleNW.setCenterX(corners[0].x);
+        resizeHandleNW.setCenterY(corners[0].y);
 
-        resizeHandleNW.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-        resizeHandleSE.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
+        resizeHandleSE.setCenterX(corners[2].x);
+        resizeHandleSE.setCenterY(corners[2].y);
     }
 
     private void createLine(Point[] corners) {
@@ -92,20 +116,24 @@ public final class Gizmo {
 
         rotationHandlePoint = new Point(handleLine * cos(handleAngle) + mid.x, handleLine * sin(handleAngle) + mid.y);
 
-        rotateLine = new Line(mid.x, mid.y, rotationHandlePoint.x, rotationHandlePoint.y);
-        rotateHandle = new Circle(rotationHandlePoint.x, rotationHandlePoint.y, handleRadius);
-        rotateHandle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-    }
+        rotateLine.setStartX(mid.x);
+        rotateLine.setStartY(mid.y);
+        rotateLine.setEndX(rotationHandlePoint.x);
+        rotateLine.setEndY(rotationHandlePoint.y);
 
-    public void drawInternalGizmo() {
-        Point[] corners = currentImage.getCorners();
-        setCorners(corners);
+        rotateHandle.setCenterX(rotationHandlePoint.x);
+        rotateHandle.setCenterY(rotationHandlePoint.y);
     }
 
     public double getAngle(Point[] corner) {
         double deltaX = corner[1].x - corner[0].x;
         double deltaY = corner[1].y - corner[0].y;
         return Math.atan(deltaY / deltaX) * 180 / Math.PI;
+    }
+
+    public void drawInternalGizmo() {
+        Point[] corners = currentImage.getCorners();
+        setCorners(corners);
     }
 
     public void setCorners(Point[] corners) {
@@ -120,11 +148,9 @@ public final class Gizmo {
             return 0;
         }
         return (y2 - y1) / (x2 - x1);
-
     }
 
     public void addBorder() {
-
         setUpSelecting(resizeHandleNW);
         setUpSelecting(resizeHandleSE);
         setUpSelecting(rotateHandle);
@@ -255,7 +281,6 @@ public final class Gizmo {
     }
 
     private void setUpDragging(Shape shape) {
-
         shape.setOnDragDetected(event -> {
             shape.setCursor(Cursor.CLOSED_HAND);
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
@@ -272,6 +297,7 @@ public final class Gizmo {
     }
 
     public void removeOnCanvas(Pane canvasLayout) {
+        System.out.println("REMOVING CANVAS");
         canvasLayout.getChildren().removeAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
