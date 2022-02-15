@@ -83,11 +83,12 @@ public class ProjectImages extends Application {
                         mainController.putFront();
                     } else if (t.getCode() == KeyCode.B) {
                         mainController.putBack();
-                    } else if (t.getCode() == KeyCode.Z && t.isControlDown()) {
-                        mainController.undoAction();
-                    } else if (t.getCode() == KeyCode.Y && t.isControlDown()) {
-                        mainController.redoAction();
                     }
+                }
+                if (t.getCode() == KeyCode.Z && t.isControlDown()) {
+                    mainController.undoAction();
+                } else if (t.getCode() == KeyCode.Y && t.isControlDown()) {
+                    mainController.redoAction();
                 }
 
             }

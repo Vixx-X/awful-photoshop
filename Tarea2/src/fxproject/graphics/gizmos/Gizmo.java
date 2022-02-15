@@ -10,7 +10,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -34,13 +33,23 @@ public final class Gizmo {
     public CanvasEntity currentImage;
     public double handleAngle;
     public Circle[] cropBorders;
+    public Wrapper<Point> mouseLocation = new Wrapper<>();
 
     public Line proof;
+
+    public Gizmo(CanvasEntity img, Point origin) {
+        initGizmo(img);
+        drawGizmo();
+        addBorder();
+        mouseLocation.value = origin;
+    }
 
     public Gizmo(CanvasEntity img) {
         initGizmo(img);
         drawGizmo();
         addBorder();
+        Point[] coord = img.getCorners();
+        mouseLocation.value = coord[0];
     }
 
     private void initGizmo(CanvasEntity img) {
@@ -112,16 +121,16 @@ public final class Gizmo {
     }
 
     public void addBorder() {
-        Wrapper<Point2D> mouseLocation = new Wrapper<>();
 
-        //setUpDragging(resizeHandleNW, mouseLocation);
-        //setUpDragging(resizeHandleSE, mouseLocation);
-        //setUpDragging(selectRect, mouseLocation);
-        //setUpDragging(rotateHandle, mouseLocation);
+        setUpDragging(resizeHandleNW, mouseLocation);
+        setUpDragging(resizeHandleSE, mouseLocation);
+        setUpDragging(selectRect, mouseLocation);
+        setUpDragging(rotateHandle, mouseLocation);
+
         resizeHandleNW.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
+                double deltaX = event.getX() - mouseLocation.value.x;
+                double deltaY = event.getY() - mouseLocation.value.y;
 
                 float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
                 Point p = new Point(mobileRect.getPoints().get(0) + d,
@@ -139,15 +148,15 @@ public final class Gizmo {
 
                 drawGizmo();
 
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+                mouseLocation.value = new Point(event.getX(), event.getY());
             }
             type = "scale";
         });
 
         resizeHandleSE.setOnMouseDragged(event -> {
             if (mouseLocation.value != null) {
-                double deltaX = event.getSceneX() - mouseLocation.value.getX();
-                double deltaY = event.getSceneY() - mouseLocation.value.getY();
+                double deltaX = event.getX() - mouseLocation.value.x;
+                double deltaY = event.getY() - mouseLocation.value.y;
 
                 float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
 
@@ -159,19 +168,13 @@ public final class Gizmo {
                 int x = currentImage.getUnrotatedCroppedX();
                 int y = currentImage.getUnrotatedCroppedY();
 
-                //System.out.println("width " + w);
-                // System.out.println("height " + h);
-                //System.out.println("puntoX " + p.x + " + " + x);
-                // System.out.println("puntoY " + p.y + " + " + y);
                 double newScale = (currentImage.scale * abs((p.x - x) * (p.y - y) / ((double) w * h)));
-
-                System.out.println("Escalaaaaa " + newScale);
 
                 currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
 
                 drawGizmo();
 
-                mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+                mouseLocation.value = new Point(event.getX(), event.getY());
             }
             type = "scale";
         });
@@ -195,40 +198,42 @@ public final class Gizmo {
             currentImage.rotate(-angle);
 
             drawGizmo();
-            mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+            mouseLocation.value = new Point(event.getX(), event.getY());
 
             type = "rotate";
         });
 
         selectRect.setOnMouseDragged(event -> {
-            System.out.println("VITTO ES INCREIBLE ");
-            /*if (mouseLocation.value == null) {
+            if (mouseLocation.value == null) {
                 return;
-            } */
+            }
 
-            double deltaX = event.getSceneX() - mouseLocation.value.getX();
-            double deltaY = event.getSceneY() - mouseLocation.value.getY();
+            double deltaX = event.getX() - mouseLocation.value.x;
+            double deltaY = event.getY() - mouseLocation.value.y;
             currentImage.translate(
                     new Point(
                             currentImage.x + deltaX,
                             currentImage.y + deltaY
                     )
             );
-            System.out.println("VITTO ES HERMOSO");
             drawGizmo();
 
-            //mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+            mouseLocation.value = new Point(event.getX(), event.getY());
 
             type = "translate";
         }
         );
+
+        selectRect.setOnMousePressed(event -> {
+            mouseLocation.value = new Point(event.getX(), event.getY());
+        });
     }
 
-    private void setUpDragging(Shape shape, Wrapper<Point2D> mouseLocation) {
+    private void setUpDragging(Shape shape, Wrapper<Point> mouseLocation) {
 
         shape.setOnDragDetected(event -> {
             shape.getParent().setCursor(Cursor.CLOSED_HAND);
-            mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+            mouseLocation.value = new Point(event.getX(), event.getY());
         });
 
         shape.setOnMouseReleased(event -> {
