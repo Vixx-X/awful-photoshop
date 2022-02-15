@@ -30,11 +30,13 @@ public class ProjectImages extends Application {
     private final ArrayList<Canvas> record = new ArrayList<>();
     private int currentState;
     public Gizmo g;
+    private int interpolation;
     public CanvasEntity currentImage;
     public imageEditorController mainController;
 
     public ProjectImages() {
-        currentState = 0;
+        this.interpolation = 3;
+        this.currentState = 0;
     }
 
     public static ProjectImages getInstance() {
@@ -134,5 +136,13 @@ public class ProjectImages extends Application {
         if ((record.size() - 1) > currentState) {
             currentState++;
         }
+    }
+
+    public int getInterpolation() {
+        return interpolation;
+    }
+
+    public void setInterpolation(int i) {
+        this.interpolation = i;
     }
 }

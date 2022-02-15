@@ -4,6 +4,7 @@
  */
 package fxproject.graphics;
 
+import fxproject.ProjectImages;
 import fxproject.graphics.transformations.affine.Rotation;
 import fxproject.graphics.transformations.affine.Scale;
 import java.io.ByteArrayInputStream;
@@ -27,7 +28,6 @@ public class CanvasEntity {
     private static RawImage img(Range range, Range range0) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
     public int x, y;
     public RawImage img;
     public double angle;

@@ -43,8 +43,4 @@ public class RawImage extends Mat {
     public boolean writeImage(String filename) {
         return Imgcodecs.imwrite(this.filename, this);
     }
-
-    public double get(long round, long round0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

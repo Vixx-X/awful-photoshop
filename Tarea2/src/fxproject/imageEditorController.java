@@ -132,6 +132,11 @@ public class imageEditorController implements Initializable {
         main.getCurrentCanvas().setSelectedImage(p);
         refreshImage();
     }
+    
+    @FXML
+    void changeInterpolation(ActionEvent event) {
+        main.setInterpolation(getMethod());
+    }
 
     private int getMethod() {
         String type = method.getValue();
@@ -139,18 +144,18 @@ public class imageEditorController implements Initializable {
             switch (type) {
                 case "Interpolación bi-lineal" -> {
                     System.out.println("Interpolación bi-lineal");
-                    return 1;
+                    return 2;
                 }
                 case "Interpolación bi-cúbica" -> {
                     System.out.println("Interpolación bi-cúbica");
-                    return 2;
+                    return 3;
                 }
                 case "Vecino más cercano" -> {
                     System.out.println("Interpolación bi-cúbica");
-                    return 3;
+                    return 1;
                 }
                 default -> {
-                    return 1;
+                    return 2;
                 }
             }
         } else {

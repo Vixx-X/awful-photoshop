@@ -15,8 +15,8 @@ import static java.lang.Math.round;
  */
 public class NearestNeighbor {
 
-    public static double getValue(RawImage img, double x, double y) {
-        return img.get(max(min(img.width() - 1, round(x)), 0), max(min(img.height() - 1, round(y)), 0));
+    public static double[] getValue(RawImage img, double x, double y) {
+        return img.get((int)(max(min(img.height() - 1, round(y)), 0)), (int)(max(min(img.width() - 1, round(x)), 0)));
     }
 
 }
