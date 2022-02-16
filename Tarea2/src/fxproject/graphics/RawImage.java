@@ -40,7 +40,7 @@ public class RawImage extends Mat {
         return !this.empty();
     }
 
-    public boolean writeImage(String filename) {
-        return Imgcodecs.imwrite(this.filename, this);
+    public boolean writeImage(String filen) {
+        return Imgcodecs.imwrite(filen, this);
     }
 }

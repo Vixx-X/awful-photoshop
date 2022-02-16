@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -16,7 +15,6 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -32,8 +30,10 @@
                <items>
                   <MenuItem fx:id="btnCl1" mnemonicParsing="false" onAction="#uploadImage" text="Abrir imagen..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveImages" text="Guardar" />
-                  <Menu mnemonicParsing="false" onAction="#saveAsAction" text="Guardar como..." />
+                  <Menu mnemonicParsing="false" onAction="#saveAsAction" text="Guardar como...">
+                     <items>
+                        <Menu mnemonicParsing="false" onAction="#saveAsAction" text="Guardar imagen seleccionada" />
+                     </items></Menu>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Herramientas">
@@ -69,6 +69,23 @@
                                     <Pane fx:id="paneImageSelected" prefHeight="337.0" prefWidth="396.0" />
                                  </children>
                               </StackPane>
+                              <VBox alignment="BOTTOM_RIGHT" prefHeight="20.0" prefWidth="396.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <Label prefHeight="17.0" prefWidth="272.0" text="Seleccione imagen para cortar" textFill="#838383">
+                                             <font>
+                                                <Font name="System Italic" size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Button mnemonicParsing="false" onMouseClicked="#cropAction" text="Aplicar Corte" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" right="20.0" />
+                                 </padding>
+                              </VBox>
                               <VBox alignment="CENTER" prefHeight="144.0" prefWidth="299.0" spacing="50.0">
                                  <children>
                                     <VBox spacing="15.0">
@@ -171,7 +188,7 @@
                                                             <Separator prefWidth="200.0" />
                                                          </children>
                                                       </VBox>
-                                                      <ComboBox fx:id="method" onAction="#changeInterpolation" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione aliasing" />
+                                                      <ComboBox fx:id="method" onAction="#changeInterpolation" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione interpolación o más" />
                                                    </children>
                                                 </VBox>
                                              </children>
@@ -185,364 +202,6 @@
                               </VBox>
                            </children>
                         </VBox>
-                     </content>
-                  </Tab>
-                  <Tab text="Más">
-                     <content>
-                        <TabPane prefHeight="1070.0" prefWidth="519.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
-                           <tabs>
-                              <Tab text="Aplicaciones básicas">
-                                 <content>
-                                    <ScrollPane prefHeight="1070.0" prefWidth="205.0">
-                                       <content>
-                                          <VBox alignment="TOP_CENTER" spacing="15.0">
-                                             <padding>
-                                                <Insets bottom="10.0" top="20.0" />
-                                             </padding>
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="144.0" prefWidth="299.0" spacing="50.0">
-                                                   <children>
-                                                      <VBox spacing="15.0">
-                                                         <children>
-                                                            <Label prefHeight="20.0" prefWidth="307.0" text="FILTROS BÁSICOS">
-                                                               <font>
-                                                                  <Font size="14.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <VBox>
-                                                               <children>
-                                                                  <VBox prefHeight="250.0" prefWidth="295.0" spacing="40.0">
-                                                                     <children>
-                                                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
-                                                                           <children>
-                                                                              <Button minWidth="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="339.0" text="Escala de Grises" />
-                                                                              <Button minWidth="0.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="341.0" text="Blanco y negro" />
-                                                                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="350.0" text="Negativo" />
-                                                                           </children>
-                                                                        </VBox>
-                                                                     </children>
-                                                                  </VBox>
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox layoutX="10.0" layoutY="10.0" spacing="15.0">
-                                                         <children>
-                                                            <Label prefHeight="20.0" prefWidth="307.0" text="FILTROS AVANZADOS">
-                                                               <font>
-                                                                  <Font size="14.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <VBox>
-                                                               <children>
-                                                                  <VBox prefHeight="250.0" prefWidth="295.0" spacing="40.0">
-                                                                     <children>
-                                                                        <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="230.0" spacing="15.0">
-                                                                           <children>
-                                                                              <Label prefHeight="20.0" prefWidth="242.0" text="Filtros de Suavizado:">
-                                                                                 <font>
-                                                                                    <Font size="14.0" />
-                                                                                 </font>
-                                                                              </Label>
-                                                                              <ComboBox fx:id="smoothedFilters" prefHeight="25.0" prefWidth="241.0" promptText="Seleccione un filtro" />
-                                                                              <HBox alignment="BOTTOM_LEFT" minWidth="240.0" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                                                                                 <children>
-                                                                                    <VBox prefHeight="45.0" prefWidth="141.0">
-                                                                                       <children>
-                                                                                          <Label prefHeight="20.0" prefWidth="123.0" text="Dimensiones:">
-                                                                                             <font>
-                                                                                                <Font size="14.0" />
-                                                                                             </font>
-                                                                                          </Label>
-                                                                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="123.0" spacing="3.0">
-                                                                                             <children>
-                                                                                                <TextField fx:id="rowsSmooth11" prefHeight="25.0" prefWidth="29.0" promptText="1" />
-                                                                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x" wrappingWidth="8.884765625">
-                                                                                                   <font>
-                                                                                                      <Font size="15.0" />
-                                                                                                   </font>
-                                                                                                </Text>
-                                                                                                <TextField fx:id="columnsSmooth11" prefHeight="25.0" prefWidth="29.0" promptText="2" />
-                                                                                             </children>
-                                                                                             <VBox.margin>
-                                                                                                <Insets />
-                                                                                             </VBox.margin>
-                                                                                          </HBox>
-                                                                                       </children>
-                                                                                    </VBox>
-                                                                                    <VBox alignment="BOTTOM_RIGHT" prefHeight="45.0" prefWidth="130.0">
-                                                                                       <children>
-                                                                                          <Button fx:id="buttonBorder111" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Aplicar" textAlignment="CENTER" />
-                                                                                       </children>
-                                                                                    </VBox>
-                                                                                 </children>
-                                                                              </HBox>
-                                                                           </children>
-                                                                        </VBox>
-                                                                        <VBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="247.0" spacing="15.0">
-                                                                           <children>
-                                                                              <Label prefHeight="20.0" prefWidth="242.0" text="Filtros de Bordes y Perfilado">
-                                                                                 <font>
-                                                                                    <Font size="14.0" />
-                                                                                 </font>
-                                                                              </Label>
-                                                                              <ComboBox fx:id="borderFilters" prefHeight="25.0" prefWidth="243.0" promptText="Seleccione un filtro" />
-                                                                              <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                                                                                 <children>
-                                                                                    <VBox prefHeight="45.0" prefWidth="141.0">
-                                                                                       <children>
-                                                                                          <Label prefHeight="20.0" prefWidth="123.0" text="Dimensiones:">
-                                                                                             <font>
-                                                                                                <Font size="14.0" />
-                                                                                             </font>
-                                                                                          </Label>
-                                                                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="123.0" spacing="3.0">
-                                                                                             <children>
-                                                                                                <TextField fx:id="rowsBorder11" prefHeight="25.0" prefWidth="29.0" promptText="1" />
-                                                                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x" wrappingWidth="8.884765625">
-                                                                                                   <font>
-                                                                                                      <Font size="15.0" />
-                                                                                                   </font>
-                                                                                                </Text>
-                                                                                                <TextField fx:id="columnsBorder11" prefHeight="25.0" prefWidth="29.0" promptText="2" />
-                                                                                             </children>
-                                                                                             <VBox.margin>
-                                                                                                <Insets />
-                                                                                             </VBox.margin>
-                                                                                          </HBox>
-                                                                                       </children>
-                                                                                    </VBox>
-                                                                                    <VBox alignment="BOTTOM_RIGHT" prefHeight="45.0" prefWidth="130.0">
-                                                                                       <children>
-                                                                                          <Button fx:id="buttonBorder11" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Aplicar" textAlignment="CENTER" />
-                                                                                       </children>
-                                                                                    </VBox>
-                                                                                 </children>
-                                                                              </HBox>
-                                                                           </children>
-                                                                        </VBox>
-                                                                     </children>
-                                                                  </VBox>
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox layoutX="10.0" layoutY="10.0" spacing="15.0">
-                                                         <children>
-                                                            <Label prefHeight="20.0" prefWidth="307.0" text="MÁS OPCIONES">
-                                                               <font>
-                                                                  <Font size="14.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <VBox prefHeight="50.0" prefWidth="270.0" spacing="30.0">
-                                                               <children>
-                                                                  <VBox prefHeight="250.0" prefWidth="295.0" spacing="40.0">
-                                                                     <children>
-                                                                        <VBox prefHeight="105.0" prefWidth="235.0">
-                                                                           <children>
-                                                                              <Label prefHeight="20.0" prefWidth="242.0" text="Histograma:">
-                                                                                 <font>
-                                                                                    <Font size="14.0" />
-                                                                                 </font>
-                                                                              </Label>
-                                                                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" text="Mostrar Histograma">
-                                                                                 <VBox.margin>
-                                                                                    <Insets top="5.0" />
-                                                                                 </VBox.margin>
-                                                                              </Button>
-                                                                           </children>
-                                                                        </VBox>
-                                                                     </children>
-                                                                  </VBox>
-                                                                  <VBox prefHeight="105.0" prefWidth="232.0">
-                                                                     <children>
-                                                                        <Label prefHeight="20.0" prefWidth="242.0" text="Umbralización:">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Label>
-                                                                        <HBox prefHeight="25.0" prefWidth="224.0">
-                                                                           <children>
-                                                                              <ComboBox fx:id="threshold" prefHeight="25.0" prefWidth="136.0" promptText="Valor constante">
-                                                                                 <HBox.margin>
-                                                                                    <Insets />
-                                                                                 </HBox.margin>
-                                                                              </ComboBox>
-                                                                              <VBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="166.0">
-                                                                                 <children>
-                                                                                    <Button fx:id="thresholdButton" alignment="TOP_CENTER" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="109.0" text="Aplicar" textAlignment="CENTER" />
-                                                                                 </children>
-                                                                              </VBox>
-                                                                           </children>
-                                                                           <VBox.margin>
-                                                                              <Insets top="5.0" />
-                                                                           </VBox.margin>
-                                                                        </HBox>
-                                                                        <VBox prefHeight="45.0" prefWidth="141.0" spacing="5.0">
-                                                                           <children>
-                                                                              <Label fx:id="thresholdLabel" prefHeight="20.0" prefWidth="123.0">
-                                                                                 <font>
-                                                                                    <Font size="14.0" />
-                                                                                 </font>
-                                                                              </Label>
-                                                                              <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="123.0" spacing="15.0">
-                                                                                 <children>
-                                                                                    <TextField fx:id="thresholdVal1" prefHeight="25.0" prefWidth="52.0" promptText="0...255" visible="false" />
-                                                                                    <TextField fx:id="thresholdVal2" prefHeight="25.0" prefWidth="52.0" promptText="0...255" visible="false" />
-                                                                                 </children>
-                                                                                 <VBox.margin>
-                                                                                    <Insets />
-                                                                                 </VBox.margin>
-                                                                              </HBox>
-                                                                           </children>
-                                                                           <VBox.margin>
-                                                                              <Insets top="5.0" />
-                                                                           </VBox.margin>
-                                                                        </VBox>
-                                                                     </children>
-                                                                  </VBox>
-                                                                  <VBox prefHeight="103.0" prefWidth="252.0" spacing="10.0">
-                                                                     <children>
-                                                                        <Label prefHeight="20.0" prefWidth="283.0" text="Filtros a porción de imagen:">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Label>
-                                                                        <HBox prefHeight="46.0" prefWidth="254.0">
-                                                                           <children>
-                                                                              <VBox prefHeight="48.0" prefWidth="125.0">
-                                                                                 <children>
-                                                                                    <Label text="Punto inicial:">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="126.0" spacing="5.0">
-                                                                                       <children>
-                                                                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="(">
-                                                                                             <font>
-                                                                                                <Font size="19.0" />
-                                                                                             </font>
-                                                                                          </Text>
-                                                                                          <TextField fx:id="portionX" alignment="CENTER" prefHeight="25.0" prefWidth="37.0" promptText="0" />
-                                                                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text=",">
-                                                                                             <font>
-                                                                                                <Font size="19.0" />
-                                                                                             </font>
-                                                                                          </Text>
-                                                                                          <TextField fx:id="portionY" alignment="CENTER" prefHeight="25.0" prefWidth="35.0" promptText="0" />
-                                                                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text=")">
-                                                                                             <font>
-                                                                                                <Font size="19.0" />
-                                                                                             </font>
-                                                                                          </Text>
-                                                                                       </children>
-                                                                                    </HBox>
-                                                                                 </children>
-                                                                              </VBox>
-                                                                              <VBox prefHeight="48.0" prefWidth="70.0">
-                                                                                 <children>
-                                                                                    <Label text="Ancho: ">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="75.0" spacing="5.0">
-                                                                                       <children>
-                                                                                          <TextField fx:id="widthPortion" alignment="CENTER" prefHeight="25.0" prefWidth="60.0" />
-                                                                                       </children>
-                                                                                    </HBox>
-                                                                                 </children>
-                                                                              </VBox>
-                                                                              <VBox prefHeight="48.0" prefWidth="69.0">
-                                                                                 <children>
-                                                                                    <Label text="Largo:">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <HBox alignment="BOTTOM_LEFT" prefHeight="28.0" prefWidth="81.0" spacing="5.0">
-                                                                                       <children>
-                                                                                          <TextField fx:id="heightPortion" alignment="CENTER" prefHeight="25.0" prefWidth="60.0" />
-                                                                                       </children>
-                                                                                    </HBox>
-                                                                                 </children>
-                                                                              </VBox>
-                                                                           </children>
-                                                                        </HBox>
-                                                                        <CheckBox fx:id="imagePortionBool" alignment="BOTTOM_RIGHT" disable="true" mnemonicParsing="false" prefHeight="48.0" prefWidth="127.0" text="Aplicar a la porcion" />
-                                                                     </children>
-                                                                  </VBox>
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox layoutX="10.0" layoutY="375.0" spacing="15.0">
-                                                         <children>
-                                                            <Label prefHeight="20.0" prefWidth="307.0" text="MÁS INFORMACIÓN">
-                                                               <font>
-                                                                  <Font size="14.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <VBox prefHeight="50.0" prefWidth="270.0" spacing="30.0">
-                                                               <children>
-                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Ver Detalles" />
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                   <VBox.margin>
-                                                      <Insets left="25.0" right="25.0" />
-                                                   </VBox.margin>
-                                                </VBox>
-                                             </children>
-                                          </VBox>
-                                       </content>
-                                    </ScrollPane>
-                                 </content>
-                              </Tab>
-                              <Tab text="Personalizar kernel">
-                                 <content>
-                                    <BorderPane fx:id="kernelPane" prefHeight="573.0" prefWidth="764.0">
-                                       <top>
-                                          <VBox prefHeight="59.0" prefWidth="764.0" spacing="10.0" BorderPane.alignment="CENTER">
-                                             <children>
-                                                <Label alignment="TOP_LEFT" prefHeight="27.0" prefWidth="757.0" style="&#10;" text="Seleccione la cantidad de filas y columnas de su Kernel y presione &quot;Enter&quot;" textFill="#9f9f9f" wrapText="false">
-                                                   <font>
-                                                      <Font size="13.0" />
-                                                   </font>
-                                                </Label>
-                                                <HBox prefHeight="20.0" prefWidth="200.0" spacing="10.0">
-                                                   <children>
-                                                      <TextField fx:id="kernelRows" prefHeight="25.0" prefWidth="61.0" />
-                                                      <TextField fx:id="kernelColumns" prefHeight="25.0" prefWidth="61.0" />
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-                                             </padding>
-                                             <opaqueInsets>
-                                                <Insets />
-                                             </opaqueInsets>
-                                          </VBox>
-                                       </top>
-                                       <bottom>
-                                          <Button fx:id="kernelButtonApply" disable="true" mnemonicParsing="false" text="Aplicar" BorderPane.alignment="BOTTOM_RIGHT">
-                                             <BorderPane.margin>
-                                                <Insets bottom="20.0" right="20.0" />
-                                             </BorderPane.margin>
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Button>
-                                       </bottom>
-                                    </BorderPane>
-                                 </content>
-                              </Tab>
-                           </tabs>
-                        </TabPane>
                      </content>
                   </Tab>
                </tabs>

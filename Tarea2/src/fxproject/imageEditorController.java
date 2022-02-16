@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import org.opencv.core.Point;
 
 public class imageEditorController implements Initializable {
@@ -42,18 +43,12 @@ public class imageEditorController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja",
-            "Cilíndrico", "Gauss");
     ObservableList<String> algorithm = FXCollections.observableArrayList("Octree",
             "Mediancut");
     ObservableList<String> morphologyList = FXCollections.observableArrayList("Erosión",
             "Dilatación", "Apertura", "Cierre");
-    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel",
-            "Roberts", "Prewitt", "Perfilado");
     ObservableList<String> methodList = FXCollections.observableArrayList("Interpolación "
-            + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano");
-    ObservableList<String> optionsThreshold = FXCollections.observableArrayList("Valor "
-            + "constante", "Rango");
+            + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano", "Gauss + Vecino más cercano");
 
     @FXML
     private StackPane backgroundLayout, staticPaneSelected;
@@ -74,8 +69,7 @@ public class imageEditorController implements Initializable {
     private RadioButton r3b, r5b, r7b;
 
     @FXML
-    private ComboBox<String> smoothedFilters, borderFilters, threshold,
-            quantization, morphology, method;
+    private ComboBox<String> quantization, morphology, method;
 
     @FXML
     private TextField indexColors;
@@ -87,6 +81,8 @@ public class imageEditorController implements Initializable {
     private ArrayList<ImageView> visualImages;
 
     private Canvas current;
+
+    public boolean isCropped;
     public GizmoCrop gizmoCrop;
 
     void selectImage(Point p) {
@@ -116,31 +112,6 @@ public class imageEditorController implements Initializable {
     @FXML
     void changeInterpolation(ActionEvent event) {
         main.setInterpolation(getMethod());
-    }
-
-    private int getMethod() {
-        String type = method.getValue();
-        if (type != null) {
-            switch (type) {
-                case "Interpolación bi-lineal" -> {
-                    System.out.println("Interpolación bi-lineal");
-                    return 2;
-                }
-                case "Interpolación bi-cúbica" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 3;
-                }
-                case "Vecino más cercano" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 1;
-                }
-                default -> {
-                    return 2;
-                }
-            }
-        } else {
-            return 1;
-        }
     }
 
     public Canvas loadCurrentCanvas() {
@@ -188,12 +159,25 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void saveAsAction(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
 
-    }
+        File f = fileChooser.showSaveDialog(null);
 
-    @FXML
-    void saveImages(ActionEvent event) {
-
+        if (f != null && main.currentImage.img != null) {
+            String name = f.getAbsolutePath();
+            int i = name.indexOf(".");
+            if (i == -1) {
+                return;
+            }
+            String ext = name.substring(i);
+            if (".png".equals(ext) || ".bmp".equals(ext) || ".jpg".equals(ext)) {
+                main.currentImage.getRawImage().writeImage(f.getAbsolutePath());
+            } else {
+                System.out.println("Extension no permitida");
+            }
+        }
     }
 
     @FXML
@@ -230,27 +214,31 @@ public class imageEditorController implements Initializable {
         return (r5b.isSelected()) ? 5 : (r7b.isSelected() ? 7 : 3);
     }
 
-    void moveActions(String type, Canvas c) {
-        if (main.g.type != null) {
-            switch (main.g.type) {
-                case "translate" -> {
-                    break;
+    private int getMethod() {
+        String type = method.getValue();
+        if (type != null) {
+            switch (type) {
+                case "Interpolación bi-lineal" -> {
+                    System.out.println("Interpolación bi-lineal");
+                    return 1;
                 }
-                case "scale" -> {
-                    int i = getMethod();
-                    //tmp.sclae(i);
-                    break;
+                case "Interpolación bi-cúbica" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 2;
                 }
-                case "rotate" -> {
-                    int i = getMethod();
-                    break;
+                case "Vecino más cercano" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 3;
+                }
+                case "Gauss + Vecino más cercano" -> {
+                    return 4;
                 }
                 default -> {
-                    return;
+                    return 1;
                 }
             }
-            saveState();
-            refresh();
+        } else {
+            return 1;
         }
     }
 
@@ -363,14 +351,37 @@ public class imageEditorController implements Initializable {
         compositeSelected();
     }
 
+    private void removeGizmoCrop() {
+        gizmoCrop.removeOnCanvas(paneImageSelected);
+        gizmoCrop = null;
+    }
+
+    private void addGizmoCrop(CanvasEntity img, int width, int height, float scale) {
+        gizmoCrop = new GizmoCrop(img, width, height, scale);
+        gizmoCrop.addOnCanvas(paneImageSelected);
+        isCropped = true;
+    }
+
     private void cleanSelectImage() {
         paneImageSelected.getChildren().remove(imageV);
         paneImageSelected.setStyle("-fx-background-color: transparent;");
         if (gizmoCrop != null) {
-            gizmoCrop.removeOnCanvas(paneImageSelected);
-            gizmoCrop = null;
+            removeGizmoCrop();
         }
 
+    }
+
+    @FXML
+    void cropAction(MouseEvent event) {
+        System.out.println("EVENTO EJECUTA");
+        if (imageV.isPressed() || !isCropped) {
+            return;
+        }
+        isCropped = false;
+        removeGizmoCrop();
+        System.out.println("ACCION DE CROPPEAR");
+        saveState();
+        refresh();
     }
 
     private void drawRaster(ArrayList<CanvasEntity> images) {
@@ -392,8 +403,8 @@ public class imageEditorController implements Initializable {
             return;
         }
         //CanvasEntity tmpImage = new CanvasEntity(main.currentImage);
-        float w = main.currentImage.getUnrotatedUnscaledCroppedWidth();
-        float h = main.currentImage.getUnrotatedUnscaledCroppedHeight();
+        float w = main.currentImage.img.width();
+        float h = main.currentImage.img.height();
         float scale = (w <= h) ? w / h : h / w;
 
         int width = (int) ((w <= h) ? scale * staticPaneSelected.getWidth()
@@ -413,6 +424,11 @@ public class imageEditorController implements Initializable {
         CanvasEntity tmpImg = new CanvasEntity(img);
         tmpImg.angle = 0;
         tmpImg.scale = (float) 1 / scale;
+        System.out.println("ESCALAAA " + tmpImg.scale);
+        tmpImg.padBottom = 0;
+        tmpImg.padRight = 0;
+        tmpImg.padLeft = 0;
+        tmpImg.padTop = 0;
         imageV = new ImageView(tmpImg.getImage());
         imageV.relocate(0, 0);
         paneImageSelected.getChildren().setAll(imageV);
@@ -421,8 +437,8 @@ public class imageEditorController implements Initializable {
             if (gizmoCrop != null) {
                 return;
             }
-            gizmoCrop = new GizmoCrop(img, width, height);
-            gizmoCrop.addOnCanvas(paneImageSelected);
+            addGizmoCrop(img, width, height, (float) tmpImg.scale);
+
         });
     }
 
@@ -430,7 +446,7 @@ public class imageEditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         main = ProjectImages.getInstance();
         current = loadCurrentCanvas();
-
+        isCropped = false;
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
 
@@ -444,9 +460,6 @@ public class imageEditorController implements Initializable {
         canvasLayout.setPrefSize(w, h);
         canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
-        threshold.setItems(optionsThreshold);
-        smoothedFilters.setItems(smoothedList);
-        borderFilters.setItems(borderList);
         quantization.setItems(algorithm);
         morphology.setItems(morphologyList);
         method.setItems(methodList);

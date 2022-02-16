@@ -6,9 +6,6 @@ package fxproject.graphics.interpolation;
 
 import fxproject.ProjectImages;
 import fxproject.graphics.RawImage;
-import static fxproject.graphics.interpolation.Bilinear.checkValues;
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 
 /**
  *
@@ -28,6 +25,8 @@ public class Method {
                 data = Bilinear.getValue(img, x, y);
             case 3 ->
                 data = Bicubic.getValue(img, x, y);
+            case 4 ->
+                data = NearestNeighbor.getValue(img, x, y);
             default ->
                 data = Bilinear.getValue(img, x, y);
         }
