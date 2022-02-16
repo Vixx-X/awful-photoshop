@@ -35,10 +35,13 @@ public class ProjectImages extends Application {
     private int size;
 
     public Gizmo g;
+    private int interpolation;
     public CanvasEntity currentImage;
     public imageEditorController mainController;
 
     public ProjectImages() {
+        this.interpolation = 2;
+        this.currentState = 0;
         record = new Canvas[MAX_RECORDS_SIZE];
         currentState = -1;
         size = 0;
@@ -157,5 +160,13 @@ public class ProjectImages extends Application {
         if (size - 1 > currentState) {
             currentState++;
         }
+    }
+
+    public int getInterpolation() {
+        return interpolation;
+    }
+
+    public void setInterpolation(int i) {
+        this.interpolation = i;
     }
 }

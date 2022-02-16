@@ -171,7 +171,7 @@
                                                             <Separator prefWidth="200.0" />
                                                          </children>
                                                       </VBox>
-                                                      <ComboBox fx:id="method" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione aliasing" />
+                                                      <ComboBox fx:id="method" onAction="#changeInterpolation" prefHeight="25.0" prefWidth="218.0" promptText="Seleccione aliasing" />
                                                    </children>
                                                 </VBox>
                                              </children>

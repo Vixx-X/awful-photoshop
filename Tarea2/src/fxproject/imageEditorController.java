@@ -89,8 +89,6 @@ public class imageEditorController implements Initializable {
     private Canvas current;
     public GizmoCrop gizmoCrop;
 
-    private Point p;
-
     void selectImage(Point p) {
         if (main.g != null && main.g.isEditing) {
             return;
@@ -101,17 +99,48 @@ public class imageEditorController implements Initializable {
     @FXML
     void clickPanel(MouseEvent event) {
         if (main.g != null && main.g.type != null) {
-            moveActions(main.g.type, current);
+            saveState();
+            refresh();
         }
-        p = new Point(event.getX(), event.getY());
+        Point p = new Point(event.getX(), event.getY());
         selectImage(p);
     }
 
     @FXML
     void clickSelect(MouseEvent event) {
-        p = new Point(event.getX(), event.getY());
+        Point p = new Point(event.getX(), event.getY());
         selectImage(p);
         refreshImage();
+    }
+
+    @FXML
+    void changeInterpolation(ActionEvent event) {
+        main.setInterpolation(getMethod());
+    }
+
+    private int getMethod() {
+        String type = method.getValue();
+        if (type != null) {
+            switch (type) {
+                case "Interpolación bi-lineal" -> {
+                    System.out.println("Interpolación bi-lineal");
+                    return 2;
+                }
+                case "Interpolación bi-cúbica" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 3;
+                }
+                case "Vecino más cercano" -> {
+                    System.out.println("Interpolación bi-cúbica");
+                    return 1;
+                }
+                default -> {
+                    return 2;
+                }
+            }
+        } else {
+            return 1;
+        }
     }
 
     public Canvas loadCurrentCanvas() {
@@ -201,31 +230,6 @@ public class imageEditorController implements Initializable {
         return (r5b.isSelected()) ? 5 : (r7b.isSelected() ? 7 : 3);
     }
 
-    private int getMethod() {
-        String type = method.getValue();
-        if (type != null) {
-            switch (type) {
-                case "Interpolación bi-lineal" -> {
-                    System.out.println("Interpolación bi-lineal");
-                    return 1;
-                }
-                case "Interpolación bi-cúbica" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 2;
-                }
-                case "Vecino más cercano" -> {
-                    System.out.println("Interpolación bi-cúbica");
-                    return 3;
-                }
-                default -> {
-                    return 1;
-                }
-            }
-        } else {
-            return 1;
-        }
-    }
-
     void moveActions(String type, Canvas c) {
         if (main.g.type != null) {
             switch (main.g.type) {
@@ -253,8 +257,7 @@ public class imageEditorController implements Initializable {
     @FXML
     void applyMorphology(ActionEvent event) {
         int dim = getDimension();
-        Canvas c = new Canvas(main.getCurrentCanvas());
-        main.currentImage = c.getSelectedImage();
+        main.currentImage = current.getSelectedImage();
         if (main.currentImage == null) {
             return;
         }
@@ -284,10 +287,9 @@ public class imageEditorController implements Initializable {
     @FXML
     void applyQuantization(ActionEvent event) {
         int index = (!indexColors.getText().isEmpty())
-                ? Integer.parseInt(indexColors.getText()) : 256;
+                ? Integer.parseInt(indexColors.getText()) : 128;
 
-        Canvas c = new Canvas(main.getCurrentCanvas());
-        main.currentImage = c.getSelectedImage();
+        main.currentImage = current.getSelectedImage();
         if (main.currentImage == null) {
             return;
         }
@@ -308,6 +310,7 @@ public class imageEditorController implements Initializable {
             System.out.println("Default Octree");
         }
         saveState();
+        refresh();
     }
 
     private void saveState() {

@@ -5,6 +5,9 @@
 package fxproject.graphics.transformations.affine;
 
 import fxproject.graphics.RawImage;
+import fxproject.graphics.interpolation.Bilinear;
+import fxproject.graphics.interpolation.Method;
+import fxproject.graphics.interpolation.NearestNeighbor;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.max;
@@ -63,9 +66,8 @@ public class Rotation {
                 p1.x += -newCenter.x + center.x;
                 p1.y += -newCenter.y + center.y;
 
-                if (p1.x > 0 && p1.y > 0 && p1.x < size.width && p1.y < size.height) {
-                    double[] data = src.get((int) p1.y, (int) p1.x);
-
+                if (p1.x >= 0 && p1.y >= 0 && p1.x < size.width && p1.y < size.height) {
+                    double data[] = Method.getValue(src, p1.x, p1.y);
                     if (data != null) {
                         out.put(i, j, data);
                     }
