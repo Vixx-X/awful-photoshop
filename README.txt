@@ -13,8 +13,12 @@ Trabajo realizado por:
 ##      2. El escalado de la imagen funciona haciendo click en el boton inferior derecho.
 
 ##      3. A cualquier transformación afin, llámese rotación o escalado, se le aplicará
-        la técnica de antialiasing/interpolación que esté selecionada en el momento. Se 
-        refrescarán en todas las imagenes del Canvas.
+        la técnica de antialiasing/interpolación que esté selecionada en el momento para
+        esa imagen.
+
+##      4. La técnica escogida adicional para manejar el aliasing en el escalado por 
+        minificación es la aplicación del filtro de Gauss y luego se ejecuta el método de Vecino
+        más cercano.
         
 ##      6. Importante agregar la libreria JavaFx  y OpenCV para que funciona la aplicación,
         así como la configuración en la ejecución.
