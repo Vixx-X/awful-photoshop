@@ -10,7 +10,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import java.util.Arrays;
+import static java.lang.Math.sqrt;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -36,6 +36,10 @@ public final class Gizmo {
     public Circle[] cropBorders;
     public boolean isEditing = false;
     public Wrapper<Point> mouseLocation = new Wrapper<>();
+    int w;
+    int h;
+    int y;
+    int x;
 
     public Line proof;
 
@@ -61,6 +65,7 @@ public final class Gizmo {
     private void initGizmo(CanvasEntity img) {
         cropBorders = null;
         currentImage = img;
+
         proof = new Line(0, 0, 0, 0);
 
         handleRadius = 6.5;
@@ -81,12 +86,14 @@ public final class Gizmo {
         rotateLine = new Line();
         rotateHandle = new Circle(0, 0, handleRadius);
         rotateHandle.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 0.8;");
-
-        setRefresh();
     }
 
     private void setRefresh() {
-        System.out.println("SET REFRESH");
+        w = currentImage.getUnrotatedCroppedWidth();
+        h = currentImage.getUnrotatedCroppedHeight();
+        x = currentImage.getUnrotatedCroppedX();
+        y = currentImage.getUnrotatedCroppedY();
+
         Point[] corners = currentImage.getCorners();
         createLine(corners);
 
@@ -97,9 +104,7 @@ public final class Gizmo {
             corners[3].x, corners[3].y
         };
 
-        System.out.println("PUNTOS " + Arrays.toString(points));
         selectRect.getPoints().setAll(points);
-        System.out.println("PUNTOS " + Arrays.toString(points));
 
         mobileRect.getPoints().setAll(points);
 
@@ -169,21 +174,17 @@ public final class Gizmo {
             double deltaY = event.getSceneY() - mouseLocation.value.y;
 
             float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
-            Point p = new Point(mobileRect.getPoints().get(0) + d,
-                    mobileRect.getPoints().get(1) + d);
 
-            int w = currentImage.getUnrotatedCroppedWidth();
-            int h = currentImage.getUnrotatedCroppedHeight();
-            int x = currentImage.getUnrotatedCroppedX();
-            int y = currentImage.getUnrotatedCroppedY();
+            Point p = new Point(
+                    mobileRect.getPoints().get(0) + d - x,
+                    mobileRect.getPoints().get(1) + d - y
+            );
 
-            float newScale = (float) ((float) (p.x - x) * (p.y - y) / ((float) w * h));
+            double newScale = sqrt(abs(p.x / w));
 
-            currentImage.translate(p);
-            currentImage.scale(newScale);
-
-            drawInternalGizmo();
-
+            //currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
+            //currentImage.translate(p);
+            //drawInternalGizmo();
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
 
             type = "scale";
@@ -199,21 +200,16 @@ public final class Gizmo {
 
             float d = (float) ((abs(deltaX) > abs(deltaY)) ? deltaX : deltaY);
 
-            Point p = new Point(mobileRect.getPoints().get(4) + d,
-                    mobileRect.getPoints().get(5) + d);
+            Point p = new Point(
+                    mobileRect.getPoints().get(4) + d - x,
+                    mobileRect.getPoints().get(5) + d - y
+            );
 
-            int w = currentImage.getUnrotatedCroppedWidth();
-            int h = currentImage.getUnrotatedCroppedHeight();
-            int x = currentImage.getUnrotatedCroppedX();
-            int y = currentImage.getUnrotatedCroppedY();
-
-            double newScale = (currentImage.scale * abs((p.x - x) * (p.y - y) / ((double) w * h)));
+            double newScale = sqrt(abs(p.x / w));
 
             currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
 
             drawInternalGizmo();
-
-            mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
 
             type = "scale";
         });
@@ -224,9 +220,6 @@ public final class Gizmo {
             }
 
             Point mid = currentImage.getCenter();
-
-            double x = event.getSceneX() - mid.x;
-            double y = event.getSceneY() - mid.y;
 
             float angle = (float) ((handleAngle - atan2(y, x)) * 180 / PI);
             proof.setStartX(mid.x);
@@ -267,15 +260,12 @@ public final class Gizmo {
 
     private void setUpSelecting(Shape shape) {
         shape.setOnMouseClicked(event -> {
-            System.out.println("AAAAA");
             isEditing = true;
         });
         shape.setOnMousePressed(event -> {
-            System.out.println("BBBB");
             isEditing = true;
         });
         shape.setOnMouseReleased(event -> {
-            System.out.println("CCCC");
             isEditing = false;
         });
     }
@@ -285,26 +275,22 @@ public final class Gizmo {
             shape.setCursor(Cursor.CLOSED_HAND);
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
             isEditing = true;
-            System.out.println("DRAGGING");
         });
 
         shape.setOnMouseReleased(event -> {
             shape.setCursor(Cursor.DEFAULT);
             mouseLocation.value = null;
             isEditing = false;
-            System.out.println("REALESED");
         });
     }
 
     public void removeOnCanvas(Pane canvasLayout) {
-        System.out.println("REMOVING CANVAS");
         canvasLayout.getChildren().removeAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
     }
 
     public void addOnCanvas(Pane canvasLayout) {
-        canvasLayout.getChildren().add(proof);
         canvasLayout.getChildren().addAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);

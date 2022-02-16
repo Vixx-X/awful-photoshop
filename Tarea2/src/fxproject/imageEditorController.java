@@ -92,9 +92,7 @@ public class imageEditorController implements Initializable {
     private Point p;
 
     void selectImage(Point p) {
-        System.out.println("SELECTING");
         if (main.g != null && main.g.isEditing) {
-            System.out.println("IS EDITING SKIP");
             return;
         }
         current.setSelectedImage(p);
@@ -147,7 +145,6 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void undoAction() {
-        System.out.println("Undo");
         main.undo();
         loadState();
         refresh();
@@ -155,7 +152,6 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void redoAction() {
-        System.out.println("Redo");
         main.redo();
         loadState();
         refresh();
@@ -315,12 +311,10 @@ public class imageEditorController implements Initializable {
     }
 
     private void saveState() {
-        System.out.println("Saved!");
         main.pushCanvas(new Canvas(current));
     }
 
     private void loadState() {
-        System.out.println("Load!");
         current = loadCurrentCanvas();
     }
 
@@ -336,7 +330,6 @@ public class imageEditorController implements Initializable {
     }
 
     public void removeGizmo() {
-        System.out.println("REMOVE CANVAS");
         main.g.removeOnCanvas(canvasLayout);
         main.g = null;
     }
@@ -348,9 +341,8 @@ public class imageEditorController implements Initializable {
     private void refreshImage() {
         main.currentImage = current.getSelectedImage();
 
-        if (main.g != null && (main.currentImage == null || (main.currentImage != null && main.currentImage.id != main.g.currentImage.id))) {
+        if (main.g != null && (main.currentImage == null || (main.currentImage.id != main.g.currentImage.id))) {
             removeGizmo();
-            System.out.println("DELETING GIZMO");
         }
 
         if (main.currentImage == null) {
@@ -360,11 +352,9 @@ public class imageEditorController implements Initializable {
 
         if (main.g == null) {
             addGizmo();
-            System.out.println("ADDING GIZMO");
         } else {
             main.g.currentImage = main.currentImage;
             main.g.drawGizmo();
-            System.out.println("REFRESH GIZMO");
         }
 
         compositeSelected();
