@@ -43,18 +43,12 @@ public class imageEditorController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    ObservableList<String> smoothedList = FXCollections.observableArrayList("Caja",
-            "Cilíndrico", "Gauss");
     ObservableList<String> algorithm = FXCollections.observableArrayList("Octree",
             "Mediancut");
     ObservableList<String> morphologyList = FXCollections.observableArrayList("Erosión",
             "Dilatación", "Apertura", "Cierre");
-    ObservableList<String> borderList = FXCollections.observableArrayList("Sobel",
-            "Roberts", "Prewitt", "Perfilado");
     ObservableList<String> methodList = FXCollections.observableArrayList("Interpolación "
             + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano", "Gauss + Vecino más cercano");
-    ObservableList<String> optionsThreshold = FXCollections.observableArrayList("Valor "
-            + "constante", "Rango");
 
     @FXML
     private StackPane backgroundLayout, staticPaneSelected;
@@ -75,8 +69,7 @@ public class imageEditorController implements Initializable {
     private RadioButton r3b, r5b, r7b;
 
     @FXML
-    private ComboBox<String> smoothedFilters, borderFilters, threshold,
-            quantization, morphology, method;
+    private ComboBox<String> quantization, morphology, method;
 
     @FXML
     private TextField indexColors;
@@ -93,9 +86,7 @@ public class imageEditorController implements Initializable {
     public GizmoCrop gizmoCrop;
 
     void selectImage(Point p) {
-        System.out.println("SELECTING");
         if (main.g != null && main.g.isEditing) {
-            System.out.println("IS EDITING SKIP");
             return;
         }
         current.setSelectedImage(p);
@@ -154,7 +145,6 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void undoAction() {
-        System.out.println("Undo");
         main.undo();
         loadState();
         refresh();
@@ -162,7 +152,6 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void redoAction() {
-        System.out.println("Redo");
         main.redo();
         loadState();
         refresh();
@@ -177,8 +166,17 @@ public class imageEditorController implements Initializable {
         File f = fileChooser.showSaveDialog(null);
 
         if (f != null && main.currentImage.img != null) {
-            System.out.println("FILENAME " + f.getAbsolutePath());
-            main.currentImage.getRawImage().writeImage(f.getAbsolutePath());
+            String name = f.getAbsolutePath();
+            int i = name.indexOf(".");
+            if (i == -1) {
+                return;
+            }
+            String ext = name.substring(i);
+            if (".png".equals(ext) || ".bmp".equals(ext) || ".jpg".equals(ext)) {
+                main.currentImage.getRawImage().writeImage(f.getAbsolutePath());
+            } else {
+                System.out.println("Extension no permitida");
+            }
         }
     }
 
@@ -468,9 +466,6 @@ public class imageEditorController implements Initializable {
         canvasLayout.setPrefSize(w, h);
         canvasLayout.setMaxSize(w, h);
         canvasLayout.setStyle("-fx-background-color: #f5f5f5;");
-        threshold.setItems(optionsThreshold);
-        smoothedFilters.setItems(smoothedList);
-        borderFilters.setItems(borderList);
         quantization.setItems(algorithm);
         morphology.setItems(morphologyList);
         method.setItems(methodList);
