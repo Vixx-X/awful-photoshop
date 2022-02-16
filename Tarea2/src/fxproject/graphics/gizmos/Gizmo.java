@@ -117,7 +117,7 @@ public final class Gizmo {
 
     private void createLine(Point[] corners) {
         Point mid = new Point((corners[0].x + corners[1].x) / 2, (corners[0].y + corners[1].y) / 2);
-        handleAngle = -(currentImage.angle + (corners[1].y < corners[2].y ? 90 : -90)) * PI / 180;
+        handleAngle = (currentImage.angle - 90) * PI / 180;
 
         rotationHandlePoint = new Point(handleLine * cos(handleAngle) + mid.x, handleLine * sin(handleAngle) + mid.y);
 
@@ -181,10 +181,6 @@ public final class Gizmo {
             );
 
             double newScale = sqrt(abs(p.x / w));
-
-            //currentImage.scale(abs(newScale) > 0.01 ? abs(newScale) : currentImage.scale);
-            //currentImage.translate(p);
-            //drawInternalGizmo();
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
 
             type = "scale";
@@ -218,20 +214,18 @@ public final class Gizmo {
             if (mouseLocation.value == null) {
                 return;
             }
-            /*Point mouse = new Point(event.getSceneX(), event.getSceneX());
+            Point mouse = new Point(event.getX(), event.getY());
             System.out.println("MOUSE " + mouse);
             Point mid = currentImage.getCenter();
-            
-            double deltaX = event.getSceneX() - mouseLocation.value.x;
-            double deltaY = event.getSceneY() - mouseLocation.value.y;
-            
-            float angle = (float) ((handleAngle - atan2(mouse.y, mouse.x)) * 180 / PI);
+            System.out.println("Medio " + mid);
+
+            float angle = (float) (atan2(mid.y-mouse.y, mouse.x-mid.x) * 180 / PI);
             proof.setStartX(mid.x);
             proof.setStartY(mid.y);
-            proof.setEndX(mouse.x + mid.x);
-            proof.setEndY(mouse.y + mid.y);
-
-            currentImage.rotate(-angle);*/
+            proof.setEndX(mouse.x);
+            proof.setEndY(mouse.y);
+            System.out.println("ANGLE " + angle);
+            currentImage.rotate(90-angle);
 
             drawInternalGizmo();
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
@@ -289,14 +283,12 @@ public final class Gizmo {
     }
 
     public void removeOnCanvas(Pane canvasLayout) {
-        canvasLayout.getChildren().remove(proof);
         canvasLayout.getChildren().removeAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
     }
 
     public void addOnCanvas(Pane canvasLayout) {
-        canvasLayout.getChildren().add(proof);
         canvasLayout.getChildren().addAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
