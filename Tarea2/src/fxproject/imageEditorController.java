@@ -7,6 +7,7 @@ package fxproject;
 import fxproject.graphics.gizmos.Gizmo;
 import fxproject.graphics.Canvas;
 import fxproject.graphics.CanvasEntity;
+import fxproject.graphics.RawImage;
 import fxproject.graphics.gizmos.GizmoCrop;
 import fxproject.graphics.transformations.morphology.Closing;
 import fxproject.graphics.transformations.morphology.Dilation;
@@ -112,6 +113,7 @@ public class imageEditorController implements Initializable {
     @FXML
     void changeInterpolation(ActionEvent event) {
         main.setInterpolation(getMethod());
+        
     }
 
     public Canvas loadCurrentCanvas() {
@@ -219,26 +221,30 @@ public class imageEditorController implements Initializable {
         if (type != null) {
             switch (type) {
                 case "Interpolación bi-lineal" -> {
+                    main.currentImage.aliasing = 2;
                     System.out.println("Interpolación bi-lineal");
-                    return 1;
-                }
-                case "Interpolación bi-cúbica" -> {
-                    System.out.println("Interpolación bi-cúbica");
                     return 2;
                 }
-                case "Vecino más cercano" -> {
+                case "Interpolación bi-cúbica" -> {
+                    main.currentImage.aliasing = 3;
                     System.out.println("Interpolación bi-cúbica");
                     return 3;
                 }
+                case "Vecino más cercano" -> {
+                    main.currentImage.aliasing = 1;
+                    System.out.println("Interpolación bi-cúbica");
+                    return 1;
+                }
                 case "Gauss + Vecino más cercano" -> {
+                    main.currentImage.aliasing = 4;
                     return 4;
                 }
                 default -> {
-                    return 1;
+                    return 0;
                 }
             }
         } else {
-            return 1;
+            return 0;
         }
     }
 

@@ -218,16 +218,20 @@ public final class Gizmo {
             if (mouseLocation.value == null) {
                 return;
             }
-
+            /*Point mouse = new Point(event.getSceneX(), event.getSceneX());
+            System.out.println("MOUSE " + mouse);
             Point mid = currentImage.getCenter();
-
-            float angle = (float) ((handleAngle - atan2(y, x)) * 180 / PI);
+            
+            double deltaX = event.getSceneX() - mouseLocation.value.x;
+            double deltaY = event.getSceneY() - mouseLocation.value.y;
+            
+            float angle = (float) ((handleAngle - atan2(mouse.y, mouse.x)) * 180 / PI);
             proof.setStartX(mid.x);
             proof.setStartY(mid.y);
-            proof.setEndX(x + mid.x);
-            proof.setEndY(y + mid.y);
+            proof.setEndX(mouse.x + mid.x);
+            proof.setEndY(mouse.y + mid.y);
 
-            currentImage.rotate(-angle);
+            currentImage.rotate(-angle);*/
 
             drawInternalGizmo();
             mouseLocation.value = new Point(event.getSceneX(), event.getSceneY());
@@ -285,12 +289,14 @@ public final class Gizmo {
     }
 
     public void removeOnCanvas(Pane canvasLayout) {
+        canvasLayout.getChildren().remove(proof);
         canvasLayout.getChildren().removeAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);
     }
 
     public void addOnCanvas(Pane canvasLayout) {
+        canvasLayout.getChildren().add(proof);
         canvasLayout.getChildren().addAll(
                 mobileRect, selectRect, resizeHandleNW,
                 resizeHandleSE, rotateLine, rotateHandle);

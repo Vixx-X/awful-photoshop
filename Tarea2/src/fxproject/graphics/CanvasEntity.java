@@ -5,6 +5,7 @@
 package fxproject.graphics;
 
 import fxproject.ProjectImages;
+import fxproject.graphics.filters.locals.GaussFilter;
 import fxproject.graphics.transformations.affine.Rotation;
 import fxproject.graphics.transformations.affine.Scale;
 import java.io.ByteArrayInputStream;
@@ -36,6 +37,7 @@ public class CanvasEntity {
     public int padBottom;
     public int padLeft;
     public UUID id;
+    public int aliasing;
 
     public CanvasEntity(int x, int y, String filename) {
         this.padTop = 0;
@@ -237,11 +239,21 @@ public class CanvasEntity {
     }
 
     public RawImage getRawImage() {
+        int tmp = ProjectImages.getInstance().getInterpolation();
+        if (this.aliasing == 0) {
+            this.aliasing = tmp;
+        }
+        ProjectImages.getInstance().setInterpolation(this.aliasing);
         RawImage tmpMat = new RawImage();
         this.img.copyTo(tmpMat);
         tmpMat = cropImg(tmpMat, this.padTop, this.padRight, this.padBottom, this.padLeft);
+        if (this.aliasing == 4) {
+            tmpMat = GaussFilter.apply(tmpMat, tmpMat.width(), tmpMat.height());
+        }
         tmpMat = rotateImg(tmpMat, this.angle);
         tmpMat = scaleImg(tmpMat, this.scale);
+
+        ProjectImages.getInstance().setInterpolation(tmp);
         return tmpMat;
     }
 
