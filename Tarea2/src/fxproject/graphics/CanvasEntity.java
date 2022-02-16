@@ -14,6 +14,7 @@ import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import java.util.UUID;
 import javafx.scene.image.Image;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
@@ -26,9 +27,6 @@ import org.opencv.core.Range;
  */
 public class CanvasEntity {
 
-    private static RawImage img(Range range, Range range0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     public int x, y;
     public RawImage img;
     public double angle;
@@ -217,7 +215,18 @@ public class CanvasEntity {
     }
 
     static public RawImage cropImg(RawImage img, int padTop, int padRight, int padBot, int padLeft) {
-        return img(new Range(padTop, img.height() - padBot), new Range(padLeft, img.width() - padRight));
+        RawImage ret = new RawImage();
+        System.out.println(padTop + " " + padBot + " " + padRight + " " + padLeft);
+        /*Mat tmp = new Mat(img.height() - padTop - padBot, img.width() - padRight - padLeft, img.type());
+        tmp.copyTo(ret);
+        System.out.println(padTop + " " + (img.height() - padBot) + " " + padBot + " " + (img.width() - padRight));
+        for (int i = padTop, y = 0; i < img.height() - padBot; i++, y++) {
+            for (int j = padLeft, x = 0; j < img.width() - padRight; j++, x++) {
+                ret.put(y, x, img.get(i, j));
+            }
+        } */
+        img.submat(padTop, img.height() - padBot, padLeft, img.width() - padRight).copyTo(ret);
+        return ret;
     }
 
     public Image getImage() {
@@ -225,6 +234,7 @@ public class CanvasEntity {
         this.img.copyTo(tmpMat);
 
         //tmpMat = translateImg(tmpMat, point);
+        tmpMat = cropImg(tmpMat, this.padTop, this.padRight, this.padBottom, this.padLeft);
         tmpMat = rotateImg(tmpMat, this.angle);
         tmpMat = scaleImg(tmpMat, this.scale);
 

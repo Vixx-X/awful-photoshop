@@ -87,6 +87,8 @@ public class imageEditorController implements Initializable {
     private ArrayList<ImageView> visualImages;
 
     private Canvas current;
+
+    public boolean isCropped;
     public GizmoCrop gizmoCrop;
 
     void selectImage(Point p) {
@@ -114,12 +116,12 @@ public class imageEditorController implements Initializable {
         selectImage(p);
         refreshImage();
     }
-    
+
     @FXML
     void changeInterpolation(ActionEvent event) {
         main.setInterpolation(getMethod());
     }
-    
+
     public Canvas loadCurrentCanvas() {
         return main.getCurrentCanvas();
     }
@@ -349,14 +351,37 @@ public class imageEditorController implements Initializable {
         compositeSelected();
     }
 
+    private void removeGizmoCrop() {
+        gizmoCrop.removeOnCanvas(paneImageSelected);
+        gizmoCrop = null;
+    }
+
+    private void addGizmoCrop(CanvasEntity img, int width, int height, float scale) {
+        gizmoCrop = new GizmoCrop(img, width, height, scale);
+        gizmoCrop.addOnCanvas(paneImageSelected);
+        isCropped = true;
+    }
+
     private void cleanSelectImage() {
         paneImageSelected.getChildren().remove(imageV);
         paneImageSelected.setStyle("-fx-background-color: transparent;");
         if (gizmoCrop != null) {
-            gizmoCrop.removeOnCanvas(paneImageSelected);
-            gizmoCrop = null;
+            removeGizmoCrop();
         }
 
+    }
+
+    @FXML
+    void cropAction(MouseEvent event) {
+        System.out.println("EVENTO EJECUTA");
+        if (imageV.isPressed() || !isCropped) {
+            return;
+        }
+        isCropped = false;
+        removeGizmoCrop();
+        System.out.println("ACCION DE CROPPEAR");
+        saveState();
+        refresh();
     }
 
     private void drawRaster(ArrayList<CanvasEntity> images) {
@@ -378,8 +403,8 @@ public class imageEditorController implements Initializable {
             return;
         }
         //CanvasEntity tmpImage = new CanvasEntity(main.currentImage);
-        float w = main.currentImage.getUnrotatedUnscaledCroppedWidth();
-        float h = main.currentImage.getUnrotatedUnscaledCroppedHeight();
+        float w = main.currentImage.img.width();
+        float h = main.currentImage.img.height();
         float scale = (w <= h) ? w / h : h / w;
 
         int width = (int) ((w <= h) ? scale * staticPaneSelected.getWidth()
@@ -399,6 +424,11 @@ public class imageEditorController implements Initializable {
         CanvasEntity tmpImg = new CanvasEntity(img);
         tmpImg.angle = 0;
         tmpImg.scale = (float) 1 / scale;
+        System.out.println("ESCALAAA " + tmpImg.scale);
+        tmpImg.padBottom = 0;
+        tmpImg.padRight = 0;
+        tmpImg.padLeft = 0;
+        tmpImg.padTop = 0;
         imageV = new ImageView(tmpImg.getImage());
         imageV.relocate(0, 0);
         paneImageSelected.getChildren().setAll(imageV);
@@ -407,8 +437,8 @@ public class imageEditorController implements Initializable {
             if (gizmoCrop != null) {
                 return;
             }
-            gizmoCrop = new GizmoCrop(img, width, height);
-            gizmoCrop.addOnCanvas(paneImageSelected);
+            addGizmoCrop(img, width, height, (float) tmpImg.scale);
+
         });
     }
 
@@ -416,7 +446,7 @@ public class imageEditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         main = ProjectImages.getInstance();
         current = loadCurrentCanvas();
-
+        isCropped = false;
         backgroundLayout.prefWidthProperty().bind(leftPanel.widthProperty());
         backgroundLayout.prefHeightProperty().bind(leftPanel.heightProperty());
 

@@ -39,11 +39,11 @@ public final class GizmoCrop {
     int bottom;
     public Circle cir1;
 
-    public GizmoCrop(CanvasEntity img, int width, int height) {
+    public GizmoCrop(CanvasEntity img, int width, int height, float scale) {
         this.width = width;
         this.height = height;
         this.img = img;
-        this.scale = img.scale;
+        this.scale = scale;
         Point[] cp = calculateCoordenates();
         initCrop(cp);
         addEvents();
@@ -105,24 +105,25 @@ public final class GizmoCrop {
         }
 
         cropPoints[0].setOnMouseDragged(event -> {
-            this.top = (int) min(max(0, (event.getY() / scale)), height - bottom);
+            this.top = (int) (min(max(0, (int) (event.getY() / scale)), img.img.height() - bottom));
             img.crop(top, right, bottom, left);
             drawGizmo();
         });
         cropPoints[1].setOnMouseDragged(event -> {
-            this.right = (int) min(max(0, ((width - event.getX()) / scale)), width - left);
+            this.right = (int) (min(max(0, ((img.img.width() - (int) (event.getX() / scale)))), img.img.width() - left));
             //this.right = (int) ((width - event.getX()) / scale);
             img.crop(top, right, bottom, left);
             drawGizmo();
         });
         cropPoints[2].setOnMouseDragged(event -> {
-            this.bottom = (int) min(max(0, ((height - event.getY()) / scale)), height - top);
+            this.bottom = (int) (min(max(0, ((img.img.height() - (int) (event.getY() / scale)))), img.img.height() - top));
             //this.bottom = (int) ((height - event.getY()) / scale);
             img.crop(top, right, bottom, left);
             drawGizmo();
         });
         cropPoints[3].setOnMouseDragged(event -> {
-            this.left = (int) min(max(0, (event.getX() / scale)), width - right);
+            System.out.println("TRASLACION " + event.getX() + " " + (event.getX() / scale));
+            this.left = (int) (min(max(0, (int) (event.getX() / scale)), img.img.width() - right));
             img.crop(top, right, bottom, left);
             drawGizmo();
         });
