@@ -234,30 +234,6 @@ public class imageEditorController implements Initializable {
         }
     }
 
-    void moveActions(String type, Canvas c) {
-        if (main.g.type != null) {
-            switch (main.g.type) {
-                case "translate" -> {
-                    break;
-                }
-                case "scale" -> {
-                    int i = getMethod();
-                    //tmp.sclae(i);
-                    break;
-                }
-                case "rotate" -> {
-                    int i = getMethod();
-                    break;
-                }
-                default -> {
-                    return;
-                }
-            }
-            saveState();
-            refresh();
-        }
-    }
-
     @FXML
     void applyMorphology(ActionEvent event) {
         int dim = getDimension();
