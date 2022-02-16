@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import org.opencv.core.Point;
 
 public class imageEditorController implements Initializable {
@@ -51,7 +52,7 @@ public class imageEditorController implements Initializable {
     ObservableList<String> borderList = FXCollections.observableArrayList("Sobel",
             "Roberts", "Prewitt", "Perfilado");
     ObservableList<String> methodList = FXCollections.observableArrayList("Interpolación "
-            + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano");
+            + "bi-lineal", "Interpolación bi-cúbica", "Vecino más cercano", "Gauss + Vecino más cercano");
     ObservableList<String> optionsThreshold = FXCollections.observableArrayList("Valor "
             + "constante", "Rango");
 
@@ -169,12 +170,16 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void saveAsAction(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
 
-    }
+        File f = fileChooser.showSaveDialog(null);
 
-    @FXML
-    void saveImages(ActionEvent event) {
-
+        if (f != null && main.currentImage.img != null) {
+            System.out.println("FILENAME " + f.getAbsolutePath());
+            main.currentImage.getRawImage().writeImage(f.getAbsolutePath());
+        }
     }
 
     @FXML
@@ -226,6 +231,9 @@ public class imageEditorController implements Initializable {
                 case "Vecino más cercano" -> {
                     System.out.println("Interpolación bi-cúbica");
                     return 3;
+                }
+                case "Gauss + Vecino más cercano" -> {
+                    return 4;
                 }
                 default -> {
                     return 1;

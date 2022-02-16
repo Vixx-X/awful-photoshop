@@ -230,17 +230,19 @@ public class CanvasEntity {
     }
 
     public Image getImage() {
-        RawImage tmpMat = new RawImage();
-        this.img.copyTo(tmpMat);
-
-        //tmpMat = translateImg(tmpMat, point);
-        tmpMat = cropImg(tmpMat, this.padTop, this.padRight, this.padBottom, this.padLeft);
-        tmpMat = rotateImg(tmpMat, this.angle);
-        tmpMat = scaleImg(tmpMat, this.scale);
-
+        RawImage tmpMat = getRawImage();
         MatOfByte byteMat = new MatOfByte();
         Imgcodecs.imencode(".png", tmpMat, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));
+    }
+
+    public RawImage getRawImage() {
+        RawImage tmpMat = new RawImage();
+        this.img.copyTo(tmpMat);
+        tmpMat = cropImg(tmpMat, this.padTop, this.padRight, this.padBottom, this.padLeft);
+        tmpMat = rotateImg(tmpMat, this.angle);
+        tmpMat = scaleImg(tmpMat, this.scale);
+        return tmpMat;
     }
 
 }
