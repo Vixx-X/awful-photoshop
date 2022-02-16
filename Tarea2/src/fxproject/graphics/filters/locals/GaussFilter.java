@@ -31,8 +31,6 @@ public class GaussFilter {
     public static RawImage apply(RawImage img, int width, int height, int x1, int y1, int x2, int y2) {
         //float[] kernelX = GaussFilter.createGaussKernel(width);
         //float[] kernelY = GaussFilter.createGaussKernel(height);
-        //System.out.println(Arrays.toString(kernelX));
-        //System.out.println(Arrays.toString(kernelY));
         //var img2 = KernelFilter.apply(img, kernelX, width, 1, x1, y1, x2, y2);
         //return KernelFilter.apply(img2, kernelY, 1, height, x1, y1, x2, y2);
         float[] kernel = {

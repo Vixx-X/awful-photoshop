@@ -215,16 +215,13 @@ public final class Gizmo {
                 return;
             }
             Point mouse = new Point(event.getX(), event.getY());
-            System.out.println("MOUSE " + mouse);
             Point mid = currentImage.getCenter();
-            System.out.println("Medio " + mid);
 
             float angle = (float) (atan2(mid.y-mouse.y, mouse.x-mid.x) * 180 / PI);
             proof.setStartX(mid.x);
             proof.setStartY(mid.y);
             proof.setEndX(mouse.x);
             proof.setEndY(mouse.y);
-            System.out.println("ANGLE " + angle);
             currentImage.rotate(90-angle);
 
             drawInternalGizmo();
