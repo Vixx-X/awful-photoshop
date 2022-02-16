@@ -222,17 +222,14 @@ public class imageEditorController implements Initializable {
             switch (type) {
                 case "Interpolación bi-lineal" -> {
                     main.currentImage.aliasing = 2;
-                    System.out.println("Interpolación bi-lineal");
                     return 2;
                 }
                 case "Interpolación bi-cúbica" -> {
                     main.currentImage.aliasing = 3;
-                    System.out.println("Interpolación bi-cúbica");
                     return 3;
                 }
                 case "Vecino más cercano" -> {
                     main.currentImage.aliasing = 1;
-                    System.out.println("Interpolación bi-cúbica");
                     return 1;
                 }
                 case "Gauss + Vecino más cercano" -> {
@@ -301,7 +298,6 @@ public class imageEditorController implements Initializable {
         } else {
             quantization.setValue("Octree");
             indexColors.setText(String.valueOf(index));
-            System.out.println("Default Octree");
         }
         saveState();
         refresh();
@@ -379,13 +375,11 @@ public class imageEditorController implements Initializable {
 
     @FXML
     void cropAction(MouseEvent event) {
-        System.out.println("EVENTO EJECUTA");
         if (imageV.isPressed() || !isCropped) {
             return;
         }
         isCropped = false;
         removeGizmoCrop();
-        System.out.println("ACCION DE CROPPEAR");
         saveState();
         refresh();
     }
@@ -430,7 +424,6 @@ public class imageEditorController implements Initializable {
         CanvasEntity tmpImg = new CanvasEntity(img);
         tmpImg.angle = 0;
         tmpImg.scale = (float) 1 / scale;
-        System.out.println("ESCALAAA " + tmpImg.scale);
         tmpImg.padBottom = 0;
         tmpImg.padRight = 0;
         tmpImg.padLeft = 0;
